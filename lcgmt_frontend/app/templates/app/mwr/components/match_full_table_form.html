@@ -1,0 +1,57 @@
+{% from 'input.html' import ValueInputer, TextInputer %}
+
+<div class="card ">
+        <input  type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="card-header">
+            <button type="button" class="btn ep-manage-btn" style="float: right; padding: 3px 15px;"
+             data-toggle="modal" data-target="#mwrHint">
+                Help<label class="fa fa-question-circle"></label>
+            </button>
+            <h6 class="table-title-sm">Select File to Upload 
+            </h6>
+            <div class="modal fade" id="mwrHint">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    {% include 'app/mwr/components/hint.html'%}
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="card-body">
+            <label for="fileInputer" class="btn ep-manage-btn" style="padding: 8px 20px; margin: 15px 0px;">Select file to Upload</label>
+            <input type="file" hidden name="file" id="fileInputer" accept=".csv,.fits">
+            {{ ValueInputer('area','deg²',41252.96,'Sky Coverage Area of the Catalogue',label_class="ep_objsearch_label")}}
+            <div class="fits-info" >
+                {{ TextInputer('ra_col','ra')}}
+                {{ TextInputer('dec_col','dec')}}
+                {{ TextInputer('pos_err_col','pos_err')}}
+                {{ ValueInputer('pos_err','arcsec')}}
+            </div>
+            <div style="text-align: center;margin-top: 20px;">
+            <button class='btn ep_openBtn' type="submit" text="submit" id="submitFullTable"> Submit </button></div>
+        </div>
+        
+       
+        
+
+</div>
+
+
+<script>
+    $(".fits-info").hide()
+
+    $("#fileInputer").change(function(event){
+        let filename = event.currentTarget.files[0].name
+        if(filename.endsWith(".fits")){
+            $(".fits-info").show()
+        }else{
+            $(".fits-info").hide()
+        }
+        $("label[for=fileInputer]").text(()=>{return filename})
+    })
+
+    $("#submitFullTable").click(function(event){
+        $("#mwrForm").attr("action","{{url_for('.match_full_table')}}")
+    })
+</script>

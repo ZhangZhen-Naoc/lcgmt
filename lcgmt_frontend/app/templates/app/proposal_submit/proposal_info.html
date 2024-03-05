@@ -1,0 +1,128 @@
+{% from 'app/proposal_submit/components/Checkbox.html' import Checkbox %}
+{% from 'app/proposal_submit/components/source.html' import SourceTable %}
+<div>
+<script>
+    {%include 'app/proposal_submit/components/proposal.js'%}
+</script>
+<div  id="proposal-pdf-content">
+    <div class="proposal_view">
+        <div class="proposal_view pdf-title">EP Proposal Coverpage</div>
+        <!-- TODO: 这里还要加个判断，见_coverpage_pdf -->
+        <div class="proposal_view">No: {{proposal.get_no()}}</div>
+
+    </div>
+    <hr>
+    <div class="proposal_view">
+        <!-- 标题 -->
+        <span class="proposal_view pdf-title">Proposal Title: </span>
+        <p class="proposal_view"> {{proposal.proposal_title}}</p>
+
+    </div>
+    <hr>
+    <div class="proposal_view">
+        <!-- Scientific Category -->
+        <span class="proposal_view pdf-title">Scientific Category: </span><span >(tick all that apply)</span>
+        {% for category,checked in categories.items() %}
+            <div class="proposal_view ml-2">
+                {{Checkbox(category,checked)}}
+                {% if category == "Other" %}
+                  <b>{{other_content}}</b>
+                {% endif %}
+            </div>
+        {%endfor %}
+      
+    </div>
+    <hr>
+    <div class="proposal_view">
+        <!-- Proposal Abstract: -->
+        <span class="proposal_view pdf-title">Proposal Abstract:</span>
+        <p class="proposal_view">
+            {{proposal.proposal_abstract}}
+        </p>
+    </div>
+    <hr>
+   {# <div class="proposal_view">
+        <span class="proposal_view pdf-title">Submit this proposal to Science Topical Panel:   {{proposal.stp}}</span>
+        
+    </div>
+    <hr>#}
+    <div class="proposal_view">
+        <span class="proposal_view pdf-title">Observation Type:  
+            {{proposal.obs_type|string}}
+            </span>
+      
+        
+    </div>
+    <hr>
+    <div class="proposal_view">
+        <span class="proposal_view pdf-title">Proposal Type:  
+             {% if proposal.type1|string == "ProposalType1.TOO"  %}
+                ToO
+             {% elif proposal.type1|string == "ProposalType1.TOOM" %}
+                ToO MM
+             {% elif proposal.type2|string == "ProposalType2.AnticipjteToO" %}
+                Anticipated ToO
+             {%else%}
+                FXT Survey-mode Target Observation 
+            {%endif%}
+            </span>
+            {% if proposal.type2|string == "ProposalType2.AnticipateToO" %}
+        <p class="proposal_view">{{proposal.ant_too_trig_criteria}}<p>
+            {%endif%}
+    </div>
+    <hr>
+    <div class="proposal_view">
+        <!-- Proposal Abstract: -->
+        <span class="proposal_view pdf-title">Other Remarks:</span>
+        <p class="proposal_view">
+            {{proposal.other_remarks}}
+        </p>
+    </div>
+    <hr>
+    <div class="proposal_view">
+        <!-- request_hours -->
+        <span class="proposal_view pdf-title">Times requested for this period(Total):</span>
+        {{proposal.srcs_total_time['seconds']}} Seconds
+    </div>
+    <hr>
+    <div class="proposal_view">
+        <!-- PI -->
+        <span class="proposal_view pdf-title">PI Information:</span>
+        {% include 'app/proposal_submit/components/pi.html' %}
+    </div>
+    <hr>
+    <div class="proposal_view">
+        <!-- CI -->
+        <span class="proposal_view pdf-title">Co-I Information:</span>
+        <!-- TODO: CI表格 -->
+        {% include 'app/proposal_submit/components/ci.html' %}
+    </div>
+    <hr>
+    <div class="proposal_view">
+        <!-- source list -->
+        <span class=" proposal_view pdf-title">Observation List:</span>
+        
+        {% for source in sources %}
+            {{SourceTable(source,idx=loop.index,anticipated_too=anticipated_too)}}
+        {% endfor %}
+        <!-- TODO 仪器信息 -->
+    </div>
+</div>
+<div class="divider"></div>
+</div>
+<script>
+    $("#proposal-pdf-content>div").addClass("block")
+    // $(".block").addClass('border-top')
+</script>
+<style>
+    .pdf-title{
+        font-size: larger;
+        font-weight: bolder;
+    }
+    .proposal_view {
+        margin:20px 20px 20px 20px;
+    }
+    p {
+        margin-top:10px;
+    }
+</style>

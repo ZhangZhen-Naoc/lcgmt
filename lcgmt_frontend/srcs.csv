@@ -1,0 +1,1328 @@
+Number,Type,Common Name,Category,Classification,RA,Dec,R_Flux,Tag,Comments,ID
+1,Source,M 87,AGN,AGN,187.706,12.391,1.41E-09,Known Source,,22293
+2,Source,MCG-02-08-038,AGN,AGN,45.018,-10.825,3.37E-11,Known Source,,22240
+3,Source,NGC 3227,AGN,AGN,155.877,19.865,6.92E-11,Known Source,,22108
+4,Source,NGC 4051,AGN,AGN,180.79,44.531,7.96E-11,Known Source,,22512
+5,Source,NGC 4696,AGN,AGN,192.205,-41.311,9.66E-09,Known Source,,23017
+6,Source,1ES 0806+52.4,AGN,BL Lac,122.455,52.316,1.74E-11,Known Source,,22056
+7,Source,1ES 1011+496,AGN,BL Lac,153.767,49.434,2.4E-11,Known Source,,21945
+8,Source,1ES 1959+650,AGN,BL Lac,299.999,65.149,3.18E-10,Known Source,,361
+9,Source,2FGL J0543.9-5532,AGN,BL Lac,85.988,-55.535,2.04E-11,Known Source,,21495
+10,Source,2FGL J1023.1-0115,AGN,BL Lac,155.682,-1.217,1.58E-11,Known Source,,22367
+11,Source,2FGL J1033.5-5032,AGN,BL Lac,158.384,-50.591,1.88E-11,Known Source,,22394
+12,Source,2FGL J1240.6-7151,AGN,BL Lac,190.088,-71.816,1.2E-11,Known Source,,23189
+13,Source,2MASS J00454334+1217119,AGN,BL Lac,11.431,12.287,3.13E-12,Known Source,,25074
+14,Source,2MASS J08471293+1133501,AGN,BL Lac,131.804,11.564,2.13E-11,Known Source,,22355
+15,Source,2MASX J03525755-6831167,AGN,BL Lac,58.24,-68.521,3.01E-11,Known Source,,21257
+16,Source,2MASX J08052657+7534247,AGN,BL Lac,121.361,75.574,2.35E-11,Known Source,,22256
+17,Source,3C 273,AGN,BL Lac,187.278,2.052,2.22E-10,Known Source,,22299
+18,Source,4C 39.49,AGN,BL Lac,253.468,39.76,1.44E-10,Known Source,,22958
+19,Source,6C 032130+340016,AGN,BL Lac,51.172,34.179,2.13E-11,Known Source,,25677
+20,Source,87GB 013336.4+385101,AGN,BL Lac,24.136,39.1,3.16E-11,Known Source,,21534
+21,Source,87GB 064555.8+152016,AGN,BL Lac,102.199,15.274,1.37E-11,Known Source,,25544
+22,Source,Mrk 421,AGN,BL Lac,166.114,38.209,2.41E-09,Known Source,,22543
+23,Source,OKM2018 SWIFT J0244.8-5829,AGN,BL Lac,41.168,-58.332,7.14E-11,Known Source,,21673
+24,Source,QSO B0317+18,AGN,BL Lac,49.966,18.76,1.28E-11,Known Source,,22225
+25,Source,QSO B0647+250,AGN,BL Lac,102.694,25.05,4.32E-11,Known Source,,26768
+26,Source,QSO B0927+500,AGN,BL Lac,142.657,49.84,1.64E-11,Known Source,,22055
+27,Source,QSO B1218+304,AGN,BL Lac,185.341,30.177,4.4E-11,Known Source,,22070
+28,Source,QSO B1426+428,AGN,BL Lac,217.136,42.673,7.7E-11,Known Source,,22965
+29,Source,QSO B1553+113,AGN,BL Lac,238.929,11.19,4.5E-11,Known Source,,22909
+30,Source,QSO B2005-489,AGN,BL Lac,302.356,-48.832,4.3E-11,Known Source,,23891
+31,Source,QSO B2155-304,AGN,BL Lac,329.717,-30.226,1.32E-10,Known Source,,23881
+32,Source,QSO J1103-2329,AGN,BL Lac,165.907,-23.492,7.62E-11,Known Source,,22372
+33,Source,RX J0227.2+0201,AGN,BL Lac,36.819,2.033,6.12E-12,Known Source,,22015
+34,Source,NGC 5920,AGN,LINER,230.466,7.709,1.19E-09,Known Source,,23243
+35,Source,ZwCl 0335+0956,AGN,LINER,54.647,9.965,2.24E-10,Known Source,,21588
+36,Source,[VV2006] J041327.2+102743,AGN,Quasar,63.363,10.462,5.14E-11,Known Source,,21591
+37,Source,SDSS J081014.48+280337.1,AGN,Quasar,122.56,28.06,1.91E-11,Known Source,,21983
+38,Source,US 1665,AGN,Quasar,131.935,46.876,4.63E-09,Known Source,,22099
+39,Source,[MWC2015] MG J1549+3047 3357,AGN,Seyfert 1 Galaxy,237.536,30.958,1.13E-11,Known Source,,22962
+40,Source,2E 3542,AGN,Seyfert 1 Galaxy,239.622,27.287,1.86E-11,Known Source,,23071
+41,Source,3C 120,AGN,Seyfert 1 Galaxy,68.296,5.354,1.06E-09,Known Source,,21590
+42,Source,Ark 564,AGN,Seyfert 1 Galaxy,340.664,29.725,7.06E-11,Known Source,,24045
+43,Source,ESO 141-55,AGN,Seyfert 1 Galaxy,290.309,-58.67,3.96E-11,Known Source,,23171
+44,Source,ESO 383-35,AGN,Seyfert 1 Galaxy,203.974,-34.296,8.27E-11,Known Source,,22383
+45,Source,ICRF J024457.6+622806,AGN,Seyfert 1 Galaxy,41.24,62.468,4.55E-11,Known Source,,25644
+46,Source,IRAS 05078+1626,AGN,Seyfert 1 Galaxy,77.69,16.499,2.13E-11,Known Source,,21622
+47,Source,LEDA 90334,AGN,Seyfert 1 Galaxy,294.388,-6.218,7.05E-11,Known Source,,23873
+48,Source,MCG +08-11-011,AGN,Seyfert 1 Galaxy,88.723,46.439,1.1E-10,Known Source,,21548
+49,Source,MCG+04-22-042,AGN,Seyfert 1 Galaxy,140.929,22.909,2.89E-11,Known Source,,22280
+50,Source,Mrk 1044,AGN,Seyfert 1 Galaxy,37.523,-8.998,2.5E-11,Known Source,,21598
+51,Source,Mrk 110,AGN,Seyfert 1 Galaxy,141.304,52.286,5.54E-11,Known Source,,21915
+52,Source,Mrk 509,AGN,Seyfert 1 Galaxy,311.041,-10.724,8.91E-11,Known Source,,24102
+53,Source,Mrk 704,AGN,Seyfert 1 Galaxy,139.608,16.305,1.43E-11,Known Source,,22297
+54,Source,Mrk 79,AGN,Seyfert 1 Galaxy,115.637,49.81,2.71E-11,Known Source,,21914
+55,Source,NGC 4151,AGN,Seyfert 1 Galaxy,182.636,39.406,1.61E-10,Known Source,,22276
+56,Source,NGC 4253,AGN,Seyfert 1 Galaxy,184.61,29.813,3.55E-11,Known Source,,22286
+57,Source,NGC 5548,AGN,Seyfert 1 Galaxy,214.498,25.137,6.6E-11,Known Source,,22430
+58,Source,NGC 6814,AGN,Seyfert 1 Galaxy,295.669,-10.324,4.9E-11,Known Source,,23872
+59,Source,NGC 931,AGN,Seyfert 1 Galaxy,37.06,31.312,3.78E-11,Known Source,,21962
+60,Source,3C 84,AGN,Seyfert 2 Galaxy,49.951,41.512,8.46E-09,Known Source,,21544
+61,Source,Cyg A,AGN,Seyfert 2 Galaxy,299.868,40.734,4.63E-10,Known Source,,24146
+62,Source,ACO 1650,Cluster of Galaxies,Cluster of Galaxies,194.653,-1.726,1.29E-11,Known Source,,22312
+63,Source,ACO 1651,Cluster of Galaxies,Cluster of Galaxies,194.843,-4.196,1.25E-11,Known Source,,22308
+64,Source,ACO 1656,Cluster of Galaxies,Cluster of Galaxies,194.953,27.981,8.74E-10,Known Source,,22285
+65,Source,ACO 1795,Cluster of Galaxies,Cluster of Galaxies,207.252,26.585,5.45E-11,Known Source,,23018
+66,Source,ACO 2029,Cluster of Galaxies,Cluster of Galaxies,227.745,5.762,1.35E-11,Known Source,,22913
+67,Source,ACO 2052,Cluster of Galaxies,Cluster of Galaxies,229.19,7,8.98E-10,Known Source,,23133
+68,Source,ACO 2199,Cluster of Galaxies,Cluster of Galaxies,247.154,39.524,2.08E-11,Known Source,,22959
+69,Source,ACO 2319,Cluster of Galaxies,Cluster of Galaxies,290.189,43.962,4.52E-10,Known Source,,816
+70,Source,ACO 2811,Cluster of Galaxies,Cluster of Galaxies,10.537,-28.536,9.22E-12,Known Source,,21762
+71,Source,ACO 3158,Cluster of Galaxies,Cluster of Galaxies,55.665,-53.631,2.04E-11,Known Source,,21739
+72,Source,ACO 3266,Cluster of Galaxies,Cluster of Galaxies,67.8,-61.406,1.66E-10,Known Source,,20825
+73,Source,ACO 3571,Cluster of Galaxies,Cluster of Galaxies,206.87,-32.866,1.01E-10,Known Source,,22386
+74,Source,ACO 401,Cluster of Galaxies,Cluster of Galaxies,44.737,13.582,4.64E-11,Known Source,,21988
+75,Source,ACO 576,Cluster of Galaxies,Cluster of galaxies,110.35,55.739,9.92E-12,Known Source,,21913
+76,Source,ACO 644,Cluster of Galaxies,Cluster of Galaxies,124.352,-7.513,3.45E-11,Known Source,,22365
+77,Source,ACO 85,Cluster of Galaxies,Cluster of Galaxies,10.401,-9.325,1.74E-10,Known Source,,21596
+78,Source,ACO 990,Cluster of Galaxies,Cluster of Galaxies,155.921,49.135,6.77E-12,Known Source,,22065
+79,Source,ACO S 540,Cluster of Galaxies,Cluster of Galaxies,85.026,-40.841,1.01E-11,Known Source,,21642
+80,Source,AWM 7,Cluster of Galaxies,Cluster of Galaxies,43.634,41.586,2.48E-10,Known Source,,25404
+81,Source,Oph Cluster,Cluster of Galaxies,Cluster of Galaxies,258.103,-23.35,4.39E-10,Known Source,,22888
+82,Source,RXC J0433.6-1315,Cluster of Galaxies,Cluster of Galaxies,68.377,-13.239,8.87E-11,Known Source,,21617
+83,Source,ZwCl 1215+0400,Cluster of Galaxies,Cluster of Galaxies,184.419,3.663,1.24E-11,Known Source,,22302
+84,Source,2MASS J19551247+0045365,CV,CV,298.802,0.76,1.24E-11,Known Source,,24047
+85,Source,AM Her,CV,CV,274.055,49.868,1.55E-12,Known Source,,23180
+86,Source,DO Dra,CV,CV,175.91,71.689,5.17E-11,Known Source,,22260
+87,Source,EF Eri,CV,CV,48.555,-22.595,5.17E-11,Known Source,,22085
+88,Source,EX Hya,CV,CV,193.101,-29.249,1.6E-10,Known Source,,22375
+89,Source,SS Cyg,CV,CV,325.678,43.586,7.47E-11,Known Source,,366
+90,Source,V1223 Sgr,CV,CV,283.76,-31.164,1.51E-10,Known Source,,19147
+91,Source,V2606 Oph,CV,CV,265.667,-27.748,8.41E-11,Known Source,,23501
+92,Source,NGC 5044,Galaxy,Brightest Galaxy in a Cluster,198.85,-16.385,7.31E-11,Known Source,,22373
+93,Source,2E 4673,Pulsar,Magnetar,345.284,58.879,4.61E-11,Known Source,,21183
+94,Source,PSR B0540-69,Pulsar,Pulsar,85.045,-69.332,5.21E-11,Known Source,,22908
+95,Source,PSR B1509-58,Pulsar,Pulsar,228.481,-59.136,1.79E-09,Known Source,,22573
+96,Source,PSR J0146+6145,Pulsar,Pulsar,26.593,61.751,1.78E-10,Known Source,,21227
+97,Source,Vela Pulsar,Pulsar,Pulsar,128.836,-45.176,2.86E-10,Known Source,,22389
+98,Source,Cas A,SNR,SNR,350.85,58.815,8.74E-10,Known Source,,80
+99,Source,Crab,SNR,SNR,83.629,22.015,3.55E-09,Known Source,,4321
+100,Source,Cyg Loop,SNR,SNR,311.881,30.174,8.06E-10,Known Source,,23582
+101,Source,G296.1-0.5,SNR,SNR,177.792,-62.567,2E-11,Known Source,,23267
+102,Source,G299.2-2.9,SNR,SNR,183.717,-65.467,6E-11,Known Source,,22479
+103,Source,HB9,SNR,SNR,75.25,46.667,,Known Source,,25380
+104,Source,IC 443,SNR,SNR,94.25,22.57,8.27E-10,Known Source,,21656
+105,Source,Kepler SNR,SNR,SNR,262.65,-21.482,2.48E-10,Known Source,,20549
+106,Source,Kes 73,SNR,SNR,280.333,-4.935,2E-11,Known Source,,24361
+107,Source,Pup A,SNR,SNR,126.029,-42.997,2.94E-11,Known Source,,21811
+108,Source,RCW 103,SNR,SNR,244.388,-51.033,1.98E-10,Known Source,,22665
+109,Source,RCW 86,SNR,SNR,220.121,-62.645,3.65E-10,Known Source,,22494
+110,Source,SNR B0505-67.9,SNR,SNR,76.425,-67.875,2.79E-11,Known Source,,24121
+111,Source,SNR B0519-69.0,SNR,SNR,79.896,-69.033,7.81E-11,Known Source,,20769
+112,Source,SNR B0535-66.0,SNR,SNR,83.93,-66.033,7.11E-11,Known Source,,1086
+113,Source,SNR G034.6-00.5,SNR,SNR,284.044,1.223,3.1E-11,Known Source,,21205
+114,Source,SNR G292.0+01.8,SNR,SNR,171.246,-59.318,1.81E-10,Known Source,,22392
+115,Source,SNR G296.1-00.7/SNR G296.0-00.6,SNR,SNR,177.8,-62.767,8.68E-11,Known Source,,22586
+116,Source,SNR J050854-684447,SNR,SNR,77.245,-68.729,1.94E-11,Known Source,,1089
+117,Source,SNR J052501-693842,SNR,SNR,81.259,-69.644,4.83E-10,Known Source,,2141
+118,Source,SNR J052559-660453/SNR B0525-66.0,SNR,SNR,81.502,-66.084,1.68E-11,Known Source,,1902
+119,Source,Tycho SNR,SNR,SNR,6.34,64.141,5.03E-10,Known Source,,81
+120,Source,gam Cas,Star,Be Star,14.177,60.717,1.04E-10,Known Source,,3861
+121,Source,BD+43 3754,Star,BY Dra Variable,313.243,44.122,2.63E-12,Known Source,,24508
+122,Source,BF Lyn,Star,BY Dra Variable,140.608,40.201,2.36E-11,Known Source,,21946
+123,Source,BY Dra,Star,BY Dra Variable,278.482,51.719,3.5E-11,Known Source,,23179
+124,Source,GS Leo,Star,BY Dra Variable,142.649,10.602,8.63E-12,Known Source,,22294
+125,Source,HD 197481,Star,BY Dra Variable,311.29,-31.341,5.16E-11,Known Source,,24154
+126,Source,HD 283750,Star,BY Dra Variable,69.201,27.132,3.11E-11,Known Source,,21411
+127,Source,HD 29697,Star,BY Dra Variable,70.329,20.902,2.37E-11,Known Source,,4604
+128,Source,HD 48189,Star,BY Dra Variable,99.501,-61.533,2.23E-11,Known Source,,21771
+129,Source,MCC 124,Star,BY Dra Variable,153.58,21.075,6.53E-12,Known Source,,22071
+130,Source,YY Gem,Star,BY Dra Variable,113.656,31.869,3.71E-11,Known Source,,26762
+131,Source,71 Tau,Star,Delta Sct Variable,66.586,15.618,9.25E-12,Known Source,,26110
+132,Source,BD+11 189,Star,Double or Multiple Star,22.544,12.056,3.06E-12,Known Source,,24845
+133,Source,BD+19 5116,Star,Double or Multiple Star,352.967,19.937,1.95E-11,Known Source,,24189
+134,Source,HD 235994,Star,Double or Multiple Star,343.748,51.526,1.19E-11,Known Source,,21182
+135,Source,iot01 Nor,Star,Double or Multiple Star,240.884,-57.775,2.01E-11,Known Source,,24030
+136,Source,RX J0052.5+1042,Star,Double or Multiple Star,13.139,10.712,1.23E-11,Known Source,,24844
+137,Source,bet Per,Star,Eclipsing Binary,47.042,40.956,9.17E-11,Known Source,,21535
+138,Source,i Boo,Star,Eclipsing Binary,225.947,47.654,4.34E-11,Known Source,,22454
+139,Source,AO Men,Star,Eruptive Variable,94.618,-72.045,9.99E-12,Known Source,,25660
+140,Source,AT Mic,Star,Eruptive Variable,310.463,-32.435,3.49E-11,Known Source,,23673
+141,Source,BD+20 2465,Star,Eruptive Variable,154.901,19.87,4.28E-11,Known Source,,22076
+142,Source,CD-56 1032B,Star,Eruptive Variable,73.377,-55.859,1.25E-11,Known Source,,22034
+143,Source,G 124-43,Star,Eruptive Variable,216.984,-0.375,1.02E-12,Known Source,,23260
+144,Source,HD 42270,Star,Eruptive Variable,88.372,-81.948,3.06E-11,Known Source,,22440
+145,Source,UV Cet,Star,Eruptive Variable,24.757,-17.95,6.23E-12,Known Source,,21996
+146,Source,YZ Cmi,Star,Eruptive Variable,116.167,3.552,1.26E-11,Known Source,,22354
+147,Source,1RXS J041833.6-073637,Star,High Proper Motion Star,64.642,-7.614,2.8E-12,Known Source,,22088
+148,Source,2MASS J19312434-2134226,Star,High Proper Motion Star,292.941,-21.676,,Known Source,transient by TA,23230
+149,Source,beta Cet,Star,High Proper Motion Star,10.897,-17.987,2.72E-11,Known Source,,25018
+150,Source,CD-50 7760,Star,High Proper Motion Star,201.443,-51.097,2.88E-12,Known Source,,23239
+151,Source,HD 22403,Star,High Proper Motion Star,54.296,25.991,3.78E-11,Known Source,,21578
+152,Source,HD 82533,Star,High Proper Motion Star,142.677,-53.522,9.81E-12,Known Source,,23238
+153,Source,BD-17 6768,Star,Low-mass Star,353.195,-16.752,9.43E-12,Known Source,,24086
+154,Source,L 34-26,Star,Low-mass Star,117.303,-76.702,7.17E-12,Known Source,,22224
+155,Source,HD 283447,Star,Orion Variable,63.554,28.203,4.7E-12,Known Source,,22238
+156,Source,1RXS J060415.2+124555,Star,Rotating Variable,91.063,12.765,8.25E-12,Known Source,,21491
+157,Source,ASAS J054612+1803.6,Star,Rotating Variable,86.549,18.063,,Known Source,,21874
+158,Source,FI Cnc,Star,Rotating Variable,128.072,29.319,1.97E-11,Known Source,,22279
+159,Source,HD 199178,Star,Rotating Variable,313.474,44.386,2.86E-11,Known Source,,24475
+160,Source,HD 87525,Star,Rotating Variable,150.969,-56.19,1.46E-11,Known Source,,22584
+161,Source,YY Men,Star,Rotating Variable,74.575,-75.277,2.12E-11,Known Source,,22519
+162,Source,SDSS J134448.52+404106.8,Star,RR Lyrae Variable,206.202,40.685,8.76E-09,Known Source,,22457
+163,Source,12 Mus,Star,RS CVn Variable,174.873,-65.398,1.48E-09,Known Source,,22480
+164,Source,39 Cet,Star,RS CVn Variable,19.151,-2.5,3.76E-11,Known Source,,21597
+165,Source,AF Lep,Star,RS CVn Variable,81.77,-11.901,3.11E-11,Known Source,,21626
+166,Source,AR Lac,Star,RS CVn Variable,332.17,45.742,6.31E-11,Known Source,,21289
+167,Source,BH CVn,Star,RS CVn Variable,203.699,37.182,2.52E-11,Known Source,,22343
+168,Source,BM CVn,Star,RS CVn Variable,200.384,38.88,1.84E-11,Known Source,,22963
+169,Source,d UMa,Star,RS CVn Variable,143.62,69.83,1.63E-11,Known Source,,22095
+170,Source,DH Leo,Star,RS CVn Variable,150.007,24.553,1.83E-11,Known Source,,22221
+171,Source,DK Dra,Star,RS CVn Variable,183.923,72.551,1.84E-11,Known Source,,22401
+172,Source,DM Uma,Star,RS CVn Variable,163.931,60.469,1.17E-11,Known Source,,22062
+173,Source,EI Eri,Star,RS CVn Variable,62.42,-7.893,3.62E-11,Known Source,,22087
+174,Source,FF UMa,Star,RS CVn Variable,143.444,62.828,2.37E-11,Known Source,,22061
+175,Source,GSC 4367-00629,Star,RS CVn Variable,103.326,72.762,0.00000179,Known Source,,22330
+176,Source,HD 112859,Star,RS CVn Variable,194.766,47.151,4.23E-12,Known Source,,22536
+177,Source,HD 155555,Star,RS CVn Variable,259.356,-66.951,4.18E-11,Known Source,,23181
+178,Source,HD 22468,Star,RS CVn Variable,54.197,0.588,1.7E-10,Known Source,,24934
+179,Source,HD 41824,Star,RS CVn Variable,91.195,-48.458,2.87E-11,Known Source,,22046
+180,Source,HK Lac,Star,RS CVn Variable,331.236,47.235,2.43E-11,Known Source,,21803
+181,Source,II Peg,Star,RS CVn Variable,358.767,28.634,9.34E-11,Known Source,,21567
+182,Source,IM Peg,Star,RS CVn Variable,343.259,16.841,2.05E-10,Known Source,,21595
+183,Source,lam And,Star,RS CVn Variable,354.391,46.458,9.46E-11,Known Source,,21566
+184,Source,RS CVn,Star,RS CVn Variable,197.654,35.935,1.17E-11,Known Source,,22558
+185,Source,sig CrB,Star,RS CVn Variable,243.67,33.859,9.7E-11,Known Source,,22347
+186,Source,sig Gem,Star,RS CVn Variable,115.828,28.884,8.11E-11,Known Source,,21573
+187,Source,UX Ari,Star,RS CVn Variable,51.647,28.715,2.08E-10,Known Source,,21570
+188,Source,V1198 Ori,Star,RS CVn Variable,74.571,0.454,1.18E-11,Known Source,,25724
+189,Source,V1313 Tau,Star,RS CVn Variable,64.545,23.285,4.48E-12,Known Source,,26479
+190,Source,V376 Cep,Star,RS CVn Variable,329.582,82.871,2.17E-11,Known Source,,21901
+191,Source,V478 Lyr,Star,RS CVn Variable,286.885,30.254,1.98E-11,Known Source,,24481
+192,Source,V841 Cen,Star,RS CVn Variable,218.567,-60.408,7.01E-12,Known Source,,22526
+193,Source,V851 Cen,Star,RS CVn Variable,206.004,-61.366,1.27E-11,Known Source,,23820
+194,Source,VV Mon,Star,RS CVn Variable,105.826,-5.738,1.89E-12,Known Source,,25725
+195,Source,VY Ari,Star,RS CVn Variable,42.182,31.115,7.11E-11,Known Source,,21961
+196,Source,zet And,Star,RS CVn Variable,11.835,24.267,2.15E-11,Known Source,,25053
+197,Source,alf Aur,Star,Spectroscopic Binary,79.172,45.998,3.35E-10,Known Source,,6365
+198,Source,FK Aqr,Star,Spectroscopic Binary,339.69,-20.621,3.35E-11,Known Source,,24021
+199,Source,HD 152751,Star,Spectroscopic Binary,253.87,-8.336,3.44E-11,Known Source,,22917
+200,Source,HD 205297,Star,Spectroscopic Binary,324.315,-65.039,1.55E-11,Known Source,,24041
+201,Source,HD 80492,Star,Spectroscopic Binary,140.314,39.666,2.66E-12,Known Source,,22339
+202,Source,ksi UMa B,Star,Spectroscopic Binary,169.545,31.529,4.31E-11,Known Source,,22283
+203,Source,LP 476-207,Star,Spectroscopic Binary,75.495,9.983,5.34E-12,Known Source,,24612
+204,Source,1RXS J054317.4-760222,Star,Star,85.822,-76.039,1.47E-12,Known Source,,23124
+205,Source,HD 146797,Star,Star,244.893,-36.403,,Known Source,,23911
+206,Source,HD 159911,Star,Star,264.444,-13.246,1.45E-11,Known Source,,23969
+207,Source,HD 322168,Star,Star,252.969,-38.367,,Known Source,,23832
+208,Source,tau Sco,Star,Star,248.971,-28.216,1.95E-10,Known Source,,24204
+209,Source,2MASS J05242572+1922070,Star,T Tauri Star,81.107,19.369,1.28E-12,Known Source,,21515
+210,Source,AB Dor,Star,T Tauri Star,82.187,-65.449,4.93E-11,Known Source,,1456
+211,Source,HD 245358,Star,T Tauri Star,84.215,23.435,7.72E-12,Known Source,,21363
+212,Source,MW Lup,Star,T Tauri Star,238.081,-38.325,,Known Source,,24172
+213,Source,WR140,Star,Wolf-Rayet Satr,305.117,43.855,6E-11,Known Source,,24224
+214,Source,HD 105070,Star,Young Stellar Object,181.448,-51.003,4.53E-12,Known Source,,23009
+215,Source,WRAY 15-1674,Star,Young Stellar Object,259.925,-46.258,3.87E-12,Known Source,,22892
+216,Source,M 42,Star Cluster,Open Cluster,83.821,-5.39,7.37E-11,Known Source,,21608
+217,Source,Terzan 5,Star Cluster,Star Cluster,267.021,-24.78,3.29E-11,Known Source,,22553
+218,Source,1RXS J052911.4+261009,Unclassified,Unclassified,82.297,26.169,8.12E-11,Known Source,,21939
+219,Source,1RXS J054638.5-624322,Unclassified,Unclassified,86.66,-62.723,5.55E-08,Known Source,,22364
+220,Source,NuSTAR J092418-3142.2,Unclassified,Unclassified,141.076,-31.705,7.44E-10,Known Source,LMXRB or CV,22377
+221,Source,4U 0900-40,X-ray Binary,HMXB,135.529,-40.555,1.76E-09,Known Source,,21995
+222,Source,4U 1210-64,X-ray Binary,HMXB,183.271,-64.917,1.07E-10,Known Source,,22561
+223,Source,4U 1907+09,X-ray Binary,HMXB,287.405,9.832,2.32E-10,Known Source,,24037
+224,Source,BP Cru,X-ray Binary,HMXB,186.657,-62.77,6.43E-10,Known Source,,22924
+225,Source,Cir X-1,X-ray Binary,HMXB,230.17,-57.167,1.22E-10,Known Source,,22493
+226,Source,Cyg X-1,X-ray Binary,HMXB,299.59,35.202,9.94E-08,Known Source,,323
+227,Source,Cyg X-3,X-ray Binary,HMXB,308.107,40.958,1.01E-08,Known Source,,328
+228,Source,EXO 2030+375,X-ray Binary,HMXB,308.064,37.637,9.19E-11,Known Source,,5188
+229,Source,GRO J1008-571,X-ray Binary,HMXB,152.446,-58.293,1.16E-10,Known Source,,23902
+230,Source,GRS 1915+105,X-ray Binary,HMXB,288.798,10.946,4.94E-09,Known Source,,24036
+231,Source,H 1700-377,X-ray Binary,HMXB,255.987,-37.844,1.16E-09,Known Source,,22952
+232,Source,HD 245770,X-ray Binary,HMXB,84.727,26.316,9.64E-11,Known Source,,21446
+233,Source,IGR J06074+2205,X-ray Binary,HMXB,91.861,22.096,9.5E-12,Known Source,,26469
+234,Source,LMC X-1,X-ray Binary,HMXB,84.912,-69.743,1.11E-09,Known Source,,2140
+235,Source,LMC X-3,X-ray Binary,HMXB,84.736,-64.084,4.47E-10,Known Source,,1083
+236,Source,LMC X-4,X-ray Binary,HMXB,83.206,-66.37,3.48E-09,Known Source,,1085
+237,Source,LS V +44 17,X-ray Binary,HMXB,70.247,44.53,1.25E-10,Known Source,,22337
+238,Source,QV Nor,X-ray Binary,HMXB,235.597,-52.386,2.72E-10,Known Source,,22533
+239,Source,RX J0535.6-6651,X-ray Binary,HMXB,83.921,-66.865,8.04E-10,Known Source,,2922
+240,Source,SMC X-1,X-ray Binary,HMXB,19.271,-73.443,9.92E-10,Known Source,,22515
+241,Source,SS 433,X-ray Binary,HMXB,287.957,4.983,5.73E-12,Known Source,,23515
+242,Source,V779 Cen,X-ray Binary,HMXB,170.313,-60.624,3.86E-09,Known Source,,22391
+243,Source,X Per,X-ray Binary,HMXB,58.846,31.046,6.3E-11,Known Source,,21546
+244,Source,[KRL2007b] 228,X-ray Binary,LMXB,258.144,-37.65,4.83E-10,Known Source,,23173
+245,Source,[KRL2007b] 275,X-ray Binary,LMXB,266.761,-28.883,4.71E-10,Known Source,,23220
+246,Source,1ES 1735-26.9,X-ray Binary,LMXB,264.571,-26.994,3.3E-10,Known Source,,22947
+247,Source,1H 0512-401,X-ray Binary,LMXB,78.527,-40.044,2.08E-10,Known Source,,21679
+248,Source,1RXS J173546.9-302859,X-ray Binary,LMXB,263.945,-30.483,5.42E-11,Known Source,,22589
+249,Source,2E 3943,X-ray Binary,LMXB,266.522,-29.515,6.11E-10,Known Source,,6884
+250,Source,2XMM J180112.4-254436,X-ray Binary,LMXB,270.302,-25.743,3.72E-10,Known Source,,22640
+251,Source,4U 0919-54,X-ray Binary,LMXB,140.11,-55.207,2.31E-10,Known Source,,21810
+252,Source,4U 1246-58,X-ray Binary,LMXB,192.414,-59.087,3.97E-10,Known Source,,22390
+253,Source,4U 1624-49,X-ray Binary,LMXB,247.023,-49.211,2.04E-09,Known Source,,22567
+254,Source,4U 1642-45,X-ray Binary,LMXB,251.449,-45.611,6.62E-10,Known Source,,22495
+255,Source,4U 1701-407,X-ray Binary,LMXB,255.435,-40.858,2.35E-10,Known Source,,22940
+256,Source,4U 1705-44,X-ray Binary,LMXB,257.227,-44.102,0.000000004,Known Source,,22557
+257,Source,4U 1708-40,X-ray Binary,LMXB,258.099,-40.843,1.3E-09,Known Source,,22595
+258,Source,4U 1722-30,X-ray Binary,LMXB,261.889,-30.802,3.68E-10,Known Source,,6890
+259,Source,4U 1728-337,X-ray Binary,LMXB,262.991,-33.834,7.08E-10,Known Source,,6886
+260,Source,4U 1730-22,X-ray Binary,LMXB,263.488,-22.035,2E-10,Known Source,,20729
+261,Source,4U 1746-371,X-ray Binary,LMXB,267.553,-37.052,9.48E-10,Known Source,,20753
+262,Source,4U 1812-12,X-ray Binary,LMXB,273.776,-12.096,4.12E-10,Known Source,,23191
+263,Source,4U 1823-00,X-ray Binary,LMXB,276.342,-0.012,2.57E-10,Known Source,,7014
+264,Source,4U 1850-086,X-ray Binary,LMXB,283.27,-8.705,2.96E-10,Known Source,,23163
+265,Source,4U 2129+12,X-ray Binary,LMXB,322.493,12.167,4.52E-10,Known Source,,23235
+266,Source,Aql X-1,X-ray Binary,LMXB,287.817,0.585,2.15E-11,Known Source,,23915
+267,Source,Ara X-1,X-ray Binary,LMXB,256.564,-43.036,1.02E-09,Known Source,,22596
+268,Source,AT 2019wey,X-ray Binary,LMXB,68.847,55.376,,Known Source,,21186
+269,Source,AX J1747.4-3000,X-ray Binary,LMXB,266.858,-30.001,1.13E-10,Known Source,,21149
+270,Source,Cyg X-2,X-ray Binary,LMXB,326.171,38.321,1.69E-08,Known Source,,77
+271,Source,GR Mus,X-ray Binary,LMXB,194.405,-69.289,1.66E-09,Known Source,,22478
+272,Source,Granat 1747-312,X-ray Binary,LMXB,267.695,-31.275,3.75E-10,Known Source,,14457
+273,Source,GX 3+1,X-ray Binary,LMXB,266.983,-26.564,4.88E-09,Known Source,,6897
+274,Source,GX 5-1,X-ray Binary,LMXB,270.291,-25.079,1.69E-08,Known Source,,20726
+275,Source,H 1730-333,X-ray Binary,LMXB,263.353,-33.389,7.49E-11,Known Source,,23148
+276,Source,HZ Her,X-ray Binary,LMXB,254.458,35.342,2.37E-10,Known Source,,22960
+277,Source,IGR J17062-6143,X-ray Binary,LMXB,256.568,-61.711,1.29E-10,Known Source,,22570
+278,Source,IGR J17498-2921,X-ray Binary,LMXB,267.481,-29.322,2.15E-11,Known Source,,23006
+279,Source,INTREF 1012,X-ray Binary,LMXB,303.157,38.184,,Known Source,,23257
+280,Source,KZ TrA,X-ray Binary,LMXB,248.07,-67.461,2.32E-10,Known Source,,22506
+281,Source,LMC X-2,X-ray Binary,LMXB,80.117,-71.965,1.66E-10,Known Source,,2139
+282,Source,LU TrA,X-ray Binary,LMXB,240.26,-60.738,2.65E-10,Known Source,,22507
+283,Source,MAXI J1807+132,X-ray Binary,LMXB,272.042,13.274,1.58E-12,Known Source,,23863
+284,Source,MM Ser,X-ray Binary,LMXB,279.99,5.036,2.55E-08,Known Source,,21199
+285,Source,Nor X-1,X-ray Binary,LMXB,248.507,-47.393,5.01E-10,Known Source,,22625
+286,Source,NP Ser,X-ray Binary,LMXB,274.006,-14.036,2.87E-08,Known Source,,6946
+287,Source,QU TrA,X-ray Binary,LMXB,236.978,-62.568,1.03E-09,Known Source,,22508
+288,Source,QX Nor,X-ray Binary,LMXB,243.179,-52.423,2.76E-10,Known Source,,22662
+289,Source,RX J1749.8-3312,X-ray Binary,LMXB,267.454,-33.203,1.55E-08,Known Source,,22551
+290,Source,Sco X-1,X-ray Binary,LMXB,244.979,-15.64,0.000000659,Known Source,,6827
+291,Source,Sgr X-3,X-ray Binary,LMXB,270.385,-20.529,2.68E-08,Known Source,,21192
+292,Source,Sgr X-4,X-ray Binary,LMXB,275.919,-30.361,4.64E-09,Known Source,,19473
+293,Source,Swift J1727.8-1613,X-ray Binary,LMXB,261.942,-16.215,,Known Source,,24117
+294,Source,V1055 Ori,X-ray Binary,LMXB,94.281,9.137,2.19E-09,Known Source,,21464
+295,Source,V1101 Sco,X-ray Binary,LMXB,256.435,-36.423,3.86E-08,Known Source,,22951
+296,Source,V1405 Aql,X-ray Binary,LMXB,289.699,-5.238,5.42E-10,Known Source,,10123
+297,Source,V1408 Aql,X-ray Binary,LMXB,299.85,11.708,1.77E-09,Known Source,,23160
+298,Source,V2216 Oph,X-ray Binary,LMXB,262.934,-16.961,0.000000011,Known Source,,6894
+299,Source,V395 Car,X-ray Binary,LMXB,140.644,-63.295,4.39E-10,Known Source,,22387
+300,Source,V4134 Sgr,X-ray Binary,LMXB,269.667,-33.807,4.47E-10,Known Source,,20707
+301,Source,V4634 Sgr,X-ray Binary,LMXB,277.368,-23.797,3.48E-09,Known Source,,6880
+302,Source,V5512 Sgr,X-ray Binary,LMXB,273.631,-17.157,6.47E-08,Known Source,,22616
+303,Source,V691 CrA,X-ray Binary,LMXB,276.445,-37.105,9.98E-10,Known Source,,20771
+304,Source,V801 Ara,X-ray Binary,LMXB,250.232,-53.751,9.3E-09,Known Source,,22521
+305,Source,V926 Sco,X-ray Binary,LMXB,264.743,-44.45,1.36E-08,Known Source,,22619
+306,Source,XTE J1701-462,X-ray Binary,LMXB,255.244,-46.186,5.79E-11,Known Source,,22496
+307,Source,XTE J1739-285,X-ray Binary,LMXB,264.975,-28.496,6.81E-10,Known Source,,22641
+308,Source,XTE J1810-189,X-ray Binary,LMXB,272.587,-19.07,3.82E-10,Known Source,,22902
+309,Source,XTE J1856+053,X-ray Binary,LMXB,284.179,5.31,1.38E-09,Known Source,,23852
+310,Source,MAXI J0911-655,X-ray Binary,X-ray Binary,138.01,-64.868,2.57E-10,Known Source,,22395
+311,Source,MAXI J1810-222,X-ray Binary,X-ray Binary,273.113,-22.326,,Known Source,,23192
+312,Source,RX J0925.7-4758,X-ray Binary,X-ray Binary,141.442,-47.971,0.00000653,Known Source,,22548
+313,Source,GRB 230307A,GRB,GRB,60.8593,-75.3788,,Transient,,
+314,Source,GRB 221009A,GRB,GRB Afterglow,288.265,19.773,,Transient,,
+315,Source,NOVA Sco 2023,Nova,Classical Nova,260.687,-41.621,,Transient,,24167
+316,Source,ASASSN-23hd,Nova,Nova,71.718,-65.897,,Transient,,25160
+317,Source,LXT 221117A,Unclassified,Unclassified,94.713,26.463,,Transient,,21619
+318,Source,LXT 221201A,Unclassified,Unclassified,111.457,-14.243,,Transient,,21783
+319,Source,LXT 221207A,Unclassified,Unclassified,79.405,28.589,,Transient,stellar flare?,21899
+320,Source,LXT 221223A,Unclassified,Unclassified,26.88,61.526,,Transient,,22026
+321,Source,LXT 221227A,Unclassified,Unclassified,147.454,4.6777,,Transient,,22040
+322,Source,LXT 230308A,Unclassified,Unclassified,177.176,39.709,,Transient,,22513
+323,Source,LXT 230511A,Unclassified,Unclassified,189.282,-69.151,,Transient,stellar flare?,23174
+324,Source,LXT 230725A,Unclassified,Unclassified,200.502,-55.011,,Transient,,23974
+325,Source,LXT 230815A,Unclassified,Unclassified,249.474,-46.411,,Transient,stellar flare?,24050
+326,Source,LXT 240101A,Unclassified,Unclassified,94.775,1.075,,Transient,,26615
+327,Source,2FHL J0709.3-1526,AGN,AGN,107.3011,-15.4501,8.41E-12,Known Source,,
+328,Source,2MAXI J1837-570,AGN,AGN,279.77654,-57.25161,1.29E-11,Known Source,,
+329,Source,4PBC J1709.7-2348,AGN,AGN,257.4362398,-23.78144273,4.41E-12,Known Source,,
+330,Source,4PBC J1814.1-1822,AGN,AGN,273.56158,-18.386,1.9E-12,Known Source,,
+331,Source,AX J1830.6-1002,AGN,AGN,277.66,-10.046,7.34E-12,Known Source,,
+332,Source,IGR J09189-4418,AGN,AGN,139.744,-44.31,1.87E-12,Known Source,,
+333,Source,IGR J10200-1436,AGN,AGN,154.90538,-14.69119,1.26E-12,Known Source,,
+334,Source,IGR J11079+7106,AGN,AGN,166.9494004,71.0923467,4.05E-12,Known Source,,
+335,Source,IGR J14417-5533,AGN,AGN,220.328079,-55.559784,7.8E-12,Known Source,,
+336,Source,IGR J15359-5750,AGN,AGN,233.97,-57.8486,0.000000249,Known Source,,
+337,Source,IGR J16181-5407,AGN,AGN,244.53214,-54.103394,4.02E-12,Known Source,,
+338,Source,IGR J16560-4958,AGN,AGN,253.96646,-49.959,2.97E-12,Known Source,,
+339,Source,IGR J17111+3910,AGN,AGN,257.7721373,39.14683,2.83E-12,Known Source,,
+340,Source,IGR J17157-5449,AGN,AGN,258.9063902,-54.83504318,7.42E-12,Known Source,,
+341,Source,IGR J17348-2045,AGN,AGN,263.745,-20.759,1.39E-12,Known Source,,
+342,Source,IGR J17520-6018,AGN,AGN,267.982503,-60.32869,3.73E-12,Known Source,,
+343,Source,IGR J18497-0248,AGN,AGN,282.44446,-2.80481,1.63E-12,Known Source,,
+344,Source,IGR J19504+3318,AGN,AGN,297.5821935,33.23784524,0.00000636,Known Source,,
+345,Source,IGR J20310+3835,AGN,AGN,307.73,38.5631,4.62E-12,Known Source,,
+346,Source,LEDA 1398342,AGN,AGN,221.7536451,11.75996732,3.51E-10,Known Source,,
+347,Source,M 82,AGN,AGN,148.968458,69.679703,3.04E-10,Known Source,,
+348,Source,PBC J1850.7-1658,AGN,AGN,282.7059573,-16.93039998,3.23E-12,Known Source,,
+349,Source,PKS 0312-770,AGN,AGN,47.98020708,-76.86412454,2.49E-12,Known Source,,
+350,Source,1ES 0033+595,AGN,BL Lac,8.968975,59.834497,2.84E-10,Known Source,,
+351,Source,1ES 2344+51.4,AGN,BL Lac,356.770155,51.70496598,2.55E-11,Known Source,,
+352,Source,2E 0205.7+3509,AGN,BL Lac,32.1590142,35.38689083,1.16E-12,Known Source,,
+353,Source,2EG J0744+5438,AGN,BL Lac,115.6657946,54.74018531,1.91E-11,Known Source,,
+354,Source,2EG J1133+0037,AGN,BL Lac,173.190077,0.574397459,1.77E-11,Known Source,,
+355,Source,2EG J2039+1131,AGN,BL Lac,308.8430554,10.93521894,2.96E-12,Known Source,,
+356,Source,2EGS J1504-1537,AGN,BL Lac,225.919448,-15.68726122,1.35E-11,Known Source,,
+357,Source,2EGS J1703-6302,AGN,BL Lac,255.9022551,-62.21111349,1.57E-12,Known Source,,
+358,Source,3C 371,AGN,BL Lac,271.7111679,69.82447489,3.68E-12,Known Source,,
+359,Source,3EG J0512-6150,AGN,BL Lac,79.18719238,-62.11816372,1.07E-12,Known Source,,
+360,Source,3EG J1300-4406,AGN,BL Lac,196.0875242,-43.88616659,3.96E-12,Known Source,,
+361,Source,3EG J1500-3509,AGN,BL Lac,224.3612988,-35.65276989,1.3E-12,Known Source,,
+362,Source,4C 06.41,AGN,BL Lac,160.3215104,6.171367704,2.54E-12,Known Source,,
+363,Source,4C 73.18,AGN,BL Lac,291.9520613,73.96710349,9.97E-12,Known Source,,
+364,Source,4U 0506-03,AGN,BL Lac,77.40907959,-4.012689671,3.7E-11,Known Source,,
+365,Source,6C 021252+733537,AGN,BL Lac,34.37838897,73.82572826,8.94E-12,Known Source,,
+366,Source,7C 1415+2556,AGN,BL Lac,214.4861276,25.72395677,2.85E-11,Known Source,,
+367,Source,B2 1308+32,AGN,BL Lac,197.6194327,32.34549523,3.13E-12,Known Source,,
+368,Source,BL Lac,AGN,BL Lac,330.6803806,42.27777206,1.58E-11,Known Source,,
+369,Source,GeV J0319+2407,AGN,BL Lac,50.49987626,23.60311298,5.02E-12,Known Source,,
+370,Source,GeV J0508+0540,AGN,BL Lac,77.35818516,5.693148283,2.63E-12,Known Source,,
+371,Source,H 0414+009,AGN,BL Lac,64.21872737,1.089971973,2.17E-11,Known Source,,
+372,Source,H 1517+656,AGN,BL Lac,229.4482844,65.42313489,1.82E-11,Known Source,,
+373,Source,ICRF J021417.9+514451,AGN,BL Lac,33.57473273,51.74776272,1.54E-11,Known Source,,
+374,Source,IGR J08321-1808,AGN,BL Lac,127.9932004,-18.14311565,7.52E-12,Known Source,,
+375,Source,IGR J20569+4940,AGN,BL Lac,314.1780845,49.66850113,2.38E-11,Known Source,,
+376,Source,PKS 0723-008,AGN,BL Lac,111.4609996,-0.915706403,8.22E-12,Known Source,,
+377,Source,PKS 1241-399,AGN,BL Lac,191.1216587,-40.21304322,3.51E-12,Known Source,,
+378,Source,PKS 1355-416,AGN,BL Lac,209.75077,-41.88128867,8.69E-11,Known Source,,
+379,Source,PKS 1749+096,AGN,BL Lac,267.8867441,9.650202335,8.28E-12,Known Source,,
+380,Source,PKS 1937-101,AGN,BL Lac,294.9885695,-10.04486731,1.85E-12,Known Source,,
+381,Source,PKS 2251+113,AGN,BL Lac,343.5434226,11.61076336,3.06E-12,Known Source,,
+382,Source,QSO B0323+022,AGN,BL Lac,51.55811743,2.420743316,7.59E-10,Known Source,,
+383,Source,QSO B0548-322,AGN,BL Lac,87.66904381,-32.27124576,7.54E-11,Known Source,,
+384,Source,QSO B0716+714,AGN,BL Lac,110.4727012,71.3434344,1.83E-11,Known Source,,
+385,Source,QSO B0735+178,AGN,BL Lac,114.5308073,17.70527726,1.19E-12,Known Source,,
+386,Source,QSO B0851+202,AGN,BL Lac,133.7036458,20.108511,8.22E-12,Known Source,,
+387,Source,QSO B0954+658,AGN,BL Lac,149.6968549,65.5652276,8.48E-12,Known Source,,
+388,Source,QSO B1219+285,AGN,BL Lac,185.3820435,28.23291675,3.82E-12,Known Source,,
+389,Source,QSO B1424+240,AGN,BL Lac,216.7516325,23.80001042,1.46E-11,Known Source,,
+390,Source,QSO B1604+159,AGN,BL Lac,241.7767936,15.85957933,1.44E-12,Known Source,,
+391,Source,QSO B1722+119,AGN,BL Lac,261.2680872,11.87096444,1.46E-11,Known Source,,
+392,Source,QSO B1921-293,AGN,BL Lac,291.2127331,-29.24170028,1.19E-11,Known Source,,
+393,Source,QSO B2022-077,AGN,BL Lac,306.4194177,-7.597968902,2.27E-12,Known Source,,
+394,Source,RX J0137.7+5814,AGN,BL Lac,24.46031744,58.23647826,8.95E-12,Known Source,,
+395,Source,RX J0202.3+0849,AGN,BL Lac,30.61009478,8.820469856,1.19E-12,Known Source,,
+396,Source,RX J1031.3+5053,AGN,BL Lac,157.8271879,50.89328258,3.11E-11,Known Source,,
+397,Source,[VV2006] J074625.9+254901,AGN,Blazar,116.6078091,25.81725964,5.62E-12,Known Source,,
+398,Source,2EG J0220+4228,AGN,Blazar,35.66504782,43.03549987,4.74E-12,Known Source,,
+399,Source,2EGS J1800-4005,AGN,Blazar,270.6778336,-39.66886338,1.52E-12,Known Source,,
+400,Source,3C 279,AGN,Blazar,194.0465274,-5.789312542,1.86E-11,Known Source,,
+401,Source,3C 454.3,AGN,Blazar,343.4906168,16.14821153,5.88E-11,Known Source,,
+402,Source,3PBC J1152.9+3307,AGN,Blazar,178.2162924,33.12187901,3.17E-12,Known Source,,
+403,Source,4C 21.55,AGN,Blazar,308.3834635,21.77289057,2.1E-11,Known Source,,
+404,Source,4C 50.11,AGN,Blazar,59.87394697,50.96393385,6.73E-12,Known Source,,
+405,Source,CTA 102,AGN,Blazar,338.1517038,11.73080668,1.65E-11,Known Source,,
+406,Source,ICRF J150838.9-495302,AGN,Blazar,227.1622684,-49.88397663,3.8E-12,Known Source,,
+407,Source,IGR J02341+0228,AGN,Blazar,38.45501798,2.490321174,6.01E-12,Known Source,,
+408,Source,IGR J12224+0306,AGN,Blazar,185.5365717,3.121790344,4.4E-12,Known Source,,
+409,Source,IGR J12546+1139,AGN,Blazar,193.6593984,11.68497085,1.13E-12,Known Source,,
+410,Source,IGR J18129-0649,AGN,Blazar,273.2122783,-6.807024111,1.79E-12,Known Source,,
+411,Source,IGR J19443+2117,AGN,Blazar,295.98435,21.306494,2.58E-11,Known Source,,
+412,Source,IGR J21178+5139,AGN,Blazar,319.447571,51.647889,1.66E-11,Known Source,,
+413,Source,IGR J22517+2217,AGN,Blazar,342.9728949,22.29368268,4.61E-12,Known Source,,
+414,Source,LEDA 2703015,AGN,Blazar,174.125362,67.61787389,3.38E-11,Known Source,,
+415,Source,NRAO 140,AGN,Blazar,54.12544834,32.30815062,1.6E-11,Known Source,,
+416,Source,NRAO 190,AGN,Blazar,70.66108635,-0.295394711,2.68E-12,Known Source,,
+417,Source,NRAO 676,AGN,Blazar,330.4314052,50.81566364,6.74E-12,Known Source,,
+418,Source,PG 1718+481,AGN,Blazar,259.9093735,48.07006879,1.35E-12,Known Source,,
+419,Source,PKS 0235+164,AGN,Blazar,39.66220877,16.61646515,4.51E-12,Known Source,,
+420,Source,PKS 0528+134,AGN,Blazar,82.73506978,13.53198596,3.37E-12,Known Source,,
+421,Source,PKS 0637-752,AGN,Blazar,98.94378304,-75.27133789,8.08E-12,Known Source,,
+422,Source,PKS 1622-297,AGN,Blazar,246.5250868,-29.85749203,3.53E-12,Known Source,,
+423,Source,PKS 1830-211,AGN,Blazar,278.4164163,-21.06093579,1.62E-11,Known Source,,
+424,Source,PKS 2126-158,AGN,Blazar,322.3007329,-15.64473386,1.08E-11,Known Source,,
+425,Source,PKS 2149-306,AGN,Blazar,327.9813499,-30.46491614,2.19E-11,Known Source,,
+426,Source,PKS 2325+093,AGN,Blazar,351.889919,9.6692952,4.26E-12,Known Source,,
+427,Source,PMN J0641-0320,AGN,Blazar,100.4630539,-3.346828384,7.73E-12,Known Source,,
+428,Source,QSO B0208-512,AGN,Blazar,32.69250184,-51.0171925,3.35E-12,Known Source,,
+429,Source,QSO B0537-441,AGN,Blazar,84.70983983,-44.0858164,8.46E-12,Known Source,,
+430,Source,QSO B0836+710,AGN,Blazar,130.351522,70.89504807,3.34E-11,Known Source,,
+431,Source,QSO B0917+449,AGN,Blazar,140.243577,44.69832919,3.81E-12,Known Source,,
+432,Source,QSO B1127-145,AGN,Blazar,172.5293848,-14.82427445,7.85E-12,Known Source,,
+433,Source,QSO B1331+170,AGN,Blazar,203.3990948,16.81778153,1.14E-12,Known Source,,
+434,Source,QSO B1510-089,AGN,Blazar,228.2105539,-9.09995272,1.31E-11,Known Source,,
+435,Source,QSO B1739+522,AGN,Blazar,265.1540744,52.19539094,2.47E-12,Known Source,,
+436,Source,QSO B2052-474,AGN,Blazar,314.0681659,-47.24656325,4.17E-12,Known Source,,
+437,Source,QSO J0539-2839,AGN,Blazar,84.97617283,-28.66554115,4.11E-12,Known Source,,
+438,Source,QSO J0623-6436,AGN,Blazar,95.7820685,-64.60575625,7.62E-12,Known Source,,
+439,Source,SWIFT J165616.5-3302,AGN,Blazar,254.07016,-33.03621,7.23E-12,Known Source,,
+440,Source,IC 1459,AGN,LINER,344.2941951,-36.46222129,0.00000636,Known Source,,
+441,Source,NGC 315,AGN,LINER,14.4536806,30.35244776,1.27E-12,Known Source,,
+442,Source,NGC 4261,AGN,LINER,184.8467336,5.824916673,1.3E-12,Known Source,,
+443,Source,NGC 4278,AGN,LINER,185.0284342,29.2807561,0.00000076,Known Source,,
+444,Source,NGC 5005,AGN,LINER,197.734633,37.058942,0.00000116,Known Source,,
+445,Source,2E 1248.7+5706,AGN,Quasar,192.747252,56.833161,0.000000195,Known Source,,
+446,Source,2EG J0852-1237,AGN,Quasar,132.5401485,-12.22649337,1.33E-12,Known Source,,
+447,Source,2EG J1239+0441,AGN,Quasar,189.886482,4.718120284,1.45E-12,Known Source,,
+448,Source,2EGS J2322-0321,AGN,Quasar,350.8831406,-3.284728848,2.15E-12,Known Source,,
+449,Source,3C 254,AGN,Quasar,168.6613549,40.62231369,0.00000357,Known Source,,
+450,Source,3EG J0340-0201,AGN,Quasar,54.87890744,-1.776612275,2.29E-12,Known Source,,
+451,Source,3EG J0458-4635,AGN,Quasar,73.96155203,-46.26629994,3.15E-12,Known Source,,
+452,Source,3EG J1744-0310,AGN,Quasar,265.9952339,-3.834615759,2.66E-12,Known Source,,
+453,Source,3EG J1921-2015,AGN,Quasar,290.8841242,-21.07592587,2.12E-12,Known Source,,
+454,Source,3EG J1937-1529,AGN,Quasar,294.861074,-15.42862735,1.68E-11,Known Source,,
+455,Source,Cen B,AGN,Quasar,206.7043437,-60.40815428,7.92E-12,Known Source,,
+456,Source,CTS C25.36,AGN,Quasar,45.48248897,-43.51425798,6.13E-11,Known Source,,
+457,Source,GB6 B1428+4218,AGN,Quasar,217.5989235,42.07680307,2.53E-12,Known Source,,
+458,Source,HE 1104-1805,AGN,Quasar,166.6391022,-18.35661918,3.94E-10,Known Source,,
+459,Source,IGR J03184-0014,AGN,Quasar,49.57308,-0.29728,3.93E-12,Known Source,,
+460,Source,IGR J11015+7224,AGN,Quasar,165.4533571,72.4269775,2.99E-12,Known Source,,
+461,Source,PDS 456,AGN,Quasar,262.0824556,-14.26551526,6.54E-12,Known Source,,
+462,Source,PG 1148+549,AGN,Quasar,177.8352497,54.62584721,4.04E-11,Known Source,,
+463,Source,PG 1247+267,AGN,Quasar,192.5238112,26.51877732,3.56E-12,Known Source,,
+464,Source,PG 1407+265,AGN,Quasar,212.3496191,26.30584902,1.31E-12,Known Source,,
+465,Source,PG 1634+706,AGN,Quasar,248.6207988,70.52566484,1.93E-12,Known Source,,
+466,Source,PHL 1377,AGN,Quasar,38.78059102,-4.034810305,3.6E-12,Known Source,,
+467,Source,PKS 0237-233,AGN,Quasar,40.03405991,-23.15436917,1.62E-11,Known Source,,
+468,Source,PKS 0332-403,AGN,Quasar,53.5568937,-40.14038833,8.09E-12,Known Source,,
+469,Source,PKS 0405-385,AGN,Quasar,61.74598057,-38.44112288,1.16E-12,Known Source,,
+470,Source,PKS 0438-436,AGN,Quasar,70.07158323,-43.55239009,3.33E-12,Known Source,,
+471,Source,PKS 0440-285,AGN,Quasar,70.65690495,-28.42523186,2.08E-12,Known Source,,
+472,Source,PKS 0454-234,AGN,Quasar,74.26324643,-23.41445031,1.67E-12,Known Source,,
+473,Source,PKS 0736+01,AGN,Quasar,114.8251412,1.617949375,6.88E-12,Known Source,,
+474,Source,PKS 1614+051,AGN,Quasar,244.1564867,4.992426825,1.99E-12,Known Source,,
+475,Source,PKS 2209+236,AGN,Quasar,333.0248596,23.92792884,,Known Source,,
+476,Source,QSO B0130-171,AGN,Quasar,23.18119776,-16.91347836,2.08E-12,Known Source,,
+477,Source,QSO B0420-014,AGN,Quasar,65.81583634,-1.342518224,4.26E-12,Known Source,,
+478,Source,QSO B0458-020,AGN,Quasar,75.30337452,-1.98729346,2.51E-12,Known Source,,
+479,Source,QSO B0804+499,AGN,Quasar,122.1652762,49.84348067,1.84E-12,Known Source,,
+480,Source,QSO B1101-264,AGN,Quasar,165.8554139,-26.75439127,0.000000162,Known Source,,
+481,Source,QSO B1229-021,AGN,Quasar,188.0000665,-2.401331408,1.71E-12,Known Source,,
+482,Source,QSO B1313-333,AGN,Quasar,199.0332748,-33.64977019,3.14E-12,Known Source,,
+483,Source,QSO B1317+520,AGN,Quasar,199.9424921,51.80160505,1.4E-12,Known Source,,
+484,Source,QSO B1406-076,AGN,Quasar,212.2353384,-7.874074036,,Known Source,,
+485,Source,QSO B1424-418,AGN,Quasar,216.9845732,-42.10539934,4.2E-12,Known Source,,
+486,Source,QSO B1606+106,AGN,Quasar,242.1925133,10.48549326,2.25E-12,Known Source,,
+487,Source,QSO B1611+343,AGN,Quasar,243.421101,34.21330801,1.56E-12,Known Source,,
+488,Source,QSO B1622-253,AGN,Quasar,246.4453818,-25.46064635,1.84E-12,Known Source,,
+489,Source,QSO B1633+382,AGN,Quasar,248.8145541,38.1345835,6.2E-12,Known Source,,
+490,Source,QSO B1730-130,AGN,Quasar,263.2612741,-13.08043006,2.86E-12,Known Source,,
+491,Source,QSO B1908-202,AGN,Quasar,287.7902204,-20.11530807,2.66E-12,Known Source,,
+492,Source,QSO B1933-400,AGN,Quasar,294.3175723,-39.96709809,4.37E-12,Known Source,,
+493,Source,QSO J1044+8054,AGN,Quasar,161.096094,80.9109564,4.35E-12,Known Source,,
+494,Source,S5 0014+813,AGN,Quasar,4.285312071,81.58559347,5.54E-12,Known Source,,
+495,Source,[VV96] J091609.5-621929,AGN,Seyfert 1 Galaxy,139.0390259,-62.32487837,2.4E-11,Known Source,,
+496,Source,1H 0419-577,AGN,Seyfert 1 Galaxy,66.50299507,-57.20049164,3.69E-11,Known Source,,
+497,Source,1H 0707-495,AGN,Seyfert 1 Galaxy,107.1728694,-49.55175248,4.53E-12,Known Source,,
+498,Source,1H 2251-179,AGN,Seyfert 1 Galaxy,343.5245244,-17.58205618,8.33E-11,Known Source,,
+499,Source,2E 1849.2-7832,AGN,Seyfert 1 Galaxy,284.2823134,-78.4725595,1.21E-11,Known Source,,
+500,Source,2E 1923.7+5037,AGN,Seyfert 1 Galaxy,291.259097,50.72049873,1.33E-11,Known Source,,
+501,Source,2EG J1054+5736,AGN,Seyfert 1 Galaxy,164.6571986,56.46977983,7.81E-12,Known Source,,
+502,Source,2MASS J03120297+5029146,AGN,Seyfert 1 Galaxy,48.01239759,50.48737824,1.02E-11,Known Source,,
+503,Source,2MASS J06340353-7446377,AGN,Seyfert 1 Galaxy,98.51483087,-74.7771239,3.5E-12,Known Source,,
+504,Source,2MASS J08452137-3530242,AGN,Seyfert 1 Galaxy,131.3390549,-35.50672431,7.51E-12,Known Source,,
+505,Source,2MASS J11053761+5851208,AGN,Seyfert 1 Galaxy,166.4067817,58.85577594,3.74E-12,Known Source,,
+506,Source,2MASS J17525246-0532064,AGN,Seyfert 1 Galaxy,268.2186263,-5.535146924,5.71E-12,Known Source,,
+507,Source,2MASS J19334715+3254259,AGN,Seyfert 1 Galaxy,293.4464935,32.90720487,2.62E-11,Known Source,,
+508,Source,2MASS J21394497+5950150,AGN,Seyfert 1 Galaxy,324.9373469,59.8375071,9.81E-12,Known Source,,
+509,Source,2MASX J21561518+1722525,AGN,Seyfert 1 Galaxy,329.0634621,17.38127596,3.08E-12,Known Source,,
+510,Source,2QZ J120045.2-011041,AGN,Seyfert 1 Galaxy,180.1887973,-1.178109264,1.69E-11,Known Source,,
+511,Source,3C 109,AGN,Seyfert 1 Galaxy,63.41808751,11.20410722,5.68E-09,Known Source,,
+512,Source,3C 111,AGN,Seyfert 1 Galaxy,64.58865518,38.02661149,7.15E-11,Known Source,,
+513,Source,3C 206,AGN,Seyfert 1 Galaxy,129.9607623,-12.24286866,1.73E-11,Known Source,,
+514,Source,3C 219,AGN,Seyfert 1 Galaxy,140.2859409,45.64926617,3.62E-12,Known Source,,
+515,Source,3C 249.1,AGN,Seyfert 1 Galaxy,166.0577548,76.98283182,8.56E-12,Known Source,,
+516,Source,3C 287.1,AGN,Seyfert 1 Galaxy,203.2219606,2.012694214,6.81E-12,Known Source,,
+517,Source,3C 303,AGN,Seyfert 1 Galaxy,220.7615029,52.02702737,4.73E-12,Known Source,,
+518,Source,3C 380,AGN,Seyfert 1 Galaxy,277.3824207,48.7461556,7.05E-12,Known Source,,
+519,Source,3C 382,AGN,Seyfert 1 Galaxy,278.7641234,32.69634888,8.22E-11,Known Source,,
+520,Source,3C 390.3,AGN,Seyfert 1 Galaxy,280.5374604,79.7714244,8.62E-11,Known Source,,
+521,Source,3C 445,AGN,Seyfert 1 Galaxy,335.9564171,-2.10357207,8.88E-12,Known Source,,
+522,Source,3EG J1727+0429,AGN,Seyfert 1 Galaxy,262.1039697,4.451364953,2.32E-12,Known Source,,
+523,Source,3PBC J1231.3+7044,AGN,Seyfert 1 Galaxy,187.9023294,70.73732004,9.35E-12,Known Source,,
+524,Source,3PBC J1342.0+3539,AGN,Seyfert 1 Galaxy,205.5349173,35.65429653,2.49E-11,Known Source,,
+525,Source,4C 04.42,AGN,Seyfert 1 Galaxy,185.5939568,4.221048909,5.29E-12,Known Source,,
+526,Source,4C 74.26,AGN,Seyfert 1 Galaxy,310.6554497,75.13401274,4.56E-11,Known Source,,
+527,Source,4U 0106-59,AGN,Seyfert 1 Galaxy,20.94067981,-58.80578026,6.03E-11,Known Source,,
+528,Source,4U 1628+28,AGN,Seyfert 1 Galaxy,247.851792,29.88376812,1.1E-12,Known Source,,
+529,Source,AKARI-IRC-V1 J1930138+341048,AGN,Seyfert 1 Galaxy,292.5575,34.1803,2.9E-12,Known Source,,
+530,Source,Ark 120,AGN,Seyfert 1 Galaxy,79.04753853,-0.14976588,5.77E-11,Known Source,,
+531,Source,CTS 109,AGN,Seyfert 1 Galaxy,323.0091769,-33.71494004,2.12E-11,Known Source,,
+532,Source,ESO 140-43,AGN,Seyfert 1 Galaxy,281.2249554,-62.36468728,2.36E-11,Known Source,,
+533,Source,ESO 198-24,AGN,Seyfert 1 Galaxy,39.5821519,-52.19231775,4.56E-11,Known Source,,
+534,Source,ESO 209-12,AGN,Seyfert 1 Galaxy,120.4915522,-49.77844311,9.98E-12,Known Source,,
+535,Source,ESO 25-G002,AGN,Seyfert 1 Galaxy,283.6677671,-78.89836281,2.26E-12,Known Source,,
+536,Source,ESO 265-23,AGN,Seyfert 1 Galaxy,170.2000369,-43.26399218,1.74E-11,Known Source,,
+537,Source,ESO 31-8,AGN,Seyfert 1 Galaxy,46.89726634,-72.83405466,1.18E-11,Known Source,,
+538,Source,ESO 328-36,AGN,Seyfert 1 Galaxy,228.6958,-40.3586,1.4E-12,Known Source,,
+539,Source,ESO 399-20,AGN,Seyfert 1 Galaxy,301.7413598,-34.54851575,2.32E-12,Known Source,,
+540,Source,ESO 490-26,AGN,Seyfert 1 Galaxy,100.0487164,-25.89529436,2.88E-11,Known Source,,
+541,Source,EXO 055620-3820.2,AGN,Seyfert 1 Galaxy,89.50856946,-38.33457005,3.56E-12,Known Source,,
+542,Source,EXO 1128.1+6908,AGN,Seyfert 1 Galaxy,172.7698511,68.86472119,1.28E-11,Known Source,,
+543,Source,Fairall 303,AGN,Seyfert 1 Galaxy,67.66680405,-53.61545573,7.54E-12,Known Source,,
+544,Source,H 1029-140,AGN,Seyfert 1 Galaxy,157.9763224,-14.28093836,4.34E-11,Known Source,,
+545,Source,H 1846-786,AGN,Seyfert 1 Galaxy,281.7612186,-78.53044703,1.98E-11,Known Source,,
+546,Source,HE 1434-1600,AGN,Seyfert 1 Galaxy,219.2067519,-16.22811012,1.28E-11,Known Source,,
+547,Source,IC 4329A,AGN,Seyfert 1 Galaxy,207.3302508,-30.30950384,1.73E-10,Known Source,,
+548,Source,IGR J00158+5605,AGN,Seyfert 1 Galaxy,3.975760577,56.04931447,1.6E-12,Known Source,,
+549,Source,IGR J02045-1156,AGN,Seyfert 1 Galaxy,31.15316586,-11.99540959,1.13E-12,Known Source,,
+550,Source,IGR J02086-1742,AGN,Seyfert 1 Galaxy,32.14559706,-17.65963404,9.14E-12,Known Source,,
+551,Source,IGR J03334+3718,AGN,Seyfert 1 Galaxy,53.32829037,37.30310128,1.19E-11,Known Source,,
+552,Source,IGR J04221+4856,AGN,Seyfert 1 Galaxy,65.50218194,48.93434484,4.68E-12,Known Source,,
+553,Source,IGR J04288-6702,AGN,Seyfert 1 Galaxy,67.44758534,-67.05561392,3.27E-12,Known Source,,
+554,Source,IGR J05347-6015,AGN,Seyfert 1 Galaxy,83.62872486,-60.27094871,8.15E-12,Known Source,,
+555,Source,IGR J06058-2755,AGN,Seyfert 1 Galaxy,91.45399244,-27.91110956,1.32E-11,Known Source,,
+556,Source,IGR J06569-6534,AGN,Seyfert 1 Galaxy,104.1241333,-65.56048112,3.38E-12,Known Source,,
+557,Source,IGR J07597-3842,AGN,Seyfert 1 Galaxy,119.9242706,-38.73223382,3.05E-11,Known Source,,
+558,Source,IGR J09094+2735,AGN,Seyfert 1 Galaxy,137.3281321,27.62608199,0.000000166,Known Source,,
+559,Source,IGR J09446-2636,AGN,Seyfert 1 Galaxy,146.15425,-26.565406,9.38E-12,Known Source,,
+560,Source,IGR J10147-6354,AGN,Seyfert 1 Galaxy,153.5646,-63.8639,2.14E-12,Known Source,,
+561,Source,IGR J11457-1827,AGN,Seyfert 1 Galaxy,176.4186056,-18.45415637,4.37E-11,Known Source,,
+562,Source,IGR J12107+3822,AGN,Seyfert 1 Galaxy,182.6844875,38.33616625,6.84E-12,Known Source,,
+563,Source,IGR J12136-0527,AGN,Seyfert 1 Galaxy,183.477453,-5.505444501,7.76E-12,Known Source,,
+564,Source,IGR J12172+0710,AGN,Seyfert 1 Galaxy,184.2911746,7.191575941,4.79E-12,Known Source,,
+565,Source,IGR J13038+5348,AGN,Seyfert 1 Galaxy,195.997898,53.79164548,5.51E-11,Known Source,,
+566,Source,IGR J13109-5552,AGN,Seyfert 1 Galaxy,197.6806485,-55.8698694,8.11E-12,Known Source,,
+567,Source,IGR J13133-1109,AGN,Seyfert 1 Galaxy,198.2740877,-11.1284361,1.75E-11,Known Source,,
+568,Source,IGR J13168-7157,AGN,Seyfert 1 Galaxy,199.2262566,-71.92417291,8.5E-12,Known Source,,
+569,Source,IGR J13466+1921,AGN,Seyfert 1 Galaxy,206.6183994,19.37866718,5.68E-12,Known Source,,
+570,Source,IGR J14080-3023,AGN,Seyfert 1 Galaxy,212.0282566,-30.39832197,1.04E-11,Known Source,,
+571,Source,IGR J14488-4008,AGN,Seyfert 1 Galaxy,222.2123989,-40.146031,4.6E-12,Known Source,,
+572,Source,IGR J14552-5133,AGN,Seyfert 1 Galaxy,223.8229968,-51.57088384,1.23E-11,Known Source,,
+573,Source,IGR J15301-3840,AGN,Seyfert 1 Galaxy,232.5347544,-38.65105324,4.74E-12,Known Source,,
+574,Source,IGR J15311-3737,AGN,Seyfert 1 Galaxy,232.7157539,-37.58258973,3.04E-12,Known Source,,
+575,Source,IGR J16056-6110,AGN,Seyfert 1 Galaxy,241.4629598,-61.19560751,2.43E-12,Known Source,,
+576,Source,IGR J16119-6036,AGN,Seyfert 1 Galaxy,242.9641433,-60.63195285,1.3E-11,Known Source,,
+577,Source,IGR J16185-5928,AGN,Seyfert 1 Galaxy,244.6519184,-59.45479876,8.04E-12,Known Source,,
+578,Source,IGR J16385-2057,AGN,Seyfert 1 Galaxy,249.6288003,-20.92349019,1.4E-11,Known Source,,
+579,Source,IGR J16482-3036,AGN,Seyfert 1 Galaxy,252.063542,-30.58447438,1.35E-11,Known Source,,
+580,Source,IGR J16558-5203,AGN,Seyfert 1 Galaxy,254.0233596,-52.06134837,2.89E-11,Known Source,,
+581,Source,IGR J17418-1212,AGN,Seyfert 1 Galaxy,265.4802219,-12.19905101,1.72E-11,Known Source,,
+582,Source,IGR J17476-2253,AGN,Seyfert 1 Galaxy,266.87383,-22.87914,7.84E-12,Known Source,,
+583,Source,IGR J17488-2338,AGN,Seyfert 1 Galaxy,267.16271,-23.58922,3.5E-12,Known Source,,
+584,Source,IGR J17513-2011,AGN,Seyfert 1 Galaxy,267.8067514,-20.20405019,8.26E-12,Known Source,,
+585,Source,IGR J18027-1455,AGN,Seyfert 1 Galaxy,270.6971,-14.9153,2.67E-11,Known Source,,
+586,Source,IGR J18078+1123,AGN,Seyfert 1 Galaxy,271.9579677,11.34695578,1.11E-11,Known Source,,
+587,Source,IGR J18249-3243,AGN,Seyfert 1 Galaxy,276.2329,-32.7158,6.89E-12,Known Source,,
+588,Source,IGR J18538-0102,AGN,Seyfert 1 Galaxy,283.45208,-1.04167,7.74E-12,Known Source,,
+589,Source,IGR J18559+1535,AGN,Seyfert 1 Galaxy,284.005342,15.634972,1.39E-11,Known Source,,
+590,Source,IGR J19077-3925,AGN,Seyfert 1 Galaxy,286.9598283,-39.39216951,7.19E-12,Known Source,,
+591,Source,IGR J19405-3016,AGN,Seyfert 1 Galaxy,295.0628966,-30.26435468,2.45E-11,Known Source,,
+592,Source,IGR J19491-1035,AGN,Seyfert 1 Galaxy,297.2886278,-10.57362511,9.22E-12,Known Source,,
+593,Source,IGR J21277+5656,AGN,Seyfert 1 Galaxy,321.9391423,56.9430322,4.36E-11,Known Source,,
+594,Source,IGR J21565+5948,AGN,Seyfert 1 Galaxy,329.0174704,59.93459774,1.6E-12,Known Source,,
+595,Source,IGR J22292+6647,AGN,Seyfert 1 Galaxy,337.3077153,66.78095832,9.12E-12,Known Source,,
+596,Source,IRAS 05589+2828,AGN,Seyfert 1 Galaxy,90.54362873,28.4720577,2.71E-11,Known Source,,
+597,Source,IRAS 15091-2107,AGN,Seyfert 1 Galaxy,227.999187,-21.31709354,1.87E-11,Known Source,,
+598,Source,IRAS F00317-2142,AGN,Seyfert 1 Galaxy,8.5565,-21.44,2.11E-12,Known Source,,
+599,Source,IRAS F11598-0112,AGN,Seyfert 1 Galaxy,180.6121644,-1.4851929,7.71E-12,Known Source,,
+600,Source,IRAS F12397+3333,AGN,Seyfert 1 Galaxy,190.5441877,33.28407303,1.53E-11,Known Source,,
+601,Source,IRAS F17020+4544,AGN,Seyfert 1 Galaxy,255.8765934,45.67976838,1.59E-11,Known Source,,
+602,Source,LB 2136,AGN,Seyfert 1 Galaxy,178.3519443,49.51911948,9.73E-12,Known Source,,
+603,Source,LEDA 075258,AGN,Seyfert 1 Galaxy,75.53769671,3.53053639,9.04E-12,Known Source,,
+604,Source,LEDA 1358514,AGN,Seyfert 1 Galaxy,176.979495,9.041339329,7.44E-12,Known Source,,
+605,Source,LEDA 154502,AGN,Seyfert 1 Galaxy,149.9276889,-31.2162475,1.78E-11,Known Source,,
+606,Source,LEDA 168563,AGN,Seyfert 1 Galaxy,73.01988484,49.54576411,3.91E-11,Known Source,,
+607,Source,LEDA 2034356,AGN,Seyfert 1 Galaxy,319.871367,33.549075,1.32E-11,Known Source,,
+608,Source,LEDA 225607,AGN,Seyfert 1 Galaxy,228.6748197,-81.3938926,1.17E-11,Known Source,,
+609,Source,LEDA 3095437,AGN,Seyfert 1 Galaxy,8.569985133,-79.08895182,1.72E-11,Known Source,,
+610,Source,LEDA 3095705,AGN,Seyfert 1 Galaxy,72.93337088,-58.18341525,7.95E-12,Known Source,,
+611,Source,LEDA 3096545,AGN,Seyfert 1 Galaxy,260.8466798,36.50282282,1.5E-11,Known Source,,
+612,Source,LEDA 3096594,AGN,Seyfert 1 Galaxy,311.0177314,28.55261233,1.27E-11,Known Source,,
+613,Source,LEDA 31297,AGN,Seyfert 1 Galaxy,158.6608262,39.64116307,7.89E-12,Known Source,,
+614,Source,LEDA 36541,AGN,Seyfert 1 Galaxy,176.1244615,36.88572676,5.87E-12,Known Source,,
+615,Source,LEDA 5061286,AGN,Seyfert 1 Galaxy,159.6881954,-49.78157744,1.02E-11,Known Source,,
+616,Source,LEDA 86073,AGN,Seyfert 1 Galaxy,115.811375,-25.76401773,1.55E-11,Known Source,,
+617,Source,LEDA 88835,AGN,Seyfert 1 Galaxy,201.3307523,-38.41461436,3.42E-12,Known Source,,
+618,Source,MCG -01-13-025,AGN,Seyfert 1 Galaxy,72.92299316,-3.809369666,5.18E-12,Known Source,,
+619,Source,MCG+04-01-002,AGN,Seyfert 1 Galaxy,358.9509287,25.50884486,3.19E-12,Known Source,,
+620,Source,MCG-01-01-043,AGN,Seyfert 1 Galaxy,2.541583426,-4.710534837,3.28E-12,Known Source,,
+621,Source,MCG-02-58-022,AGN,Seyfert 1 Galaxy,346.1811567,-8.68573041,3.09E-11,Known Source,,
+622,Source,Mrk 0040,AGN,Seyfert 1 Galaxy,171.4006416,54.38253161,1.83E-11,Known Source,,
+623,Source,Mrk 0464,AGN,Seyfert 1 Galaxy,208.9730316,38.57463334,2.22E-12,Known Source,,
+624,Source,Mrk 1018,AGN,Seyfert 1 Galaxy,31.56662345,-0.291450482,1.42E-11,Known Source,,
+625,Source,Mrk 1152,AGN,Seyfert 1 Galaxy,18.45864305,-14.84565541,1.81E-11,Known Source,,
+626,Source,Mrk 1310,AGN,Seyfert 1 Galaxy,180.3098043,-3.678059737,1.21E-11,Known Source,,
+627,Source,Mrk 1383,AGN,Seyfert 1 Galaxy,217.2773833,1.285043058,1.91E-11,Known Source,,
+628,Source,Mrk 142,AGN,Seyfert 1 Galaxy,156.3803279,51.67635219,6.82E-12,Known Source,,
+629,Source,Mrk 205,AGN,Seyfert 1 Galaxy,185.433635,75.3106225,1.76E-11,Known Source,,
+630,Source,Mrk 231,AGN,Seyfert 1 Galaxy,194.0593088,56.87367733,1.18E-12,Known Source,,
+631,Source,Mrk 279,AGN,Seyfert 1 Galaxy,208.2643121,69.3081697,2.35E-11,Known Source,,
+632,Source,Mrk 290,AGN,Seyfert 1 Galaxy,233.9683463,57.90264324,1.29E-11,Known Source,,
+633,Source,Mrk 335,AGN,Seyfert 1 Galaxy,1.581405141,20.20294928,1.29E-11,Known Source,,
+634,Source,Mrk 352,AGN,Seyfert 1 Galaxy,14.97202299,31.82701505,1.38E-11,Known Source,,
+635,Source,Mrk 42,AGN,Seyfert 1 Galaxy,178.4240552,46.2117151,4.69E-12,Known Source,,
+636,Source,Mrk 478,AGN,Seyfert 1 Galaxy,220.531131,35.43970517,7.65E-12,Known Source,,
+637,Source,Mrk 50,AGN,Seyfert 1 Galaxy,185.8505677,2.679013724,2.07E-11,Known Source,,
+638,Source,Mrk 507,AGN,Seyfert 1 Galaxy,267.160096,68.704461,1.29E-12,Known Source,,
+639,Source,Mrk 541,AGN,Seyfert 1 Galaxy,359.0081333,7.523133795,4.85E-10,Known Source,,
+640,Source,Mrk 584,AGN,Seyfert 1 Galaxy,30.10973374,2.66951301,9.48E-12,Known Source,,
+641,Source,Mrk 590,AGN,Seyfert 1 Galaxy,33.6398353,-0.766717179,1.17E-11,Known Source,,
+642,Source,Mrk 6,AGN,Seyfert 1 Galaxy,103.0513943,74.42697812,1.36E-11,Known Source,,
+643,Source,Mrk 699,AGN,Seyfert 1 Galaxy,245.9411694,41.08234158,3.35E-10,Known Source,,
+644,Source,Mrk 705,AGN,Seyfert 1 Galaxy,141.5136227,12.73437011,2.64E-11,Known Source,,
+645,Source,Mrk 771,AGN,Seyfert 1 Galaxy,188.0150932,20.15819329,9.72E-12,Known Source,,
+646,Source,Mrk 783,AGN,Seyfert 1 Galaxy,195.744888,16.407664,1.18E-11,Known Source,,
+647,Source,Mrk 817,AGN,Seyfert 1 Galaxy,219.0920086,58.79427637,2.06E-11,Known Source,,
+648,Source,Mrk 876,AGN,Seyfert 1 Galaxy,243.4882479,65.7194313,8.29E-12,Known Source,,
+649,Source,Mrk 957,AGN,Seyfert 1 Galaxy,10.47263423,40.35490217,2.11E-12,Known Source,,
+650,Source,NAB 0205+02,AGN,Seyfert 1 Galaxy,31.95775793,2.715521322,1.57E-12,Known Source,,
+651,Source,NGC 1365,AGN,Seyfert 1 Galaxy,53.401908,-36.140658,3.07E-11,Known Source,,
+652,Source,NGC 253,AGN,Seyfert 1 Galaxy,11.888058,-25.2888,1.15E-11,Known Source,,
+653,Source,NGC 2617,AGN,Seyfert 1 Galaxy,128.9116588,-4.088305862,3.8E-11,Known Source,,
+654,Source,NGC 3516,AGN,Seyfert 1 Galaxy,166.6977634,72.56869399,3.41E-11,Known Source,,
+655,Source,NGC 3783,AGN,Seyfert 1 Galaxy,174.7571237,-37.73861379,8.23E-11,Known Source,,
+656,Source,NGC 3822,AGN,Seyfert 1 Galaxy,175.5462347,10.27776833,6.68E-12,Known Source,,
+657,Source,NGC 4593,AGN,Seyfert 1 Galaxy,189.914348,-5.344176386,5.06E-11,Known Source,,
+658,Source,NGC 4639,AGN,Seyfert 1 Galaxy,190.7182438,13.25741838,1.61E-12,Known Source,,
+659,Source,NGC 4748,AGN,Seyfert 1 Galaxy,193.0519379,-13.41479501,1.02E-11,Known Source,,
+660,Source,NGC 5683,AGN,Seyfert 1 Galaxy,218.7185782,48.66186971,1.11E-12,Known Source,,
+661,Source,NGC 7213,AGN,Seyfert 1 Galaxy,332.3175419,-47.16669889,2.54E-11,Known Source,,
+662,Source,NGC 7469,AGN,Seyfert 1 Galaxy,345.8151,8.8739,6.23E-11,Known Source,,
+663,Source,NGC 7603,AGN,Seyfert 1 Galaxy,349.7360576,0.243882518,4.12E-11,Known Source,,
+664,Source,NGC 985,AGN,Seyfert 1 Galaxy,38.657842,-8.788061,1.9E-11,Known Source,,
+665,Source,PG 0804+761,AGN,Seyfert 1 Galaxy,122.744434,76.04512513,2.54E-11,Known Source,,
+666,Source,PG 0844+349,AGN,Seyfert 1 Galaxy,131.926869,34.75124514,2.19E-12,Known Source,,
+667,Source,PG 0953+415,AGN,Seyfert 1 Galaxy,149.2183048,41.25616979,1.06E-11,Known Source,,
+668,Source,PG 1116+215,AGN,Seyfert 1 Galaxy,169.7861609,21.32166308,1.05E-11,Known Source,,
+669,Source,PG 1211+143,AGN,Seyfert 1 Galaxy,183.5736411,14.05366187,8.03E-12,Known Source,,
+670,Source,PG 1216+069,AGN,Seyfert 1 Galaxy,184.8372159,6.644018628,3.3E-12,Known Source,,
+671,Source,PG 1244+026,AGN,Seyfert 1 Galaxy,191.6468866,2.369106263,2.69E-11,Known Source,,
+672,Source,PG 1309+355,AGN,Seyfert 1 Galaxy,198.0739696,35.25585735,2.69E-12,Known Source,,
+673,Source,PG 1404+226,AGN,Seyfert 1 Galaxy,211.5912087,22.39625432,1.66E-11,Known Source,,
+674,Source,PG 1416-129,AGN,Seyfert 1 Galaxy,214.7659044,-13.179107,7.2E-12,Known Source,,
+675,Source,PG 1425+267,AGN,Seyfert 1 Galaxy,216.8983654,26.53737255,0.000000222,Known Source,,
+676,Source,PG 1444+407,AGN,Seyfert 1 Galaxy,221.6914134,40.58494368,9.74E-12,Known Source,,
+677,Source,PG 1501+106,AGN,Seyfert 1 Galaxy,226.0049731,10.43771678,2.65E-11,Known Source,,
+678,Source,PG 1543+489,AGN,Seyfert 1 Galaxy,236.3759828,48.76916011,3.36E-11,Known Source,,
+679,Source,PHL 1092,AGN,Seyfert 1 Galaxy,24.98237404,6.322922446,3.3E-12,Known Source,,
+680,Source,PICTOR A,AGN,Seyfert 1 Galaxy,79.95717888,-45.77884796,2.42E-11,Known Source,,
+681,Source,PKS 0405-12,AGN,Seyfert 1 Galaxy,61.95179577,-12.19351665,1.5E-11,Known Source,,
+682,Source,PKS 0558-504,AGN,Seyfert 1 Galaxy,89.94746526,-50.44778499,3.56E-11,Known Source,,
+683,Source,PKS 1143-696,AGN,Seyfert 1 Galaxy,176.4734337,-69.90049947,7.32E-12,Known Source,,
+684,Source,PKS 1217+02,AGN,Seyfert 1 Galaxy,185.0495194,2.061728877,9.5E-12,Known Source,,
+685,Source,PKS 1451-375,AGN,Seyfert 1 Galaxy,223.6142073,-37.79254023,5.16E-12,Known Source,,
+686,Source,PKS 1916-300,AGN,Seyfert 1 Galaxy,289.8668511,-29.9689069,1.13E-11,Known Source,,
+687,Source,PKS 2152-69,AGN,Seyfert 1 Galaxy,329.2749172,-69.68991279,1.58E-11,Known Source,,
+688,Source,QSO B0007+107,AGN,Seyfert 1 Galaxy,2.629191267,10.97486231,1.57E-11,Known Source,,
+689,Source,QSO B0050+124,AGN,Seyfert 1 Galaxy,13.39555463,12.69331369,1.11E-11,Known Source,,
+690,Source,QSO B0309+411,AGN,Seyfert 1 Galaxy,48.2581755,41.33366207,1.14E-11,Known Source,,
+691,Source,QSO B0521-365,AGN,Seyfert 1 Galaxy,80.74160267,-36.4585698,2.8E-11,Known Source,,
+692,Source,QSO B0827+243,AGN,Seyfert 1 Galaxy,127.7170258,24.18328341,5.42E-12,Known Source,,
+693,Source,QSO B0829+046,AGN,Seyfert 1 Galaxy,127.9536542,4.49419079,3.4E-12,Known Source,,
+694,Source,QSO B0923+392,AGN,Seyfert 1 Galaxy,141.7625581,39.0391255,6.12E-12,Known Source,,
+695,Source,QSO B0954+556,AGN,Seyfert 1 Galaxy,149.4090998,55.38270971,1.19E-12,Known Source,,
+696,Source,QSO B1156+295,AGN,Seyfert 1 Galaxy,179.8826413,29.24550745,3.85E-12,Known Source,,
+697,Source,QSO B1222+216,AGN,Seyfert 1 Galaxy,186.2269096,21.37955153,5.96E-12,Known Source,,
+698,Source,QSO B1334+2438,AGN,Seyfert 1 Galaxy,204.3279997,24.38425552,4.93E-12,Known Source,,
+699,Source,QSO B1419+480,AGN,Seyfert 1 Galaxy,215.3739464,47.79013355,1.73E-11,Known Source,,
+700,Source,QSO B1821+643,AGN,Seyfert 1 Galaxy,275.4883876,64.34339481,8.43E-11,Known Source,,
+701,Source,RBS 1011,AGN,Seyfert 1 Galaxy,174.7873788,59.198547,1.74E-11,Known Source,,
+702,Source,RBS 1044,AGN,Seyfert 1 Galaxy,178.0147895,-11.37335862,1.71E-11,Known Source,,
+703,Source,RBS 1303,AGN,Seyfert 1 Galaxy,205.3036816,-14.64451328,2.51E-11,Known Source,,
+704,Source,RBS 345,AGN,Seyfert 1 Galaxy,40.56099572,5.509992623,9.09E-12,Known Source,,
+705,Source,RE J2248-511,AGN,Seyfert 1 Galaxy,342.1715448,-51.16481177,1.02E-11,Known Source,,
+706,Source,RGB J0044+193,AGN,Seyfert 1 Galaxy,11.24636543,19.36145676,3.33E-12,Known Source,,
+707,Source,RHS 39,AGN,Seyfert 1 Galaxy,214.843353,-26.64475958,2.31E-11,Known Source,,
+708,Source,RHS 61,AGN,Seyfert 1 Galaxy,351.4760418,21.8871866,9.69E-12,Known Source,,
+709,Source,RX J0148.4-2758,AGN,Seyfert 1 Galaxy,27.09303823,-27.97378565,7.1E-12,Known Source,,
+710,Source,RX J0439.7-4540,AGN,Seyfert 1 Galaxy,69.93699337,-45.67850138,1.58E-12,Known Source,,
+711,Source,RX J1459.9+3337,AGN,Seyfert 1 Galaxy,224.9934835,33.61716007,1.5E-12,Known Source,,
+712,Source,RX J2135.9+4728,AGN,Seyfert 1 Galaxy,323.9750838,47.47274759,1.19E-11,Known Source,,
+713,Source,RX J2217.9-5941,AGN,Seyfert 1 Galaxy,334.4860691,-59.69189269,4.07E-12,Known Source,,
+714,Source,S5 2116+81,AGN,Seyfert 1 Galaxy,318.5048806,82.08009459,2.59E-11,Known Source,,
+715,Source,Ton S 180,AGN,Seyfert 1 Galaxy,14.33418367,-22.382382,2.01E-11,Known Source,,
+716,Source,UGC 3478,AGN,Seyfert 1 Galaxy,98.19655295,63.67368989,1.28E-11,Known Source,,
+717,Source,UGC 6728,AGN,Seyfert 1 Galaxy,176.3164318,79.68149352,2.04E-11,Known Source,,
+718,Source,Was 49,AGN,Seyfert 1 Galaxy,183.5742261,29.52866107,2.58E-12,Known Source,,
+719,Source,XSS J12303-4232,AGN,Seyfert 1 Galaxy,188.0500577,-42.29737525,1.6E-11,Known Source,,
+720,Source,Z 493-2,AGN,Seyfert 1 Galaxy,324.6392945,32.08493984,3.86E-12,Known Source,,
+721,Source,1AXG J135417-3746,AGN,Seyfert 2 Galaxy,208.5641747,-37.77588532,9.35E-12,Known Source,,
+722,Source,2MASS J15533475+2614413,AGN,Seyfert 2 Galaxy,238.3947458,26.24483916,1.63E-12,Known Source,,
+723,Source,2MASX J03574513+4155049,AGN,Seyfert 2 Galaxy,59.43804888,41.91811133,6.9E-12,Known Source,,
+724,Source,2MASX J05442257+5907361,AGN,Seyfert 2 Galaxy,86.09400601,59.12665096,6.65E-12,Known Source,,
+725,Source,2MASX J18212680+5955209,AGN,Seyfert 2 Galaxy,275.3619006,59.92251778,2.96E-12,Known Source,,
+726,Source,3C 098,AGN,Seyfert 2 Galaxy,59.72682085,10.43410885,3.12E-12,Known Source,,
+727,Source,3C 403,AGN,Seyfert 2 Galaxy,298.0658321,2.506732834,2.54E-12,Known Source,,
+728,Source,3C 433,AGN,Seyfert 2 Galaxy,320.935741,25.07435296,3.51E-12,Known Source,,
+729,Source,3C 452,AGN,Seyfert 2 Galaxy,341.4531734,39.68775188,3.5E-12,Known Source,,
+730,Source,3PBC J1204.7+3109,AGN,Seyfert 2 Galaxy,181.1805209,31.177273,4E-12,Known Source,,
+731,Source,4C 03.8,AGN,Seyfert 2 Galaxy,61.81861303,3.707170503,3.62E-12,Known Source,,
+732,Source,4C 73.08,AGN,Seyfert 2 Galaxy,147.441529,73.239792,1.77E-12,Known Source,,
+733,Source,4PBC J1649.3-1738,AGN,Seyfert 2 Galaxy,252.337583,-17.644536,5.51E-12,Known Source,,
+734,Source,4PBC J1725.8-4510,AGN,Seyfert 2 Galaxy,261.3771607,-45.17461692,5.73E-12,Known Source,,
+735,Source,4U 0937-12,AGN,Seyfert 2 Galaxy,146.425187,-14.326361,2.64E-11,Known Source,,
+736,Source,4U 1344-60,AGN,Seyfert 2 Galaxy,206.9,-60.61772,4.97E-11,Known Source,,
+737,Source,7C 120500.2+340922,AGN,Seyfert 2 Galaxy,181.887208,33.877814,3.19E-12,Known Source,,
+738,Source,APG 134,AGN,Seyfert 2 Galaxy,187.4449,8.0004,7.14E-11,Known Source,,
+739,Source,Arp 102B,AGN,Seyfert 2 Galaxy,259.8103858,48.98039533,5.72E-12,Known Source,,
+740,Source,B2 1144+35B,AGN,Seyfert 2 Galaxy,176.8422074,35.01876077,5.76E-12,Known Source,,
+741,Source,Cen A,AGN,Seyfert 2 Galaxy,201.3650634,-43.01911251,1.04E-10,Known Source,,
+742,Source,Circinus Galaxy,AGN,Seyfert 2 Galaxy,213.291275,-65.339019,1.46E-12,Known Source,,
+743,Source,ESO 103-35,AGN,Seyfert 2 Galaxy,279.5846687,-65.42753939,2.59E-11,Known Source,,
+744,Source,ESO 118-33,AGN,Seyfert 2 Galaxy,69.9960208,-59.68160698,3.77E-12,Known Source,,
+745,Source,ESO 138-1,AGN,Seyfert 2 Galaxy,252.8344957,-59.23449574,1.89E-12,Known Source,,
+746,Source,ESO 157-23,AGN,Seyfert 2 Galaxy,65.60075,-56.22597,4.91E-12,Known Source,,
+747,Source,ESO 263-13,AGN,Seyfert 2 Galaxy,152.450782,-42.81125846,3.29E-12,Known Source,,
+748,Source,ESO 297-18,AGN,Seyfert 2 Galaxy,24.65484191,-40.01143096,6.25E-12,Known Source,,
+749,Source,ESO 323-77,AGN,Seyfert 2 Galaxy,196.6088395,-40.41460989,5.43E-12,Known Source,,
+750,Source,ESO 33-2,AGN,Seyfert 2 Galaxy,73.995557,-75.541176,1.15E-11,Known Source,,
+751,Source,ESO 362-18,AGN,Seyfert 2 Galaxy,79.89921623,-32.65775642,3.43E-11,Known Source,,
+752,Source,ESO 383-18,AGN,Seyfert 2 Galaxy,203.3587579,-34.01480866,8.73E-12,Known Source,,
+753,Source,ESO 506-27,AGN,Seyfert 2 Galaxy,189.7274701,-27.30778053,9.64E-12,Known Source,,
+754,Source,ESO 509-66,AGN,Seyfert 2 Galaxy,203.6650871,-23.44656364,2.5E-11,Known Source,,
+755,Source,ESO 5-4,AGN,Seyfert 2 Galaxy,91.423838,-86.63195,1.61E-12,Known Source,,
+756,Source,Fairall 1146,AGN,Seyfert 2 Galaxy,129.6282313,-35.99259274,1.91E-11,Known Source,,
+757,Source,Fairall 49,AGN,Seyfert 2 Galaxy,279.24264,-59.40230065,3.53E-11,Known Source,,
+758,Source,GRS 1734-292,AGN,Seyfert 2 Galaxy,264.3682547,-29.1339221,1.21E-10,Known Source,,
+759,Source,H 0917-074,AGN,Seyfert 2 Galaxy,140.1927571,-8.056092711,1.36E-11,Known Source,,
+760,Source,IC 3639,AGN,Seyfert 2 Galaxy,190.2201437,-36.75584917,0.000000148,Known Source,,
+761,Source,IC 5063,AGN,Seyfert 2 Galaxy,313.009704,-57.068778,1.13E-11,Known Source,,
+762,Source,IGR J00040+7020,AGN,Seyfert 2 Galaxy,1.00834682,70.32171913,5.53E-12,Known Source,,
+763,Source,IGR J00335+6126,AGN,Seyfert 2 Galaxy,8.326463868,61.4619799,9.67E-12,Known Source,,
+764,Source,IGR J00465-4005,AGN,Seyfert 2 Galaxy,11.5862,-40.0969,2.48E-12,Known Source,,
+765,Source,IGR J01528-0326,AGN,Seyfert 2 Galaxy,28.204183,-3.446822,7.34E-12,Known Source,,
+766,Source,IGR J02343+3229,AGN,Seyfert 2 Galaxy,38.583754,32.505558,1.1E-11,Known Source,,
+767,Source,IGR J02524-0829,AGN,Seyfert 2 Galaxy,43.09746487,-8.510338492,6.22E-12,Known Source,,
+768,Source,IGR J03249+4041,AGN,Seyfert 2 Galaxy,51.30208,40.69958,5.7E-12,Known Source,,
+769,Source,IGR J05053-7343,AGN,Seyfert 2 Galaxy,76.1428243,-73.82425563,3.91E-12,Known Source,,
+770,Source,IGR J05081+1722,AGN,Seyfert 2 Galaxy,77.08210949,17.36335699,9.04E-12,Known Source,,
+771,Source,IGR J05470+5034,AGN,Seyfert 2 Galaxy,86.81201244,50.64040972,2.38E-12,Known Source,,
+772,Source,IGR J06239-6052,AGN,Seyfert 2 Galaxy,95.9398284,-60.97899538,5.08E-12,Known Source,,
+773,Source,IGR J07565-4139,AGN,Seyfert 2 Galaxy,119.081817,-41.628353,1.74E-12,Known Source,,
+774,Source,IGR J08190-3835,AGN,Seyfert 2 Galaxy,124.79733,-38.55292,3.74E-12,Known Source,,
+775,Source,IGR J08557+6420,AGN,Seyfert 2 Galaxy,133.8023082,64.39595246,5.12E-12,Known Source,,
+776,Source,IGR J09026-4812,AGN,Seyfert 2 Galaxy,135.6555,-48.22608,1.5E-11,Known Source,,
+777,Source,IGR J09523-6231,AGN,Seyfert 2 Galaxy,148.0862,-62.5436,5.34E-12,Known Source,,
+778,Source,IGR J10404-4625,AGN,Seyfert 2 Galaxy,160.092971,-46.424014,1.13E-11,Known Source,,
+779,Source,IGR J11366-6002,AGN,Seyfert 2 Galaxy,174.175175,-60.051847,7.21E-12,Known Source,,
+780,Source,IGR J12026-5349,AGN,Seyfert 2 Galaxy,180.6984309,-53.83549759,3.56E-11,Known Source,,
+781,Source,IGR J12391-1612,AGN,Seyfert 2 Galaxy,189.7761706,-16.17978449,9.79E-12,Known Source,,
+782,Source,IGR J12415-5750,AGN,Seyfert 2 Galaxy,190.3573631,-57.83429991,2.05E-11,Known Source,,
+783,Source,IGR J12482-5828,AGN,Seyfert 2 Galaxy,191.991012,-58.499992,5.11E-12,Known Source,,
+784,Source,IGR J13091+1137,AGN,Seyfert 2 Galaxy,197.2733038,11.63411803,2.53E-12,Known Source,,
+785,Source,IGR J13107-5626,AGN,Seyfert 2 Galaxy,197.6543682,-56.44852042,1.7E-12,Known Source,,
+786,Source,IGR J13149+4422,AGN,Seyfert 2 Galaxy,198.8219433,44.40711164,8.67E-12,Known Source,,
+787,Source,IGR J13550-7218,AGN,Seyfert 2 Galaxy,208.8064805,-72.32081993,2.96E-12,Known Source,,
+788,Source,IGR J14301-4158,AGN,Seyfert 2 Galaxy,217.55071,-41.97539,3.58E-12,Known Source,,
+789,Source,IGR J14471-6319,AGN,Seyfert 2 Galaxy,221.812,-63.28867,3.82E-12,Known Source,,
+790,Source,IGR J14471-6414,AGN,Seyfert 2 Galaxy,221.6175,-64.2733,6.15E-12,Known Source,,
+791,Source,IGR J14492-5535,AGN,Seyfert 2 Galaxy,222.303483,-55.605397,5.29E-12,Known Source,,
+792,Source,IGR J14515-5542,AGN,Seyfert 2 Galaxy,222.888083,-55.67731428,8.65E-12,Known Source,,
+793,Source,IGR J14579-4308,AGN,Seyfert 2 Galaxy,224.42158,-43.13211,9.67E-12,Known Source,,
+794,Source,IGR J15539-6142,AGN,Seyfert 2 Galaxy,238.397436,-61.6830656,2.09E-12,Known Source,,
+795,Source,IGR J15549-3740,AGN,Seyfert 2 Galaxy,238.6947958,-37.63865661,4.76E-12,Known Source,,
+796,Source,IGR J16024-6107,AGN,Seyfert 2 Galaxy,240.4509244,-61.14850842,4.61E-12,Known Source,,
+797,Source,IGR J17009+3559,AGN,Seyfert 2 Galaxy,255.2208085,35.99897586,,Known Source,,
+798,Source,IGR J17379-5957,AGN,Seyfert 2 Galaxy,264.4128321,-59.94073467,1.12E-11,Known Source,,
+799,Source,IGR J17488-3253,AGN,Seyfert 2 Galaxy,267.22971,-32.91447,2.09E-11,Known Source,,
+800,Source,IGR J18244-5622,AGN,Seyfert 2 Galaxy,276.0807605,-56.36908601,6.07E-12,Known Source,,
+801,Source,IGR J18259-0706,AGN,Seyfert 2 Galaxy,276.48996,-7.17306,4.04E-12,Known Source,,
+802,Source,IGR J18308+0928,AGN,Seyfert 2 Galaxy,277.7109769,9.478306285,1.39E-12,Known Source,,
+803,Source,IGR J19473+4452,AGN,Seyfert 2 Galaxy,296.83075,44.828475,6.24E-12,Known Source,,
+804,Source,IGR J20187+4041,AGN,Seyfert 2 Galaxy,304.661317,40.683442,5.44E-12,Known Source,,
+805,Source,IGR J20216+4359,AGN,Seyfert 2 Galaxy,305.4542467,44.01089549,2.33E-12,Known Source,,
+806,Source,IGR J20286+2544,AGN,Seyfert 2 Galaxy,307.146087,25.733383,2.46E-12,Known Source,,
+807,Source,IGR J21247+5058,AGN,Seyfert 2 Galaxy,321.1640514,50.97383732,6.6E-11,Known Source,,
+808,Source,IGR J23206+6431,AGN,Seyfert 2 Galaxy,350.1524283,64.51244141,6.84E-12,Known Source,,
+809,Source,IGR J23308+7120,AGN,Seyfert 2 Galaxy,352.6569691,71.37960808,2.19E-12,Known Source,,
+810,Source,IGR J23524+5842,AGN,Seyfert 2 Galaxy,358.0923858,58.75857977,3.96E-12,Known Source,,
+811,Source,IRAS 04410+2807,AGN,Seyfert 2 Galaxy,71.03754741,28.21688449,1.58E-11,Known Source,,
+812,Source,IRAS F09104+4109,AGN,Seyfert 2 Galaxy,138.43998,40.94187,6.11E-12,Known Source,,
+813,Source,LEDA 15023,AGN,Seyfert 2 Galaxy,65.9198507,4.133839096,2.19E-12,Known Source,,
+814,Source,LEDA 1574394,AGN,Seyfert 2 Galaxy,78.83231734,18.91432709,3.91E-12,Known Source,,
+815,Source,LEDA 17155,AGN,Seyfert 2 Galaxy,80.25583109,-25.3625894,7.21E-12,Known Source,,
+816,Source,LEDA 178130,AGN,Seyfert 2 Galaxy,76.44054271,-23.85391563,1.98E-11,Known Source,,
+817,Source,LEDA 213255,AGN,Seyfert 2 Galaxy,58.42697073,37.23546797,5.46E-12,Known Source,,
+818,Source,LEDA 214543,AGN,Seyfert 2 Galaxy,252.6781314,4.605077072,7.84E-12,Known Source,,
+819,Source,LEDA 2182842,AGN,Seyfert 2 Galaxy,291.6258911,41.55138967,8.75E-12,Known Source,,
+820,Source,LEDA 2265450,AGN,Seyfert 2 Galaxy,137.8748771,45.46826617,2.55E-12,Known Source,,
+821,Source,LEDA 2287192,AGN,Seyfert 2 Galaxy,42.61329518,46.79147882,7.3E-12,Known Source,,
+822,Source,LEDA 255906,AGN,Seyfert 2 Galaxy,116.9097389,-73.43142592,4.46E-12,Known Source,,
+823,Source,LEDA 3095635,AGN,Seyfert 2 Galaxy,49.57960528,68.49220618,6.2E-12,Known Source,,
+824,Source,LEDA 3800210,AGN,Seyfert 2 Galaxy,195.022283,16.53743305,2.58E-12,Known Source,,
+825,Source,LEDA 563146,AGN,Seyfert 2 Galaxy,212.6866981,-42.47584607,3.01E-12,Known Source,,
+826,Source,LEDA 64440,AGN,Seyfert 2 Galaxy,304.5053918,-55.65877502,6.25E-12,Known Source,,
+827,Source,LEDA 86424,AGN,Seyfert 2 Galaxy,190.1932808,27.56496526,2.58E-12,Known Source,,
+828,Source,LEDA 89928,AGN,Seyfert 2 Galaxy,42.24728295,26.5109891,5.94E-12,Known Source,,
+829,Source,LEDA 96373,AGN,Seyfert 2 Galaxy,111.6097252,-35.90604033,1.64E-12,Known Source,,
+830,Source,LEDA 97085,AGN,Seyfert 2 Galaxy,79.094633,19.453114,3.83E-12,Known Source,,
+831,Source,LEDA 97536,AGN,Seyfert 2 Galaxy,247.6360669,39.38419536,1.95E-12,Known Source,,
+832,Source,M 81,AGN,Seyfert 2 Galaxy,148.8882194,69.06529514,3.36E-11,Known Source,,
+833,Source,MCG+04-26-006,AGN,Seyfert 2 Galaxy,161.677152,25.931547,3.09E-12,Known Source,,
+834,Source,MCG+05-28-032,AGN,Seyfert 2 Galaxy,177.1915,29.641272,7.01E-12,Known Source,,
+835,Source,MCG+09-28-001,AGN,Seyfert 2 Galaxy,253.0786894,55.90554066,5.57E-12,Known Source,,
+836,Source,MCG+10-17-061,AGN,Seyfert 2 Galaxy,176.3880261,58.97814911,7.33E-12,Known Source,,
+837,Source,MCG+13-08-056,AGN,Seyfert 2 Galaxy,168.6830762,79.72668774,2.17E-12,Known Source,,
+838,Source,MCG+14-08-004,AGN,Seyfert 2 Galaxy,244.8305851,81.04649644,3.48E-12,Known Source,,
+839,Source,MCG-01-05-031,AGN,Seyfert 2 Galaxy,26.35612564,-3.827137276,4.52E-11,Known Source,,
+840,Source,MCG-01-22-006,AGN,Seyfert 2 Galaxy,125.7545661,-4.934882865,6.95E-12,Known Source,,
+841,Source,MCG-01-40-001,AGN,Seyfert 2 Galaxy,233.3362456,-8.700493814,1.07E-11,Known Source,,
+842,Source,MCG-05-23-016,AGN,Seyfert 2 Galaxy,146.9172217,-30.94887799,1.19E-10,Known Source,,
+843,Source,Mrk 1,AGN,Seyfert 2 Galaxy,19.0300533,33.0893478,3.03E-09,Known Source,,
+844,Source,Mrk 1210,AGN,Seyfert 2 Galaxy,121.0244201,5.113839827,7.72E-12,Known Source,,
+845,Source,Mrk 1498,AGN,Seyfert 2 Galaxy,247.0169004,51.77541029,1.35E-11,Known Source,,
+846,Source,Mrk 18,AGN,Seyfert 2 Galaxy,135.4933524,60.15170559,1.39E-12,Known Source,,
+847,Source,Mrk 198,AGN,Seyfert 2 Galaxy,182.308784,47.058357,7.8E-12,Known Source,,
+848,Source,Mrk 268,AGN,Seyfert 2 Galaxy,205.2964011,30.37812479,4.38E-12,Known Source,,
+849,Source,Mrk 3,AGN,Seyfert 2 Galaxy,93.90117177,71.03745478,6.39E-12,Known Source,,
+850,Source,Mrk 348,AGN,Seyfert 2 Galaxy,12.19642283,31.95696794,3.63E-11,Known Source,,
+851,Source,Mrk 417,AGN,Seyfert 2 Galaxy,162.3788583,22.96454869,1.71E-12,Known Source,,
+852,Source,Mrk 477,AGN,Seyfert 2 Galaxy,220.1587337,53.50443375,1.53E-11,Known Source,,
+853,Source,Mrk 506,AGN,Seyfert 2 Galaxy,260.6663821,30.88128437,5.86E-12,Known Source,,
+854,Source,Mrk 520,AGN,Seyfert 2 Galaxy,330.1723023,10.552232,1.3E-11,Known Source,,
+855,Source,Mrk 915,AGN,Seyfert 2 Galaxy,339.1937424,-12.5452464,1.4E-11,Known Source,,
+856,Source,NGC 1052,AGN,Seyfert 2 Galaxy,40.26999375,-8.255764431,6.95E-12,Known Source,,
+857,Source,NGC 1068,AGN,Seyfert 2 Galaxy,40.66962153,-0.013294358,2.84E-11,Known Source,,
+858,Source,NGC 1142,AGN,Seyfert 2 Galaxy,43.80096313,-0.183557542,1.04E-11,Known Source,,
+859,Source,NGC 1194,AGN,Seyfert 2 Galaxy,45.95463501,-1.103726418,1.36E-12,Known Source,,
+860,Source,NGC 1808,AGN,Seyfert 2 Galaxy,76.926429,-37.51305,1.61E-12,Known Source,,
+861,Source,NGC 2110,AGN,Seyfert 2 Galaxy,88.04740361,-7.456252074,1.06E-10,Known Source,,
+862,Source,NGC 2655,AGN,Seyfert 2 Galaxy,133.907213,78.223083,2.73E-12,Known Source,,
+863,Source,NGC 3079,AGN,Seyfert 2 Galaxy,150.4911624,55.67984716,3.8E-12,Known Source,,
+864,Source,NGC 3081,AGN,Seyfert 2 Galaxy,149.8730988,-22.82631871,1.02E-12,Known Source,,
+865,Source,NGC 3281,AGN,Seyfert 2 Galaxy,157.967025,-34.853722,3.5E-12,Known Source,,
+866,Source,NGC 3718,AGN,Seyfert 2 Galaxy,173.1452382,53.06792228,1.7E-12,Known Source,,
+867,Source,NGC 3998,AGN,Seyfert 2 Galaxy,179.4838892,55.45358957,1.38E-11,Known Source,,
+868,Source,NGC 4074,AGN,Seyfert 2 Galaxy,181.1236109,20.31629289,3.89E-12,Known Source,,
+869,Source,NGC 424,AGN,Seyfert 2 Galaxy,17.86516043,-38.0834503,1.39E-12,Known Source,,
+870,Source,NGC 4258,AGN,Seyfert 2 Galaxy,184.740083,47.303719,3.58E-11,Known Source,,
+871,Source,NGC 4388,AGN,Seyfert 2 Galaxy,186.445083,12.662069,7.17E-11,Known Source,,
+872,Source,NGC 4395,AGN,Seyfert 2 Galaxy,186.4535971,33.54686116,1.04E-11,Known Source,,
+873,Source,NGC 4501,AGN,Seyfert 2 Galaxy,187.9964688,14.42031916,2.77E-12,Known Source,,
+874,Source,NGC 4507,AGN,Seyfert 2 Galaxy,188.9026412,-39.909364,1.32E-11,Known Source,,
+875,Source,NGC 4579,AGN,Seyfert 2 Galaxy,189.4314,11.8183,8.69E-12,Known Source,,
+876,Source,NGC 4619,AGN,Seyfert 2 Galaxy,190.435631,35.06276794,3.09E-12,Known Source,,
+877,Source,NGC 4686,AGN,Seyfert 2 Galaxy,191.6661991,54.53424726,1.02E-12,Known Source,,
+878,Source,NGC 4736,AGN,Seyfert 2 Galaxy,192.7211408,41.12025025,2.95E-11,Known Source,,
+879,Source,NGC 4939,AGN,Seyfert 2 Galaxy,196.0597002,-10.3395279,1.31E-12,Known Source,,
+880,Source,NGC 4941,AGN,Seyfert 2 Galaxy,196.0545985,-5.551598001,1.21E-08,Known Source,,
+881,Source,NGC 4945,AGN,Seyfert 2 Galaxy,196.363663,-49.4679,3.22E-12,Known Source,,
+882,Source,NGC 5033,AGN,Seyfert 2 Galaxy,198.364729,36.59365,2.83E-12,Known Source,,
+883,Source,NGC 5100,AGN,Seyfert 2 Galaxy,200.2482262,8.978337333,4.55E-12,Known Source,,
+884,Source,NGC 5135,AGN,Seyfert 2 Galaxy,201.433579,-29.833678,0.000000465,Known Source,,
+885,Source,NGC 5231,AGN,Seyfert 2 Galaxy,203.9510155,2.998901247,5.89E-12,Known Source,,
+886,Source,NGC 5252,AGN,Seyfert 2 Galaxy,204.5661282,4.542644796,5E-11,Known Source,,
+887,Source,NGC 526,AGN,Seyfert 2 Galaxy,20.97657177,-35.06547524,3.01E-11,Known Source,,
+888,Source,NGC 5290,AGN,Seyfert 2 Galaxy,206.329825,41.71235376,7.81E-12,Known Source,,
+889,Source,NGC 5506,AGN,Seyfert 2 Galaxy,213.3119838,-3.207654697,9.95E-11,Known Source,,
+890,Source,NGC 5674,AGN,Seyfert 2 Galaxy,218.4678284,5.458365939,6.51E-12,Known Source,,
+891,Source,NGC 5728,AGN,Seyfert 2 Galaxy,220.5995494,-17.25312244,1.5E-12,Known Source,,
+892,Source,NGC 5899,AGN,Seyfert 2 Galaxy,228.76355,42.049853,5.16E-12,Known Source,,
+893,Source,NGC 5995,AGN,Seyfert 2 Galaxy,237.1039432,-13.75756721,2.08E-11,Known Source,,
+894,Source,NGC 6221,AGN,Seyfert 2 Galaxy,253.193037,-59.216942,1.02E-11,Known Source,,
+895,Source,NGC 6240,AGN,Seyfert 2 Galaxy,253.2454,2.4009,5.67E-12,Known Source,,
+896,Source,NGC 6251,AGN,Seyfert 2 Galaxy,248.1332079,82.53788886,3.56E-12,Known Source,,
+897,Source,NGC 6300,AGN,Seyfert 2 Galaxy,259.2480909,-62.82054072,1.85E-11,Known Source,,
+898,Source,NGC 6552,AGN,Seyfert 2 Galaxy,270.030216,66.6151001,1.04E-12,Known Source,,
+899,Source,NGC 6860,AGN,Seyfert 2 Galaxy,302.1953608,-61.09993945,2.25E-11,Known Source,,
+900,Source,NGC 7130,AGN,Seyfert 2 Galaxy,327.0814218,-34.95124778,2.62E-08,Known Source,,
+901,Source,NGC 7172,AGN,Seyfert 2 Galaxy,330.507904,-31.869889,5.43E-11,Known Source,,
+902,Source,NGC 7314,AGN,Seyfert 2 Galaxy,338.9424939,-26.05043472,4.36E-11,Known Source,,
+903,Source,NGC 7465,AGN,Seyfert 2 Galaxy,345.5040015,15.96478779,3.76E-10,Known Source,,
+904,Source,NGC 7582,AGN,Seyfert 2 Galaxy,349.5983,-42.3704,5.9E-12,Known Source,,
+905,Source,NGC 788,AGN,Seyfert 2 Galaxy,30.2769287,-6.815874947,1.41E-12,Known Source,,
+906,Source,PBC J1127.7-5320,AGN,Seyfert 2 Galaxy,171.891375,-53.340836,1.61E-12,Known Source,,
+907,Source,PKS 1345+12,AGN,Seyfert 2 Galaxy,206.8890067,12.29006664,1.15E-12,Known Source,,
+908,Source,QSO B0831+557,AGN,Seyfert 2 Galaxy,128.7287666,55.57251954,8.89E-11,Known Source,,
+909,Source,RHS 23,AGN,Seyfert 2 Galaxy,53.60210343,-15.22775709,5.85E-12,Known Source,,
+910,Source,SWIFT J1852.8+3002,AGN,Seyfert 2 Galaxy,283.20625,30.07425,2.08E-12,Known Source,,
+911,Source,UGC 11397,AGN,Seyfert 2 Galaxy,285.9547339,33.84475436,7.33E-12,Known Source,,
+912,Source,UGC 12040,AGN,Seyfert 2 Galaxy,336.7740093,36.36155243,1.72E-12,Known Source,,
+913,Source,UGC 3142,AGN,Seyfert 2 Galaxy,70.94499808,28.97193214,6.72E-12,Known Source,,
+914,Source,Z 312-12,AGN,Seyfert 2 Galaxy,142.4078013,62.54403456,1.32E-12,Known Source,,
+915,Source,Z 333-38,AGN,Seyfert 2 Galaxy,158.59809,73.01397826,4.6E-12,Known Source,,
+916,Source,Z 333-49,AGN,Seyfert 2 Galaxy,161.0356446,70.40532904,3.75E-12,Known Source,,
+917,Source,Z 341-6,AGN,Seyfert 2 Galaxy,281.359529,72.183564,5.53E-12,Known Source,,
+918,Source,Z 41-20,AGN,Seyfert 2 Galaxy,180.2414259,6.806401986,7.1E-12,Known Source,,
+919,Source,Z 420-15,AGN,Seyfert 2 Galaxy,73.35725122,4.061613879,1.59E-12,Known Source,,
+920,Source,1AXG J111513+5319,Cluster of Galaxies,Cluster of Galaxies,168.8117,53.3317,3.91E-12,Known Source,,
+921,Source,4U 0739-19,Cluster of Galaxies,Cluster of Galaxies,116.8805,-19.2944,5.46E-10,Known Source,,
+922,Source,4U 0900-09,Cluster of Galaxies,Cluster of Galaxies,137.285,-9.6661,2.3E-10,Known Source,,
+923,Source,Abell 2163,Cluster of Galaxies,Cluster of Galaxies,243.942,-6.1473,1.25E-12,Known Source,,
+924,Source,Abell 2261,Cluster of Galaxies,Cluster of Galaxies,260.612,32.1328,8.51E-12,Known Source,,
+925,Source,Abell 4038,Cluster of Galaxies,Cluster of Galaxies,356.8796,-28.2028,,Known Source,,
+926,Source,ACO 3667,Cluster of Galaxies,Cluster of Galaxies,303.14033,-56.84064,2.65E-11,Known Source,,
+927,Source,Virgo Cluster,Cluster of Galaxies,Cluster of Galaxies,186.6337,12.7233,,Known Source,,
+928,Source,1RXS J095750.4-420801,CV,CV,149.4610275,-42.1431862,6.42E-12,Known Source,,
+929,Source,1RXS J211336.1+542226,CV,CV,318.3974286,54.37581679,1.25E-11,Known Source,,
+930,Source,3A 0527-329,CV,CV,82.35637184,-32.81775006,5.95E-11,Known Source,,
+931,Source,AO Psc,CV,CV,343.824942,-3.177772731,6.68E-11,Known Source,,
+932,Source,AX J1832.3-0840,CV,CV,278.0804646,-8.675067803,1.14E-11,Known Source,,
+933,Source,BY Cam,CV,CV,85.70333897,60.85871559,1.12E-11,Known Source,,
+934,Source,EI Psc,CV,CV,352.4758944,6.469887784,1.01E-12,Known Source,,
+935,Source,FO Aqr,CV,CV,334.4807487,-8.351043054,5.53E-11,Known Source,,
+936,Source,GK Per,CV,CV,52.80004119,43.90429721,2.73E-10,Known Source,,
+937,Source,IGR J00234+6141,CV,CV,5.740185958,61.68543655,2.09E-12,Known Source,,
+938,Source,IGR J04571+4527,CV,CV,74.27906207,45.46348901,1.79E-11,Known Source,,
+939,Source,IGR J05346-5759,CV,CV,83.71077562,-58.02799031,2.72E-11,Known Source,,
+940,Source,IGR J08390-4833,CV,CV,129.7046194,-48.52356081,8.21E-12,Known Source,,
+941,Source,IGR J12123-5802,CV,CV,183.109246,-58.00569495,6.84E-12,Known Source,,
+942,Source,IGR J14091-6108,CV,CV,212.19308,-61.13208,2.39E-12,Known Source,,
+943,Source,IGR J14257-6117,CV,CV,216.2816178,-61.31612512,6.42E-12,Known Source,,
+944,Source,IGR J14536-5522,CV,CV,223.4210698,-55.36075647,1.73E-11,Known Source,,
+945,Source,IGR J15038-6021,CV,CV,226.067125,-60.356274,3.29E-12,Known Source,,
+946,Source,IGR J15094-6649,CV,CV,227.3584035,-66.82313319,2.07E-11,Known Source,,
+947,Source,IGR J15529-5029,CV,CV,238.1956024,-50.49819629,2.13E-12,Known Source,,
+948,Source,IGR J16167-4957,CV,CV,244.1573413,-49.9790467,2.88E-11,Known Source,,
+949,Source,IGR J16500-3307,CV,CV,252.4818257,-33.11724705,1.46E-11,Known Source,,
+950,Source,IGR J16547-1916,CV,CV,253.682214,-19.27529501,1.9E-11,Known Source,,
+951,Source,IGR J17014-4306,CV,CV,255.3673082,-43.10341873,1.09E-11,Known Source,,
+952,Source,IGR J17195-4100,CV,CV,259.8995533,-41.0148694,3.9E-11,Known Source,,
+953,Source,IGR J17303-0601,CV,CV,262.5912568,-5.992177882,2.07E-11,Known Source,,
+954,Source,IGR J18007-4146,CV,CV,270.1779359,-41.7806255,4.28E-12,Known Source,,
+955,Source,IGR J18151-1052,CV,CV,273.7660358,-10.85973209,3.08E-12,Known Source,,
+956,Source,IGR J18308-1232,CV,CV,277.7080966,-12.53863047,7.33E-12,Known Source,,
+957,Source,IGR J19267+1325,CV,CV,291.6124766,13.36805205,9.14E-12,Known Source,,
+958,Source,IGR J20063+3641,CV,CV,301.593313,36.695436,4.04E-12,Known Source,,
+959,Source,IGR J21095+4322,CV,CV,317.349429,43.326972,5.32E-12,Known Source,,
+960,Source,IGR J21335+5105,CV,CV,323.4318119,51.12353598,4.42E-12,Known Source,,
+961,Source,PBC J0801.2-4625,CV,CV,120.320304,-46.391156,2.66E-12,Known Source,,
+962,Source,PQ Gem,CV,CV,117.8222001,14.73996524,2.4E-11,Known Source,,
+963,Source,RX J0525.3+2413,CV,CV,81.34459254,24.22592169,1.33E-11,Known Source,,
+964,Source,RX J0527.8-6954,CV,CV,81.95345101,-69.90246785,1.39E-12,Known Source,,
+965,Source,RX J1238-38,CV,CV,189.56672,-38.71258,3.26E-11,Known Source,,
+966,Source,RX J1940.2-1025,CV,CV,295.0475831,-10.42382547,1.84E-11,Known Source,,
+967,Source,SWIFT J0746.2-1611,CV,CV,116.571312,-16.19102301,1.93E-11,Known Source,,
+968,Source,V1062 Tau,CV,CV,75.61449093,24.75643277,2.58E-11,Known Source,,
+969,Source,V2069 Cyg,CV,CV,320.9367561,42.30045413,1.28E-11,Known Source,,
+970,Source,V2301 Oph,CV,CV,270.1480488,8.170533566,1.36E-11,Known Source,,
+971,Source,V2400 Oph,CV,CV,258.151764,-24.24577055,6.14E-11,Known Source,,
+972,Source,V2487 Oph,CV,CV,262.999187,-19.232258,7.41E-12,Known Source,,
+973,Source,V405 Aur,CV,CV,89.49705604,53.89581291,1.93E-11,Known Source,,
+974,Source,V515 And,CV,CV,13.8327218,46.21582984,2.8E-11,Known Source,,
+975,Source,V709 Cas,CV,CV,7.203444747,59.28945382,6.53E-11,Known Source,,
+976,Source,V834 Cen,CV,CV,212.2803598,-45.28778438,4.3E-11,Known Source,,
+977,Source,XY Ari,CV,CV,44.034104,19.442811,7.96E-12,Known Source,,
+978,Source,2EG J1813-1229,Pulsar,Pulsar,273.349033,-12.766842,1.2E-12,Known Source,,
+979,Source,2EG J2033+4112,Pulsar,Pulsar,308.0546864,41.45676296,2.1E-12,Known Source,,
+980,Source,AX J1550.8-5418,Pulsar,Pulsar,237.72575,-54.30664,2.15E-11,Known Source,,
+981,Source,AX J1740.1-2847,Pulsar,Pulsar,265.0380541,-28.79050214,2.82E-12,Known Source,,
+982,Source,CXOU J005758.4-721620,Pulsar,Pulsar,14.4933,-72.2722,1.66E-12,Known Source,,
+983,Source,CXOU J164710.2-455216,Pulsar,Pulsar,251.79243,-45.8713,8.22E-12,Known Source,,
+984,Source,Geminga,Pulsar,Pulsar,98.475638,17.770253,1.24E-12,Known Source,,
+985,Source,GRO J1837+59,Pulsar,Pulsar,279.056921,59.424936,0.0000035,Known Source,,
+986,Source,IGR J17088-4008,Pulsar,Pulsar,257.2042,-40.1528,1.12E-10,Known Source,,
+987,Source,IGR J17233-2837,Pulsar,Pulsar,260.8466406,-28.63255845,2.25E-12,Known Source,,
+988,Source,IGR J18179-1621,Pulsar,Pulsar,274.467417,-16.3588,2.69E-10,Known Source,,
+989,Source,IGR J18490-0000,Pulsar,Pulsar,282.25762,-0.02197,4.36E-12,Known Source,,
+990,Source,PSR B0656+14,Pulsar,Pulsar,104.9508167,14.2387222,1.34E-10,Known Source,,
+991,Source,PSR B1055-52,Pulsar,Pulsar,164.4960208,-52.4489806,1.14E-09,Known Source,,
+992,Source,PSR B1951+32,Pulsar,Pulsar,298.242421,32.87805,2.26E-08,Known Source,,
+993,Source,PSR J0537-6910,Pulsar,Pulsar,84.44443,-69.17141,4.64E-11,Known Source,,
+994,Source,PSR J1023+0038,Pulsar,Pulsar,155.9486841,0.644723859,1.24E-11,Known Source,,
+995,Source,PSR J1930+1852,Pulsar,Pulsar,292.62554,18.87058,1.86E-11,Known Source,,
+996,Source,SGR 1806-20,Pulsar,Pulsar,272.16385,-20.41114,1.11E-11,Known Source,,
+997,Source,SWIFT J0243.6+6124,Pulsar,Pulsar,40.9184387,61.43437707,2.02E-09,Known Source,,
+998,Source,XSS J12270-4859,Pulsar,Pulsar,186.994782,-48.89522905,7.59E-12,Known Source,,
+999,Source,XTE J1810-197,Pulsar,Pulsar,272.4628,-19.73105,5.92E-08,Known Source,,
+1000,Source,XTE J1829-098,Pulsar,Pulsar,277.43338,-9.8564,,Known Source,,
+1001,Source,3C 58,SNR,SNR,31.4043,64.8283,3.12E-10,Known Source,,
+1002,Source,4U 0000+72,SNR,SNR,1.65,72.78,4.14E-11,Known Source,,
+1003,Source,AX J1721.0-3726,SNR,SNR,260.275,-37.448,2.64E-11,Known Source,,
+1004,Source,AX J1838.0-0655,SNR,SNR,279.51304,-6.92594,6.99E-12,Known Source,,
+1005,Source,IGR J17448-3232,SNR,SNR,266.15608,-32.53894,3.84E-12,Known Source,,
+1006,Source,IGR J18135-1751,SNR,SNR,273.39604,-17.83281,3.37E-11,Known Source,,
+1007,Source,RX J1713.7-3946,SNR,SNR,258.112,-39.687,4.75E-10,Known Source,,
+1008,Source,SN 1006,SNR,SNR,225.5921,-42.0969,3.52E-10,Known Source,,
+1009,Source,SNR 021.5-00.9,SNR,SNR,278.39005,-10.568803,4.04E-12,Known Source,,
+1010,Source,SNR 074.0-08.5,SNR,SNR,312.75,30.67,2.26E-09,Known Source,,
+1011,Source,AX J1734.6-3234,Star,Be Star,263.6770506,-32.5816654,1.96E-12,Known Source,,
+1012,Source,IGR J18173-2509,Star,Delta Sct Variable,274.342395,-25.14514196,1.76E-11,Known Source,,
+1013,Source,AX J1440.7-6001,Star,Eclipsing Binary,220.1602711,-60.02690599,2.16E-12,Known Source,,
+1014,Source,AX J1742.5-2845,Star,Eclipsing Binary,265.6264816,-28.74877821,1.05E-12,Known Source,,
+1015,Source,CAL 87,Star,Eclipsing Binary,86.69392,-71.14831,1.7E-12,Known Source,,
+1016,Source,V857 Cen,Star,Eruptive Variable,172.9438052,-41.04643795,4.23E-12,Known Source,,
+1017,Source,AX J1556.7-5325,Star,Rotating Variable,239.182212,-53.41157808,1.83E-12,Known Source,,
+1018,Source,AX J1719.1-3652,Star,Rotating Variable,259.8045984,-36.85675535,2.83E-12,Known Source,,
+1019,Source,AX J1738.4-2902,Star,Rotating Variable,264.6091662,-29.03040238,0.000000853,Known Source,,
+1020,Source,IGR J08023-6954,Star,RS CVn Variable,120.6735046,-69.89383082,,Known Source,,
+1021,Source,AX J1633.8-4807,Star,Spectroscopic Binary,248.4682788,-48.11124345,1.3E-11,Known Source,,
+1022,Source,AX J1856.1+0218,Star,Spectroscopic Binary,284.0398495,2.295491789,6.44E-12,Known Source,,
+1023,Source,1H 1045-597,Star,Star,161.2647408,-59.68445878,3.77E-12,Known Source,,
+1024,Source,2MASS J18082507-1753482,Star,Star,272.1044794,-17.89672264,1.88E-10,Known Source,,
+1025,Source,AX J1445.7-5931,Star,Star,221.4320908,-59.53475548,1.62E-12,Known Source,,
+1026,Source,AX J1456.0-5913,Star,Star,223.9150313,-59.21880817,3.04E-12,Known Source,,
+1027,Source,AX J1740.5-2937,Star,Star,265.1433,-29.6303,1.12E-12,Known Source,,
+1028,Source,IGR J21133+3154,Star,Star,318.33112,31.86869,0.000000322,Known Source,,
+1029,Source,CH Cyg,Star,Symbiotic Star,291.1377739,50.24141529,7.72E-12,Known Source,,
+1030,Source,GX 1+4,Star,Symbiotic Star,263.0089718,-24.74559144,3.98E-11,Known Source,,
+1031,Source,IGR J10109-5746,Star,Symbiotic Star,152.7622634,-57.80387455,1.54E-11,Known Source,,
+1032,Source,IGR J12349-6434,Star,Symbiotic Star,188.7239005,-64.56558306,3.53E-11,Known Source,,
+1033,Source,T CrB,Star,Symbiotic Star,239.8756759,25.92017038,8.37E-12,Known Source,,
+1034,Source,1E 1024.0-5732,Star,Wolf-Rayet Star,156.4854269,-57.81208867,3.8E-12,Known Source,,
+1035,Source,AX J1632.8-4746,Star,Wolf-Rayet Star,248.202129,-47.751742,5.53E-12,Known Source,,
+1036,Source,1RXS J170410.9-443131,Unclassified,Unclassified,256.0454,-44.5253,1.5E-10,Known Source,,
+1037,Source,1RXS J175721.2-304405,Unclassified,Unclassified,269.3383,-30.7347,3.76E-11,Known Source,,
+1038,Source,4PBC J1842.8-0506,Unclassified,Unclassified,280.7976142,-5.095973294,6.94E-12,Known Source,,
+1039,Source,4PBC J2008.7+3221,Unclassified,Unclassified,302.18399,32.30505909,3.53E-12,Known Source,,
+1040,Source,4U 0103-21,Unclassified,Unclassified,15.675,-21.882,2.22E-11,Known Source,,
+1041,Source,4U 0854-44,Unclassified,Unclassified,133.5,-46.9,,Known Source,,
+1042,Source,4U 0923-31,Unclassified,Unclassified,140.396,-31.445,2.3E-10,Known Source,,
+1043,Source,4U 1614-27,Unclassified,Unclassified,243.579,-28.738,,Known Source,,
+1044,Source,4U 1636+05,Unclassified,Unclassified,251.142,4.148,,Known Source,,
+1045,Source,4U 1708-23,Unclassified,Unclassified,257.096,-22.803,,Known Source,,
+1046,Source,4U 2048+44,Unclassified,Unclassified,312.8,44.6,,Known Source,,
+1047,Source,4U 2344+08,Unclassified,Unclassified,356.8,8.9,,Known Source,,
+1048,Source,AX J1542.5-5519,Unclassified,Unclassified,235.642,-55.322,9.65E-12,Known Source,,
+1049,Source,AX J1705.6-4038,Unclassified,Unclassified,256.4212,-40.6472,0.00000398,Known Source,,
+1050,Source,AX J1720.8-3710,Unclassified,Unclassified,260.212,-37.173,0.00000414,Known Source,,
+1051,Source,AX J1726.7-3540,Unclassified,Unclassified,261.6746,-35.675,2.37E-12,Known Source,,
+1052,Source,AX J1740.1-3102,Unclassified,Unclassified,265.0375,-31.04,,Known Source,,
+1053,Source,AX J1754.0-2929,Unclassified,Unclassified,268.5,-29.48,2.11E-12,Known Source,,
+1054,Source,AX J1818.8-1559,Unclassified,Unclassified,274.721,-15.992,1.82E-12,Known Source,,
+1055,Source,AX J1825.1-1253,Unclassified,Unclassified,276.292,-12.888,2.6E-12,Known Source,,
+1056,Source,AX J1833.9-0822,Unclassified,Unclassified,278.498733,-8.373778,1.21E-12,Known Source,,
+1057,Source,AX J1849.5-0055,Unclassified,Unclassified,282.38,-0.9403,7.31E-11,Known Source,,
+1058,Source,AX J1907.5+0709,Unclassified,Unclassified,286.8942,7.1392,1.77E-12,Known Source,,
+1059,Source,EXS 1737.9-2952,Unclassified,Unclassified,265.27,-29.88,,Known Source,,
+1060,Source,GRS 1227+025,Unclassified,Unclassified,187.47,2.22,,Known Source,,
+1061,Source,IGR J10252-6829,Unclassified,Unclassified,156.25204,-68.45758,,Known Source,,
+1062,Source,IGR J11014-6103,Unclassified,Unclassified,165.43771,-61.02786,1.43E-12,Known Source,,
+1063,Source,IGR J11085-5100,Unclassified,Unclassified,167.21033,-51.04244,,Known Source,,
+1064,Source,IGR J11098-6457,Unclassified,Unclassified,167.36,-65.04,3.34E-12,Known Source,,
+1065,Source,IGR J14043-6148,Unclassified,Unclassified,211.123,-61.789,1.08E-10,Known Source,,
+1066,Source,IGR J14549-6459,Unclassified,Unclassified,223.84958,-65.00089,3.88E-12,Known Source,,
+1067,Source,IGR J16316-4028,Unclassified,Unclassified,247.9,-40.467,,Known Source,,
+1068,Source,IGR J16374-5043,Unclassified,Unclassified,249.30579,-50.72572,4.48E-12,Known Source,,
+1069,Source,IGR J16442-5548,Unclassified,Unclassified,251.15794,-55.84592,1.23E-12,Known Source,,
+1070,Source,IGR J16558-4150,Unclassified,Unclassified,253.95,-41.83,,Known Source,,
+1071,Source,IGR J17375-3022,Unclassified,Unclassified,264.3946,-30.3817,2.11E-11,Known Source,,
+1072,Source,IGR J17419-2802,Unclassified,Unclassified,265.4833,-28.0319,1.93E-11,Known Source,,
+1073,Source,IGR J17507-2647,Unclassified,Unclassified,267.664,-26.743,4.04E-12,Known Source,,
+1074,Source,IGR J17585-3057,Unclassified,Unclassified,269.625,-30.95,6.15E-12,Known Source,,
+1075,Source,IGR J18159-3353,Unclassified,Unclassified,273.9892,-33.89,,Known Source,,
+1076,Source,IGR J18284-0345,Unclassified,Unclassified,277.13,-3.76,5.85E-11,Known Source,,
+1077,Source,IGR J18325-0756,Unclassified,Unclassified,278.1177785,-7.944958396,1.5E-12,Known Source,,
+1078,Source,IGR J18532+0416,Unclassified,Unclassified,283.318,4.297,1.15E-12,Known Source,,
+1079,Source,IGR J19149+1036,Unclassified,Unclassified,288.73637,10.61058,1.73E-11,Known Source,,
+1080,Source,IGR J19475+0049,Unclassified,Unclassified,296.875,0.828,0.00000419,Known Source,,
+1081,Source,IGR J20188+3647,Unclassified,Unclassified,304.7,36.792,,Known Source,,
+1082,Source,IGR J21117+3427,Unclassified,Unclassified,317.948,34.462,,Known Source,,
+1083,Source,MAXI J1807-228,Unclassified,Unclassified,271.9583,-22.8,,Known Source,,
+1084,Source,MAXI J1828-249,Unclassified,Unclassified,277.241958,-25.029411,4.77E-11,Known Source,,
+1085,Source,SGR 0501+4516,Unclassified,Unclassified,75.2833,45.2753,2.53E-11,Known Source,,
+1086,Source,SWIFT J0549.7-6812,Unclassified,Unclassified,87.52696,-68.24881,2.54E-10,Known Source,,
+1087,Source,SWIFT J1734.5-3027,Unclassified,Unclassified,263.602,-30.398,1.26E-10,Known Source,,
+1088,Source,SWIFT J2037.2+4151,Unclassified,Unclassified,309.25,41.833,,Known Source,,
+1089,Source,SWIFT J2059.6+4301A,Unclassified,Unclassified,314.8166,43.019,3.6E-12,Known Source,,
+1090,Source,XMMSL1 J171900.4-353,Unclassified,Unclassified,259.75307,-35.53848,3.11E-11,Known Source,,
+1091,Source,XMMU J004415.9+41305,Unclassified,Unclassified,11.06645,41.51563,1.64E-12,Known Source,,
+1092,Source,XMMU J174445.5-29504,Unclassified,Unclassified,266.1896,-29.845,3.91E-11,Known Source,,
+1093,Source,[DI91] 286,X-ray Binary,HMXB,31.68823825,-74.46322423,3.23E-12,Known Source,,
+1094,Source,1A 0620-00,X-ray Binary,HMXB,95.68559327,-0.345636239,,Known Source,,
+1095,Source,1A 1118-615,X-ray Binary,HMXB,170.2382237,-61.9167128,4.21E-11,Known Source,,
+1096,Source,1E 1145.1-6141,X-ray Binary,HMXB,176.8689993,-61.95372972,5.03E-10,Known Source,,
+1097,Source,1H 0521+373,X-ray Binary,HMXB,80.64679748,37.67601071,,Known Source,,
+1098,Source,1H 0556+286,X-ray Binary,HMXB,88.97933683,28.78511718,,Known Source,,
+1099,Source,1H 1249-637,X-ray Binary,HMXB,190.7094432,-63.05862583,1.48E-12,Known Source,,
+1100,Source,1RXS J194211.9+255552,X-ray Binary,HMXB,295.546532,25.93490807,9.67E-11,Known Source,,
+1101,Source,2E 1048.1-5937,X-ray Binary,HMXB,162.53721,-59.88886,3.51E-11,Known Source,,
+1102,Source,3A 0114+650,X-ray Binary,HMXB,19.51124027,65.29161922,1.01E-10,Known Source,,
+1103,Source,3A 0656-072,X-ray Binary,HMXB,104.5720326,-7.209778968,1.81E-09,Known Source,,
+1104,Source,3A 0726-260,X-ray Binary,HMXB,112.2232451,-26.10802698,1.78E-11,Known Source,,
+1105,Source,3A 1845-024,X-ray Binary,HMXB,282.0738,-2.4203,1.19E-10,Known Source,,
+1106,Source,3A 1954+319,X-ray Binary,HMXB,298.9264096,32.0969573,1.58E-10,Known Source,,
+1107,Source,3A 2206+543,X-ray Binary,HMXB,331.9843195,54.51844691,6.62E-10,Known Source,,
+1108,Source,4U 1036-56,X-ray Binary,HMXB,159.3971438,-56.79885267,8.34E-11,Known Source,,
+1109,Source,4U 1543-47,X-ray Binary,HMXB,236.7844869,-47.6695235,3.11E-11,Known Source,,
+1110,Source,4U 1909+07,X-ray Binary,HMXB,287.7008888,7.597696426,2.5E-10,Known Source,,
+1111,Source,AX J0051-722,X-ray Binary,HMXB,12.73749683,-72.2262729,4.83E-11,Known Source,,
+1112,Source,AX J0058-720,X-ray Binary,HMXB,14.45656048,-72.04329822,1.15E-12,Known Source,,
+1113,Source,AX J1700.1-4157,X-ray Binary,HMXB,255.01775,-41.96797,4.56E-12,Known Source,,
+1114,Source,AX J1700.2-4220,X-ray Binary,HMXB,255.1051815,-42.31674442,,Known Source,,
+1115,Source,AX J1749.1-2733,X-ray Binary,HMXB,267.27829,-27.54232,3.28E-12,Known Source,,
+1116,Source,AX J1820.5-1434,X-ray Binary,HMXB,275.1229,-14.5733,2.54E-11,Known Source,,
+1117,Source,AX J1832.1-0938,X-ray Binary,HMXB,278.0372379,-9.651650077,3.04E-12,Known Source,,
+1118,Source,Cep X-4,X-ray Binary,HMXB,324.8778763,56.98622832,4.7E-10,Known Source,,
+1119,Source,EXO 0331+530,X-ray Binary,HMXB,53.74963171,53.17313802,1.3E-10,Known Source,,
+1120,Source,EXO 053109-6609.2,X-ray Binary,HMXB,82.80542,-66.1180572,3.64E-12,Known Source,,
+1121,Source,Ginga 0834-430,X-ray Binary,HMXB,128.9791485,-43.18819364,7.26E-10,Known Source,,
+1122,Source,Ginga 1354-645,X-ray Binary,HMXB,209.540417,-64.734944,1.91E-10,Known Source,,
+1123,Source,Ginga 1843+009,X-ray Binary,HMXB,281.4034819,0.863177164,1.91E-09,Known Source,,
+1124,Source,Ginga 2000+25,X-ray Binary,HMXB,300.70658,25.23647,,Known Source,,
+1125,Source,GRO J0422+32,X-ray Binary,HMXB,65.42801145,32.9074831,,Known Source,,
+1126,Source,GRO J1655-40,X-ray Binary,HMXB,253.500571,-39.845806,2.91E-11,Known Source,,
+1127,Source,GRO J1750-27,X-ray Binary,HMXB,267.304036,-26.644147,6.18E-10,Known Source,,
+1128,Source,GRO J2058+42,X-ray Binary,HMXB,314.6980715,41.77699458,1.68E-10,Known Source,,
+1129,Source,GRS 1009-45,X-ray Binary,HMXB,153.4017117,-45.07570941,,Known Source,,
+1130,Source,GT 0236+610,X-ray Binary,HMXB,40.13193517,61.22933164,1.36E-11,Known Source,,
+1131,Source,GX 304-1,X-ray Binary,HMXB,195.3212371,-61.60184376,1.17E-10,Known Source,,
+1132,Source,GX 339-4,X-ray Binary,HMXB,255.7057818,-48.78974665,1.08E-10,Known Source,,
+1133,Source,H 0115+634,X-ray Binary,HMXB,19.6332104,63.74252017,2.55E-11,Known Source,,
+1134,Source,H 1145-619,X-ray Binary,HMXB,177.0000894,-62.20691733,1.3E-10,Known Source,,
+1135,Source,H 1417-624,X-ray Binary,HMXB,215.3006501,-62.69891371,1.23E-10,Known Source,,
+1136,Source,H 1553-542,X-ray Binary,HMXB,239.45417,-54.415,1.63E-09,Known Source,,
+1137,Source,H 1705-250,X-ray Binary,HMXB,257.0605,-25.091708,,Known Source,,
+1138,Source,IGR J00370+6122,X-ray Binary,HMXB,9.290149231,61.36013552,1.81E-11,Known Source,,
+1139,Source,IGR J00515-7328,X-ray Binary,HMXB,13.00254787,-73.49046279,1.1E-11,Known Source,,
+1140,Source,IGR J01054-7253,X-ray Binary,HMXB,16.17617,-72.90103,2.94E-11,Known Source,,
+1141,Source,IGR J01217-7257,X-ray Binary,HMXB,20.41925979,-72.9585852,1.6E-11,Known Source,,
+1142,Source,IGR J01572-7259,X-ray Binary,HMXB,29.31754831,-72.97569254,3.11E-11,Known Source,,
+1143,Source,IGR J01583+6713,X-ray Binary,HMXB,29.57704667,67.22318327,1.14E-11,Known Source,,
+1144,Source,IGR J05007-7047,X-ray Binary,HMXB,75.1918953,-70.7433484,7.67E-12,Known Source,,
+1145,Source,IGR J08262-3736,X-ray Binary,HMXB,126.5568928,-37.61996461,1.03E-11,Known Source,,
+1146,Source,IGR J08408-4503,X-ray Binary,HMXB,130.1991314,-45.05839877,1.99E-11,Known Source,,
+1147,Source,IGR J10101-5654,X-ray Binary,HMXB,152.5494608,-56.92555624,1.41E-11,Known Source,,
+1148,Source,IGR J11215-5952,X-ray Binary,HMXB,170.4450994,-59.86332511,1.2E-11,Known Source,,
+1149,Source,IGR J11305-6256,X-ray Binary,HMXB,172.7788004,-62.94692512,3.11E-11,Known Source,,
+1150,Source,IGR J11321-5311,X-ray Binary,HMXB,173.03,-53.18,,Known Source,,
+1151,Source,IGR J11435-6109,X-ray Binary,HMXB,176.0012282,-61.12680088,1.64E-12,Known Source,,
+1152,Source,IGR J13186-6257,X-ray Binary,HMXB,199.604394,-62.97102,1.26E-11,Known Source,,
+1153,Source,IGR J14331-6112,X-ray Binary,HMXB,218.2847203,-61.26105606,6.08E-12,Known Source,,
+1154,Source,IGR J14488-5942,X-ray Binary,HMXB,222.180092,-59.703815,3.35E-12,Known Source,,
+1155,Source,IGR J16195-4945,X-ray Binary,HMXB,244.8840967,-49.74182375,1.87E-11,Known Source,,
+1156,Source,IGR J16207-5129,X-ray Binary,HMXB,245.1927686,-51.50167926,3.83E-11,Known Source,,
+1157,Source,IGR J16283-4838,X-ray Binary,HMXB,247.045134,-48.648914,,Known Source,,
+1158,Source,IGR J16318-4848,X-ray Binary,HMXB,247.9512876,-48.8168514,9E-12,Known Source,,
+1159,Source,IGR J16328-4726,X-ray Binary,HMXB,248.157708,-47.394847,1.39E-11,Known Source,,
+1160,Source,IGR J16393-4643,X-ray Binary,HMXB,249.773,-46.704,3.24E-11,Known Source,,
+1161,Source,IGR J16418-4532,X-ray Binary,HMXB,250.4616604,-45.54037972,4.41E-11,Known Source,,
+1162,Source,IGR J16465-4507,X-ray Binary,HMXB,251.6469127,-45.11794719,1.14E-11,Known Source,,
+1163,Source,IGR J16479-4514,X-ray Binary,HMXB,252.027341,-45.201893,1.6E-11,Known Source,,
+1164,Source,IGR J16493-4348,X-ray Binary,HMXB,252.36229,-43.81917,3.23E-11,Known Source,,
+1165,Source,IGR J17200-3116,X-ray Binary,HMXB,260.02463,-31.28322,3.41E-11,Known Source,,
+1166,Source,IGR J17252-3616,X-ray Binary,HMXB,261.297467,-36.282647,1.91E-11,Known Source,,
+1167,Source,IGR J17353-3539,X-ray Binary,HMXB,263.8483912,-35.67022789,1.09E-11,Known Source,,
+1168,Source,IGR J17354-3255,X-ray Binary,HMXB,263.8650246,-32.93178498,7.74E-12,Known Source,,
+1169,Source,IGR J17379-3747,X-ray Binary,HMXB,264.495,-37.772,2.31E-11,Known Source,,
+1170,Source,IGR J17391-3021,X-ray Binary,HMXB,264.7981315,-30.34382998,1.47E-11,Known Source,,
+1171,Source,IGR J17404-3655,X-ray Binary,HMXB,265.1119097,-36.92703177,1.63E-11,Known Source,,
+1172,Source,IGR J17544-2619,X-ray Binary,HMXB,268.6053012,-26.33127137,2.63E-11,Known Source,,
+1173,Source,IGR J17586-2129,X-ray Binary,HMXB,269.6439823,-21.38931517,1.95E-11,Known Source,,
+1174,Source,IGR J18027-2016,X-ray Binary,HMXB,270.674753,-20.2881424,5.62E-11,Known Source,,
+1175,Source,IGR J18048-1455,X-ray Binary,HMXB,271.16217,-14.94653,8.79E-12,Known Source,,
+1176,Source,IGR J18175-1530,X-ray Binary,HMXB,274.3929,-15.5114,,Known Source,,
+1177,Source,IGR J18214-1318,X-ray Binary,HMXB,275.3323642,-13.31085928,4.87E-11,Known Source,,
+1178,Source,IGR J18219-1347,X-ray Binary,HMXB,275.47842,-13.79075,8.27E-12,Known Source,,
+1179,Source,IGR J18256-1035,X-ray Binary,HMXB,276.43375,-10.58497,3.29E-12,Known Source,,
+1180,Source,IGR J18410-0535,X-ray Binary,HMXB,280.251814,-5.59624297,2.72E-11,Known Source,,
+1181,Source,IGR J18450-0435,X-ray Binary,HMXB,281.2566253,-4.565734176,3.62E-11,Known Source,,
+1182,Source,IGR J18462-0223,X-ray Binary,HMXB,281.5533082,-2.373900187,1.25E-11,Known Source,,
+1183,Source,IGR J18483-0311,X-ray Binary,HMXB,282.0716936,-3.171351451,7.32E-11,Known Source,,
+1184,Source,IGR J19140+0951,X-ray Binary,HMXB,288.5176131,9.882888888,2.98E-11,Known Source,,
+1185,Source,IGR J19294+1816,X-ray Binary,HMXB,292.4829406,18.31062457,4.43E-11,Known Source,,
+1186,Source,IGR J20006+3210,X-ray Binary,HMXB,300.091064,32.18975844,4.2E-11,Known Source,,
+1187,Source,IGR J21347+4737,X-ray Binary,HMXB,323.5848829,47.63339054,,Known Source,,
+1188,Source,IGR J22534+6243,X-ray Binary,HMXB,343.4796905,62.72688657,4.18E-12,Known Source,,
+1189,Source,KS 1947+300,X-ray Binary,HMXB,297.3978505,30.20882666,6.64E-11,Known Source,,
+1190,Source,MACHO 44.1741.17,X-ray Binary,HMXB,72.77833,-69.80089,1.75E-11,Known Source,,
+1191,Source,MAXI J1348-630,X-ray Binary,HMXB,207.0530785,-63.27491919,,Known Source,,
+1192,Source,Nova Mus 1991,X-ray Binary,HMXB,171.6108173,-68.67579938,,Known Source,,
+1193,Source,OAO 1657-415,X-ray Binary,HMXB,255.203683,-41.655961,6.16E-11,Known Source,,
+1194,Source,PSR J1844-0258,X-ray Binary,HMXB,281.221,-2.933,2.85E-10,Known Source,,
+1195,Source,RX J0052.9-7158,X-ray Binary,HMXB,13.23027341,-71.96841328,1.76E-12,Known Source,,
+1196,Source,RX J0059.2-7138,X-ray Binary,HMXB,14.80310167,-71.64582288,1.58E-10,Known Source,,
+1197,Source,RX J0146.9+6121,X-ray Binary,HMXB,26.75088503,61.35657327,1.06E-10,Known Source,,
+1198,Source,RX J0520.5-6932,X-ray Binary,HMXB,80.1287537,-69.5319442,1.88E-11,Known Source,,
+1199,Source,RX J0529.8-6556,X-ray Binary,HMXB,82.44939447,-65.94544234,7.29E-12,Known Source,,
+1200,Source,RX J0531.5-6518,X-ray Binary,HMXB,82.9004133,-65.3044511,1.04E-12,Known Source,,
+1201,Source,RX J0532.4-6535,X-ray Binary,HMXB,83.1133346,-65.5819397,1.65E-10,Known Source,,
+1202,Source,RX J0532.5-6551,X-ray Binary,HMXB,83.13595348,-65.86126042,4.15E-12,Known Source,,
+1203,Source,RX J0535.8-6530,X-ray Binary,HMXB,83.9742,-65.5094,1.79E-12,Known Source,,
+1204,Source,RX J0648.0-4419,X-ray Binary,HMXB,102.019584,-44.31623223,3.02E-12,Known Source,,
+1205,Source,RX J0812.4-3114,X-ray Binary,HMXB,123.1181563,-31.24781624,4.04E-10,Known Source,,
+1206,Source,RX J1744.7-2713,X-ray Binary,HMXB,266.1906903,-27.22902193,2.59E-10,Known Source,,
+1207,Source,RX J1826.2-1450,X-ray Binary,HMXB,276.562734,-14.84840202,7.64E-12,Known Source,,
+1208,Source,SAX J1452.8-5949,X-ray Binary,HMXB,223.21958,-59.81892,1.24E-12,Known Source,,
+1209,Source,SAX J1818.6-1703,X-ray Binary,HMXB,274.65791,-17.04665774,1.66E-10,Known Source,,
+1210,Source,SAX J1819.3-2525,X-ray Binary,HMXB,274.840143,-25.40718044,2.7E-11,Known Source,,
+1211,Source,SAX J2103.5+4545,X-ray Binary,HMXB,315.898792,45.75154688,1.12E-10,Known Source,,
+1212,Source,Sct X-1,X-ray Binary,HMXB,278.8576018,-7.614004546,,Known Source,,
+1213,Source,SMC X-2,X-ray Binary,HMXB,13.63929,-73.68369,6.04E-12,Known Source,,
+1214,Source,SWIFT J045558.9-702001,X-ray Binary,HMXB,73.9954,-70.3336,1.61E-12,Known Source,,
+1215,Source,SWIFT J1626.5-5156,X-ray Binary,HMXB,246.6521657,-51.94183335,4.12E-11,Known Source,,
+1216,Source,SWIFT J1816.7-1613,X-ray Binary,HMXB,274.17775,-16.22317,4.38E-11,Known Source,,
+1217,Source,UCAC2 2073373,X-ray Binary,HMXB,85.39293526,-68.43012445,1.06E-10,Known Source,,
+1218,Source,V404 Cyg,X-ray Binary,HMXB,306.0159394,33.86721172,9.58E-12,Known Source,,
+1219,Source,XMMU J010253.1-724433,X-ray Binary,HMXB,15.72215844,-72.74310173,3.16E-12,Known Source,,
+1220,Source,XTE J0421+560,X-ray Binary,HMXB,64.925565,55.99936294,3.53E-12,Known Source,,
+1221,Source,XTE J1118+480,X-ray Binary,HMXB,169.544971,48.03675409,,Known Source,,
+1222,Source,XTE J1543-568,X-ray Binary,HMXB,236.008,-56.712,,Known Source,,
+1223,Source,XTE J1550-564,X-ray Binary,HMXB,237.7444325,-56.47646066,,Known Source,,
+1224,Source,XTE J1650-500,X-ray Binary,HMXB,252.504083,-49.962111,,Known Source,,
+1225,Source,XTE J1716-389,X-ray Binary,HMXB,258.9862,-38.8639,0.000000891,Known Source,,
+1226,Source,XTE J1743-363,X-ray Binary,HMXB,265.7555394,-36.3728386,2.15E-12,Known Source,,
+1227,Source,XTE J1855-026,X-ray Binary,HMXB,283.8766912,-2.604649348,2.19E-10,Known Source,,
+1228,Source,XTE J1859+083,X-ray Binary,HMXB,284.75654,8.24561,1.26E-11,Known Source,,
+1229,Source,XTE J1906+090,X-ray Binary,HMXB,286.197879,9.044833,2.41E-12,Known Source,,
+1230,Source,XTE J1908+094,X-ray Binary,HMXB,287.221167,9.384678,1.15E-10,Known Source,,
+1231,Source,XTE J1946+274,X-ray Binary,HMXB,296.413987,27.36541712,1.3E-09,Known Source,,
+1232,Source,1A 1744-361,X-ray Binary,LMXB,267.054783,-36.132506,1.71E-10,Known Source,,
+1233,Source,1E 1740.7-2942,X-ray Binary,LMXB,265.97846,-29.74517,2.76E-11,Known Source,,
+1234,Source,1E 1743.1-2843,X-ray Binary,LMXB,266.58787,-28.72842,1.25E-10,Known Source,,
+1235,Source,1E 1746.7-3224,X-ray Binary,LMXB,267.51625,-32.43067,7.18E-11,Known Source,,
+1236,Source,1H 1715-321,X-ray Binary,LMXB,259.6975,-32.17778,,Known Source,,
+1237,Source,1RXS J180408.9-342058,X-ray Binary,LMXB,271.0371,-34.3494,6.2E-12,Known Source,,
+1238,Source,2E 1603.6+2600,X-ray Binary,LMXB,241.4411445,25.86256847,4.56E-12,Known Source,,
+1239,Source,2MAXI J1753-013,X-ray Binary,LMXB,268.3678745,-1.451737932,4.48E-10,Known Source,,
+1240,Source,2MAXI J1922-171,X-ray Binary,LMXB,290.6542,-17.2842,6.82E-11,Known Source,,
+1241,Source,2S 1711-339,X-ray Binary,LMXB,258.58242,-34.04647,5.63E-11,Known Source,,
+1242,Source,2XMM J174931.6-280805,X-ray Binary,LMXB,267.383083,-28.134944,3.98E-11,Known Source,,
+1243,Source,3A 2129+470,X-ray Binary,LMXB,322.8592221,47.29014224,,Known Source,,
+1244,Source,4U 1323-62,X-ray Binary,LMXB,201.6543,-62.1358,1.73E-10,Known Source,,
+1245,Source,4U 1700+24,X-ray Binary,LMXB,256.6438034,23.97184427,7.38E-10,Known Source,,
+1246,Source,4U 1705-32,X-ray Binary,LMXB,257.22667,-32.31597,4.14E-11,Known Source,,
+1247,Source,AX J1754.2-2754,X-ray Binary,LMXB,268.56083,-27.90953,2.49E-12,Known Source,,
+1248,Source,Cen X-4,X-ray Binary,LMXB,224.5913949,-31.66875429,1.68E-12,Known Source,,
+1249,Source,EXO 0748-676,X-ray Binary,LMXB,117.14046,-67.75214,2.14E-12,Known Source,,
+1250,Source,EXO 1747-214,X-ray Binary,LMXB,267.60217,-21.42219,,Known Source,,
+1251,Source,EXO 1846-031,X-ray Binary,LMXB,282.3212,-3.0622,,Known Source,,
+1252,Source,GRO J1719-24,X-ray Binary,LMXB,259.9038341,-25.01781156,,Known Source,,
+1253,Source,GRS 1730-312,X-ray Binary,LMXB,263.38333,-31.21667,,Known Source,,
+1254,Source,GRS 1736-297,X-ray Binary,LMXB,264.87446,-29.70297,4.39E-11,Known Source,,
+1255,Source,GX 359+2,X-ray Binary,LMXB,264.642,-28.478,,Known Source,,
+1256,Source,H 1658-298,X-ray Binary,LMXB,255.52725,-29.94558,3.63E-11,Known Source,,
+1257,Source,H 1745-203,X-ray Binary,LMXB,267.2225,-20.36194,2.43E-11,Known Source,,
+1258,Source,HETE J1900.1-2455,X-ray Binary,LMXB,285.03604,-24.92047,5.6E-11,Known Source,,
+1259,Source,IGR J00291+5934,X-ray Binary,LMXB,7.26275,59.57194,8.27E-11,Known Source,,
+1260,Source,IGR J15390-6226,X-ray Binary,LMXB,234.799846,-62.467306,3.84E-09,Known Source,,
+1261,Source,IGR J16194-2810,X-ray Binary,LMXB,244.8889299,-28.12775036,6.2E-11,Known Source,,
+1262,Source,IGR J16287-5021,X-ray Binary,LMXB,247.112,-50.378,7.01E-12,Known Source,,
+1263,Source,IGR J16293-4603,X-ray Binary,LMXB,247.312,-46.077,,Known Source,,
+1264,Source,IGR J17191-2821,X-ray Binary,LMXB,259.813,-28.299,8.28E-10,Known Source,,
+1265,Source,IGR J17254-3257,X-ray Binary,LMXB,261.35625,-32.95486,3.84E-11,Known Source,,
+1266,Source,IGR J17285-2922,X-ray Binary,LMXB,262.16237,-29.36247,1.73E-11,Known Source,,
+1267,Source,IGR J17361-4441,X-ray Binary,LMXB,264.072575,-44.734994,3E-11,Known Source,,
+1268,Source,IGR J17451-3022,X-ray Binary,LMXB,266.278,-30.378694,2.95E-10,Known Source,,
+1269,Source,IGR J17464-3213,X-ray Binary,LMXB,266.5649849,-32.23357222,1.4E-10,Known Source,,
+1270,Source,IGR J17473-2721,X-ray Binary,LMXB,266.82525,-27.34414,3.91E-10,Known Source,,
+1271,Source,IGR J17497-2821,X-ray Binary,LMXB,267.408496,-28.354861,4.81E-10,Known Source,,
+1272,Source,IGR J17511-3057,X-ray Binary,LMXB,267.78563,-30.96158,1.47E-10,Known Source,,
+1273,Source,IGR J17597-2201,X-ray Binary,LMXB,269.9404,-22.0275,3.17E-11,Known Source,,
+1274,Source,IGR J18044-2739,X-ray Binary,LMXB,271.1296,-27.6589,9.51E-09,Known Source,,
+1275,Source,IGR J18245-2452,X-ray Binary,LMXB,276.13542,-24.86883,1.53E-11,Known Source,,
+1276,Source,IGR J18539+0727,X-ray Binary,LMXB,283.48,7.45,,Known Source,,
+1277,Source,IGR J19566+0326,X-ray Binary,LMXB,299.16267,3.44519,4.36E-12,Known Source,,
+1278,Source,KS 1731-260,X-ray Binary,LMXB,263.55608,-26.0885,2.4E-09,Known Source,,
+1279,Source,MAXI J1621-501,X-ray Binary,LMXB,245.09171,-50.01989,4.15E-10,Known Source,,
+1280,Source,MAXI J1659-152,X-ray Binary,LMXB,254.757,-15.257981,6.28E-11,Known Source,,
+1281,Source,MAXI J1820+070,X-ray Binary,LMXB,275.0914266,7.185356905,4.49E-09,Known Source,,
+1282,Source,MAXI J1910-057,X-ray Binary,LMXB,287.595,-5.79886,7.82E-10,Known Source,,
+1283,Source,RX J1718.4-4029,X-ray Binary,LMXB,259.60054,-40.49178,5.87E-12,Known Source,,
+1284,Source,SAX J0835.9+5118,X-ray Binary,LMXB,128.9833,51.31,,Known Source,,
+1285,Source,SAX J1750.8-2900,X-ray Binary,LMXB,267.60175,-29.03761,1.37E-11,Known Source,,
+1286,Source,SAX J1752.3-3138,X-ray Binary,LMXB,268.1,-31.62833,,Known Source,,
+1287,Source,SAX J1753.5-2349,X-ray Binary,LMXB,268.3829,-23.820794,3.17E-11,Known Source,,
+1288,Source,SAX J1808.4-3658,X-ray Binary,LMXB,272.11475,-36.97897,1.76E-11,Known Source,,
+1289,Source,SAX J1810.8-2609,X-ray Binary,LMXB,272.68529,-26.15033,5.83E-11,Known Source,,
+1290,Source,SWIFT J0732.6-1330,X-ray Binary,LMXB,113.1571221,-13.51898444,1.41E-11,Known Source,,
+1291,Source,SWIFT J174510.8-262411,X-ray Binary,LMXB,266.295204,-26.4035,5.07E-10,Known Source,,
+1292,Source,SWIFT J1756.9-2508,X-ray Binary,LMXB,269.23896,-25.10772,3.13E-11,Known Source,,
+1293,Source,TrA X-1,X-ray Binary,LMXB,232.07071,-61.88272,3.2E-10,Known Source,,
+1294,Source,XB 1832-330,X-ray Binary,LMXB,278.931871,-32.990769,3.43E-11,Known Source,,
+1295,Source,XTE J0929-314,X-ray Binary,LMXB,142.33412,-31.38422,,Known Source,,
+1296,Source,XTE J1710-281,X-ray Binary,LMXB,257.5512,-28.1317,8.9E-11,Known Source,,
+1297,Source,XTE J1720-318,X-ray Binary,LMXB,259.995792,-31.750308,,Known Source,,
+1298,Source,XTE J1723-376,X-ray Binary,LMXB,260.9112,-37.6617,,Known Source,,
+1299,Source,XTE J1751-305,X-ray Binary,LMXB,267.80621,-30.62317,1.05E-11,Known Source,,
+1300,Source,XTE J1752-223,X-ray Binary,LMXB,268.062875,-22.342322,1.47E-10,Known Source,,
+1301,Source,XTE J1755-324,X-ray Binary,LMXB,268.8692,-32.4775,,Known Source,,
+1302,Source,XTE J1807-294,X-ray Binary,LMXB,271.7492,-29.4083,,Known Source,,
+1303,Source,XTE J1814-338,X-ray Binary,LMXB,273.41262,-33.77286,,Known Source,,
+1304,Source,XTE J1817-330,X-ray Binary,LMXB,274.431404,-33.018833,1.05E-10,Known Source,,
+1305,Source,XTE J2123-058,X-ray Binary,LMXB,320.81058,-5.79803,,Known Source,,
+1306,Source,CAL 83,X-ray Binary,X-ray Binary,85.89233335,-68.37283097,3.08E-12,Known Source,,
+1307,Source,IGR J06253+7334,X-ray Binary,X-ray Binary,96.31771644,73.57752933,1.12E-11,Known Source,,
+1308,Source,IGR J11187-5438,X-ray Binary,X-ray Binary,169.5883738,-54.62465666,5.17E-12,Known Source,,
+1309,Source,IGR J15479-4529,X-ray Binary,X-ray Binary,237.0608173,-45.47775524,3.79E-11,Known Source,,
+1310,Source,IGR J16597-3704,X-ray Binary,X-ray Binary,254.8870929,-37.12063278,1.26E-10,Known Source,,
+1311,Source,IGR J17269-4737,X-ray Binary,X-ray Binary,261.705333,-47.64025,2.54E-08,Known Source,,
+1312,Source,IGR J17445-2747,X-ray Binary,X-ray Binary,266.1267389,-27.76680816,4.49E-12,Known Source,,
+1313,Source,MAXI J1305-704,X-ray Binary,X-ray Binary,196.730417,-70.451419,3.82E-11,Known Source,,
+1314,Source,MAXI J1535-571,X-ray Binary,X-ray Binary,233.83221,-57.23003,7.73E-10,Known Source,,
+1315,Source,MAXI J1647-227,X-ray Binary,X-ray Binary,252.05133,-23.01533,8.31E-11,Known Source,,
+1316,Source,MAXI J1836-194,X-ray Binary,X-ray Binary,278.931,-19.319578,6.62E-11,Known Source,,
+1317,Source,PBC J1842.3-1124,X-ray Binary,X-ray Binary,280.57271,-11.41775,2.36E-10,Known Source,,
+1318,Source,RX J0806.3+1527,X-ray Binary,X-ray Binary,121.5956334,15.45861172,1.04E-12,Known Source,,
+1319,Source,SAX J1711.6-3808,X-ray Binary,X-ray Binary,257.9046,-38.1183,,Known Source,,
+1320,Source,SWIFT J1658.2-4242,X-ray Binary,X-ray Binary,254.55267,-42.69844,1.77E-09,Known Source,,
+1321,Source,SWIFT J1753.7-2544,X-ray Binary,X-ray Binary,268.41612,-25.75389,5.17E-11,Known Source,,
+1322,Source,SWIFT J1858.6-0814,X-ray Binary,X-ray Binary,284.64546,-8.23744,,Known Source,,
+1323,Source,SWIFT J1943.4+0228,X-ray Binary,X-ray Binary,295.89221,2.46528,5.12E-11,Known Source,,
+1324,Source,V2306 Cyg,X-ray Binary,X-ray Binary,299.560289,32.54500086,1.51E-11,Known Source,,
+1325,Source,XTE J1652-453,X-ray Binary,X-ray Binary,253.084708,-45.344442,1.17E-09,Known Source,,
+1326,Source,XTE J1719-291,X-ray Binary,X-ray Binary,259.820708,-29.069542,1.08E-11,Known Source,,
+1327,Source,XTE J1901+014,X-ray Binary,X-ray Binary,285.4175,1.4419,7.6E-11,Known Source,,

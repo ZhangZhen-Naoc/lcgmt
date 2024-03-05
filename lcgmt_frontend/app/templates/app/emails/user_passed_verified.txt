@@ -1,0 +1,9 @@
+{{_('Hello')}} {{ user.name }},
+
+{{_('Welcome to')}} EP TDIC!
+
+{{_('Congratulations! Your account have passed the review, now you can visit the system normally!')}}
+
+{{_('You can visit your home page from this link:')}}{{ url_for('user.index', _external=True) }}
+
+{{_('(Please do not reply to this notification, this inbox is not monitored.)')}}

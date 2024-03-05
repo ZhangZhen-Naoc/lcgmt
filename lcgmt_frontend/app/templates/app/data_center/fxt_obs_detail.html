@@ -1,0 +1,232 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px;">
+    <ol class="breadcrumb">
+        {{ render_breadcrumb_item('main.index', _('Home')) }}
+        <li class="breadcrumb-item">FXT Observation Data Detail</li>
+        
+        
+    </ol>
+</nav>
+<div class="card w-100">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Observation: <span class="badge badge-secondary"
+                style="padding:10px; margin-left: 10px;">{{fxt_detection.obs_id}}</span> <span class="badge badge-info"
+                style="padding:10px; margin-left: 10px;">{{fxt_detection.detnam}}</span><span class="badge badge-warning"
+                style="padding:10px; margin-left: 10px;">{{fxt_detection.version}}</span></div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <table class="table table-bordered table-hover table-sm">
+                   {# 
+                    <tr>
+                        <th>OBS ID</th>
+                        <td>{{fxt_detection.obs_id}}</td>
+                    </tr>
+                    #}
+                    <tr>
+                        <th>Pointing RA</th>
+                        <td>{{fxt_detection.pnt_ra|round(3,"floor")}}</td>
+                    </tr>
+                    <tr>
+                        <th>Pointing Dec</th>
+                        <td>{{fxt_detection.pnt_dec|round(3,"floor")}}</td>
+                    </tr>
+                    {# 
+                    <tr>
+                        <th>Instrument</th>
+                        <td>{{fxt_detection.instrument}}</td>
+                    </tr>
+                    <tr>
+                        <th>DetName</th>
+                        <td>{{fxt_detection.detnam}}</td>
+                    </tr>
+                    #}
+                    <tr>
+                        <th>Start Time</th>
+                        <td>{{fxt_detection.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+                    </tr>
+                    <tr>
+                        <th>End Time</th>
+                        <td>{{fxt_detection.obs_end.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+                    </tr>
+                    <tr>
+                        <th>Object Name</th>
+                        <td>{{fxt_detection.object_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Object RA</th>
+                        <td>{{fxt_detection.obj_ra|round(3,"floor")}}</td>
+                    </tr>
+                    <tr>
+                        <th>Object Dec</th>
+                        <td>{{fxt_detection.obj_dec|round(3,"floor")}}</td>
+                    </tr>
+                    <tr>
+                        <th>Exposure Time</th>
+                        <td>{{"%d"%fxt_detection.exposure_time}}</td>
+                    </tr>
+                    <tr>
+                        <th>Observation mode</th>
+                        <td>{{fxt_detection.obs_mode}}</td>
+                    </tr>
+                    <tr>
+                        <th>observer</th>
+                        <td>{{fxt_detection.observer}}</td>
+                    </tr>
+                    <tr>
+                        <th>PI</th>
+                        <td>{{obs.pi}}</td>
+                    </tr>
+                    <tr>
+                        <th>Processing Time</th>
+                        <td>{{fxt_detection.process_time}}</td>
+                    </tr>
+                    <tr>
+                        <th>Archive Time</th>
+                        <td>{{fxt_detection.archive_time}}</td>
+                    </tr>
+                    <tr>
+                        <th>Publish Time</th>
+                        <td>{{fxt_detection.publish_time}}</td>
+                    </tr>
+                    <tr>
+                        <th>Proc Ver</th>
+                        <td>{{fxt_detection.proc_ver}}</td>
+                    </tr>
+                    <tr>
+                        <th>CALDB Ver</th>
+                        <td>{{fxt_detection.caldb_ver}}</td>
+                    </tr>
+                    <tr>
+                        <th>Soft Ver</th>
+                        <td>{{fxt_detection.soft_ver}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-4">
+                <div class="card w-100" style="margin-bottom: 20px;">
+                    <div class="card-header bg-light">
+                        <div style="color: #004386;font-weight: bold; font-size: 16px;">Image</div>
+                    </div>
+                    <div class="card-body">
+
+                        <figure class="figure">
+                            <figcaption class="figure-caption" style="font-weight: bold; line-height: 30px;">Click to check the raw data</figcaption>
+                            <a href="{{url_for('data_center.fxt_obs_quicklook',file_type='EP_FXT_IMGPNG',obs_id=fxt_detection.obs_id,module=fxt_detection.detnam)}}"
+                                target="_blank">
+                                <img
+                                    src="{{url_for('data_center.fxt_obs_quicklook',file_type='EP_FXT_IMGPNG',obs_id=fxt_detection.obs_id,module=fxt_detection.detnam)}}"
+                                    class="figure-img img-fluid rounded">
+                                </a>
+
+                        </figure>
+
+                    </div>
+                </div>
+                <div class="card w-100" style="margin-bottom: 10px;">
+                    <div class="card-header bg-light">
+                        <div style="color: #004386;font-weight: bold; font-size: 14px;">Get Data Files</div>
+                    </div>
+                    <div class="card-body">
+                        <a type="button" class="btn ep_openBtn btn-block" href="{{url_for('data_center.fxt_obs_data_downloads', obs_id=fxt_detection.obs_id,detnam=fxt_detection.detnam,version=fxt_detection.version)}}">Download data</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card w-100" style="margin-top: 20px;">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Sources in the observation <span class="badge badge-secondary" style="padding:10px; margin-left: 10px;">{{fxt_detection.obs_id}}</span> <span class="badge badge-info" style="padding:10px; margin-left: 10px;">{{fxt_detection.detnam}}</span> </div>
+    </div>
+    <div class="card-body">
+        <nav class="nav nav-tabs ep-sourcelist-nav" style="margin: 0px;">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active show" id="nav-source-list-tab" data-toggle="tab"
+                    href="#nav-source-list-tabpanel" role="tab" aria-controls="nav-source-list-tabpanel">
+                    <div class="ep-tabButton" aria-pressed="true">Source List
+                        <span class="badge">{{sourceObs|length}}</span></div>
+                </a>
+                {#
+                <a class="nav-item nav-link" id="nav-source-explorer-tab" data-toggle="tab"
+                    href="#nav-source-explorer-tabpanel" role="tab" aria-controls="nav-source-explorer-tabpanel">
+                    <div class="ep-tabButton" aria-pressed="true"
+                        id="source_explorer_tab">Explorer
+            </div>
+                </a>
+                #}
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent-1" style="background-color: #ddd; padding: 20px;">
+            <div class="tab-pane fade show active" id="nav-source-list-tabpanel" role="tabpanel"
+                aria-labelledby="nav-source-list-tab">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="source_table" style="background-color: #fff;">
+                        <thead class="table-secondary">
+                            <tr>
+                           2    <th>Source Name</th>
+                                <th>RA</th>
+                                <th>RA_ERR</th>
+                                <th>DEC</th>
+                                <th>DEC_ERR</th>
+                                <th>RA_Match</th>
+                                <th>DEC_Match</th>
+
+                                <th>flux</th>
+                                <th>rate</th>
+                                <th>SNR</th>
+                                <th>Hardness</th>
+                                <th>Name_Match</th>
+                                <th>Net Rate</th>
+                                <th>Version</th>
+                                <th>Exposure Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for row in sourceObs%}
+                            <tr>
+                                <td>
+                                    <a type="button" class="btn btn-secondary btn-block btn-sm"
+                                        href="{{url_for('data_center.fxt_src_detail', src_id=row.id)}}">{{row.id}}
+                                        {{row.detnam}}</a>
+
+                                </td>
+                                <td>{{row.ra| round(3, 'floor')}}</td>
+                                <td>{{row.ra_err| round(3, 'floor')}}</td>
+      5                         <td>{{row.dec| round(3, 'floor')}}</td>
+                                <td>{{row.dec_err| round(3, 'floor')}}</td>
+                                <td>{{row.pos_err| round(5, 'floor')}}</td>
+                                
+                                <td>{{row.ra_match}}</td>
+                                <td>{{row.dec_match}}</td>
+                                <td>{{row.flux}}</td>
+                                <td>{{row.rate| round(3, 'floor')}}</td>
+                                <td>{{row.snr| round(3, 'floor')}}</td>
+                                <td>{{row.hardness}}</td>
+                                <td>{{row.name_match}}</td>
+                                <td>{{row.version}}</td>
+                                <td>{{row.exposure_time}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-source-explorer-tabpanel" role="tabpanel"
+                aria-labelledby="nav-source-explorer-tab">
+                <div id="aladin-lite-div">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

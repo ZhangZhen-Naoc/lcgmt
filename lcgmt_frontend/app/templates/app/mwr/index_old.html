@@ -1,0 +1,106 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="card bg-light w-100">
+        <form method=post action="{{url_for('.index')}}" class="needs-validation" >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="card-header">
+                <h4>{{_('1: Choose catalogues:')}}</h4>
+            </div>
+            <div class="card-group">
+                {% for wavelength, items in catalogues|groupby("wavelength") %}
+                <div class="card">
+                    <div class="card-header">
+                        <h6>{{ wavelength|capitalize }}</h6>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for item in items %}
+                        <li class="list-group-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="{{item.table_name}}" id="{{item.table_name}}" name="cats">
+                                <label class="form-check-label" for="{{item.table_name}}">
+                                    {{ item.name}}
+                                </label>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    </ul>
+                </div>
+                {% endfor %}</ul>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{_('2: Input query details:')}}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="ra">RA</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="ra" id="ra" placeholder="RA" value="201.95" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="ra-unit">degree</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="dec">DEC</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="dec" id="dec" placeholder="DEC" value="22.08"
+                                    required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="dec-unit">degree</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="radius">Radius</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="radius" id="radius" placeholder="Radius" value="300"
+                                    required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="radius-unit">arcsec</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" type="submit">{{_('Submit Query')}}</button>
+                    <div class="form-row">
+                        {{_('OR')}}
+                    </div>
+                    <div class="form-group">
+                        <label for="batch_query">{{_('Batch Query')}}</label>
+                        <textarea class="form-control" name= "batch_query"id="batch_query" rows="10" placeholder="# ra, dec, radius">
+
+                        </textarea>
+                    </div>
+                    <button class="btn btn-primary" type="submit" id="batch_query_submit">{{_('Submit Query')}}</button>
+                    <div class="form-row">
+                        {{_('OR')}}
+                    </div>
+                    <div class="form-group">
+                        <label for="gw_query">{{_('GW Localization Query')}}</label>
+                            <select class="form-control" id="gw_query" name="gw_query" disabled>
+                              <option>GW170817</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                            </select>
+                         
+                    </div>
+                    <button class="btn btn-primary" type="submit" id="gw_query_submit" disabled>{{_('Submit Query')}}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

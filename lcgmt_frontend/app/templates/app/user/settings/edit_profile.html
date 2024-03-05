@@ -1,0 +1,23 @@
+{% extends 'app/user/settings/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{% block title %}{{_('Edit Profile')}}{% endblock %}
+
+{% block setting_content %}
+    <div class="card w-100 bg-light">
+        <h3 class="card-header">{{_('Edit Profile')}}</h3>
+        <div class="card-body">
+            {{ render_form(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(function(){
+    check_elem_on('blur', 'name', check_name, 'name');
+    check_elem_on('blur', 'phone', check_phone, 'phone');
+});
+</script>
+{% endblock %}

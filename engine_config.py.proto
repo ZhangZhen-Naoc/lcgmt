@@ -1,0 +1,11 @@
+"""
+engine_config.py.proto：把它复制为engine_config.py，
+该文件中定义要测试的engines，不放在git中。
+需要测试哪个时，把它的注释取消掉
+"""
+from typing import List
+from lcgmt.engine import BaseEngine,TaosEngine,InmemoryEngine
+
+engines:List[BaseEngine] = []
+engines.append(TaosEngine("http://localhost:6041/rest/sql","nadc","username","password"))
+engines.append(InmemoryEngine())

@@ -1,0 +1,132 @@
+{% extends 'app/base.html' %} {% block title %}EP Science Team Application Admin Panel{% endblock %} {% block content %}
+<div class="container-fluid" style="margin: 0px; padding: 0px">
+  <div class="card w-100" style="border: 0px">
+    <div class="card-body ep-newsView">
+      <div id="article_body" class="ep_article">
+        <h3 class="ep_article_title">EP科学团队中方成员申请意向征集情况总览</h3>
+
+        <div class="articleContent">
+          <div id="spinner-div">
+            Loading...
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+
+          <form class="form-inline" style="margin-top: 40px; margin-bottom: 20px">
+            <div class="form-group">
+              <label for="stp_filter"><strong>筛选:</strong></label>
+
+              <select class="custom-select col-8" id="stp_filter">
+                <option value="ALL">所有领域工作组</option>
+                <option value="STP1">STP1. 活动星系核和潮汐瓦解事件（AGN & TDE）</option>
+                <option value="STP2">STP2. 快速河外暂现源（Fast Extragalactic Transients）</option>
+                <option value="STP3">STP3. 多信使天文（Multi-messenger Astronomy）</option>
+                <option value="STP4">STP4. 恒星级致密天体（Compact Stellar Objects）</option>
+                <option value="STP5">STP5. 天文台科学（Observatory Science）</option>
+                <option value="STP6">STP6. 后随观测（Follow-up Observation Activities）</option>
+              </select>
+            </div>
+          </form>
+          <div id="result_tab" style="z-index: 50; width: 100%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  var result_table;
+  var that = this;
+  $(document).ready(function () {
+    $("#spinner-div").show();
+    $.ajax({
+      type: "GET",
+      url: "{{ url_for('cms.science_team_apply_admin') }}",
+      dataType: "json",
+      // data: { obs_id: obs_id, ra: ra, dec: dec, radius: radius, start_datetime: start_datetime, end_datetime: end_datetime },
+      success: function (res) {
+        // console.log(res);
+
+        // currentRes = res;
+        var table = new Tabulator("#result_tab", {
+          // data: mergeSameObsId(res),
+          data: res,
+          selectable: 1,
+          dataTree: true,
+          //   height: 520,
+          pagination: "local",
+          paginationSize: 150,
+          //   groupBy: "email",
+          //   paginationSizeSelector: [3, 6, 8, 10],
+          //   movableColumns: true,
+          paginationCounter: "rows",
+          layout: "fitDataFill",
+          initialSort: [{ column: "be_chair", dir: "desc" }],
+          columns: [
+            { title: "姓名", field: "name", sorter: "string", headerFilter: "input" },
+            { title: "职称", field: "title", sorter: "string", headerFilter: "input" },
+            {
+              title: "",
+              formatter: detailIcon,
+              width: 50,
+              hozAlign: "center",
+              tooltip: "查看详情",
+
+              cellClick: function (e, cell) {
+                showSTADetailPage(cell.getRow().getData().id);
+              },
+            },
+            { title: "机构", field: "institute", sorter: "string", headerFilter: "input" },
+            { title: "邮箱", field: "email", sorter: "string", headerFilter: "input" },
+            { title: "STP1", field: "agntde", tooltip: "Show Quicklook Image" },
+            { title: "STP2", field: "fet", tooltip: "Show Quicklook Image" },
+            { title: "STP3", field: "mma", tooltip: "Show Quicklook Image" },
+            { title: "STP4", field: "cso", tooltip: "Show Quicklook Image" },
+            { title: "STP5", field: "os", tooltip: "Show Quicklook Image" },
+            { title: "STP6", field: "fuoa", tooltip: "Show Quicklook Image" },
+            { title: "是否愿意作为STP负责人", field: "be_chair", tooltip: "Show Quicklook Image" },
+
+            { title: "ID", field: "id", sorter: "number" },
+          ],
+        });
+        that.result_table = table;
+        $("#spinner-div").hide(); //Request is complete so hide spinner
+      },
+    });
+  });
+
+  $("#stp_filter").change(function () {
+    var stp = $(this).val();
+    if (stp == "ALL") {
+      that.result_table.clearFilter();
+    } else if (stp == "STP1") {
+      that.result_table.setFilter("agntde", "=", true);
+    } else if (stp == "STP2") {
+      that.result_table.setFilter("fet", "=", true);
+    } else if (stp == "STP3") {
+      that.result_table.setFilter("mma", "=", true);
+    } else if (stp == "STP4") {
+      that.result_table.setFilter("cso", "=", true);
+    } else if (stp == "STP5") {
+      that.result_table.setFilter("os", "=", true);
+    } else if (stp == "STP6") {
+      that.result_table.setFilter("fuoa", "=", true);
+    }
+  });
+
+  var detailIcon = function (cell, formatterParams, onRendered) {
+    return '<i class="fas fa-info-circle"></i>';
+  };
+
+  function showSTADetailPage(id) {
+    var baseUrl = "{{url_for('cms.sta_detail', id='id_ph')}}";
+    var targetUrl = baseUrl.replace("id_ph", id);
+    window.open(targetUrl, "_blank").focus();
+  }
+</script>
+<style>
+  input {
+    padding: 0 !important;
+  }
+</style>
+{% endblock %}

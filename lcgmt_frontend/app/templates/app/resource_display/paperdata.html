@@ -1,0 +1,110 @@
+{% extends 'app/resource-display-base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
+{% block title %}{{_('Paperdata')}}{% endblock %}
+
+{% block content %}
+<div class="main-container headline-container">
+    <div class="row" style="margin: 0px;">
+        <div class="paperinfo-left col-sm-8">
+            <div class="paperinfo-titleLine">
+                <div class="paperinfo-title" id="pd-title">{{paperdata.title_en}}</div>
+            </div>
+
+            <div class="paperinfo-creater" id="pd-authors">{{paper.author|join(" / ") }}</div>
+
+            <div class="dataset-headline-body" style="margin-bottom: 20px;">
+                <div class="row" style="margin: 0px;">
+                    <div class="paperinfo-info" id="pd-description">{% if paperdata.page_en %}
+                            {{paperdata.page_en}}
+                        {% else %}
+                            {{paperdata.description_en}}
+                        {% endif %}</div>
+                </div>
+            </div>
+
+            Paper Title: {{paper.title}}<br/>
+            Paper Abstract: {{paper.abstract}}<br/>
+            Publication: {{paper.pub_raw}}<br/>
+            Bibcode: {{paper.bibcode}}<br/>
+            DOI: {%if paper.doi%}{{paper.doi| join(',')}}{% endif %}<br/>
+
+            <div class="paperinfo-subtitleLine">
+                <div class="paperinfo-subtitle">Files</div>
+            </div>
+
+            <div class="paperinfo-card">
+                <div class="row" style="margin: 0px;
+        color: #666699;
+        background-color: #eee; padding: 20px 0px; border-radius: 0.5rem;">
+                    {% for file in files%}
+                    <!--<div class="paperinfo-files-root col-sm-12" id="pd-fpath">-->
+<!--                        <img alt=".." class="paperinfo-img"-->
+<!--                             src="https://nadc.china-vo.org/s/nadcWeb/folderIcon.png"/>{{files[0].path.split("/")[0]}}</div>-->
+                    <div class="col-sm-12" id="pd-files">
+                        <div class="row">
+                            <div class="paperinfo-files-filename col-sm-8"><img
+                                    src="https://nadc.china-vo.org/s/nadcWeb/fileIcon.png" class="paperinfo-img"
+                                    alt=".."> {{file.filename}}
+                            </div>
+                            <div class="paperinfo-files-filesize col-sm-2">{{file.size_raw}}</div>
+                            <div class="col-sm-1"><a href="{{file.url[0]}}"><img
+                                    src=" https://nadc.china-vo.org/s/nadcWeb/downloadIcon.png" class="paperinfo-img"
+                                    alt=".."></a></div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="paperinfo-right col-sm-4">
+            <div class="paperinfo-subtitleLine" style="margin-top: 0px;">
+                <div class="paperinfo-subtitle">Identifier</div>
+            </div>
+
+            <div class="paperinfo-small-card">
+                <div class="row" style="margin: 0px;">
+                    <div class="paperinfo-small-secName col-sm-4">Publication date:</div>
+
+                    <div class="paperinfo-small-secInfo col-sm-7" id="pd-publicated">{{paperdata.publicated}}</div>
+
+                    <div class="paperinfo-small-secName col-sm-4">Update date:</div>
+
+                    <div class="paperinfo-small-secInfo col-sm-7" id="pd-updated">{{paperdata.updated}}</div>
+
+                    <div class="paperinfo-small-secName col-sm-4">DOI:</div>
+
+                    <div class="paperinfo-small-secInfo col-sm-7" id="pd-doi">{{paperdata.doi}}</div>
+
+                    <div class="paperinfo-small-secName col-sm-4">VO Identifier:</div>
+
+                    <div class="paperinfo-small-secInfo col-sm-7" id="pd-ivo">{{paperdata.identifier}}</div>
+                </div>
+            </div>
+            <div class="paperinfo-subtitleLine">
+                <div class="paperinfo-subtitle">Versions</div>
+            </div>
+
+            <div class="paperinfo-small-card">
+                <div class="paperinfo-version-card">
+                    {% for version in new_versions%}
+                    <div class="paperinfo-version-name">{{version.version}}</div>
+
+                    <div class="paperinfo-version-attribute" id="pd-vid">{{version.doi}}</div>
+
+                    <div class="paperinfo-version-attribute" id="pd-vdate">{{version.publicated}}</div>
+                    {% endfor %}
+                    <div class="paperinfo-version-name">{% if paperdata.version %}{{paperdata.version}}{% else %} Main {% endif %}</div>
+
+                    <div class="paperinfo-version-attribute" id="pd-vid">{{paperdata.doi}}</div>
+
+                    <div class="paperinfo-version-attribute" id="pd-vdate">{{paperdata.publicated}}</div>
+                </div>
+            </div>
+            <div class="paperinfo-backbtn"><a href="{{url_for('.paperdata_catalogue')}}">返回列表</a></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

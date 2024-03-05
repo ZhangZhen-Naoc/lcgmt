@@ -1,0 +1,195 @@
+{% extends 'app/base.html' %} {% from 'input.html' import ValueInputerUP, ValueInputer, TextInputer %} {% block title %}Add Source to Proposal{%
+  endblock %} {% block content %}
+  <div class="container-fluid" style="margin: 0px; padding: 0px">
+    <form id="form" method="POST" action="{{ url_for('proposal_submit.user_edit_target',proposal_id=proposal_id,source_id=ps_id)}}">
+      {{ form.csrf_token() }}
+   
+        <div class="container-fluid" style="margin: 0px; padding: 0px">
+          <div class="card w-100" style="border: 0px">
+            <div class="card-body ep-newsView">
+              <div id="article_body" style="margin: 0px 20px; background-color: #fff; padding: 20px">
+                <a
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                  href="{{url_for('proposal_submit.user_proposal_submit', proposal_id=proposal_id, card='sources')}}"
+                  >Back to Observation List</a
+                >
+                <h3 class="ep_article_title">Add Tiling Observation</h3>
+  
+                <div class="articleContent">
+                  <div class="card">
+                    <div class="card-header">Source Information</div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-3">{{ TextInputer("Source Name",label_class="ep_objsearch_label",id="source_name", hint="Source Name",tooltip="Please input the name of the target object followed by its respective tile index, e.g. Galactic Center Tile-1") }}</div>
+              
+                        <div class="col-md-3">{{ ValueInputerUP('ra','degree',0,label_class="ep_objsearch_label",hint="Pnt RA (J2000)",tooltip="")}}</div>
+                        <div class="col-md-3">{{ ValueInputerUP('dec','degree',0,label_class="ep_objsearch_label",hint="Pnt Dec (J2000)",tooltip="")}}</div>
+                        <div class="col-md-3"> <input id="visibility-tool" type="button" class="btn btn-md btn-info" target="_blank"  style="margin-top: 30px;" href="#" value="Target Visibility Tool" /></div>
+                      </div>
+                  
+                    </div>
+                  </div>
+                  <br>
+  
+               
+  
+                  <div class="card">
+                    <div class="card-header">Observation Parameters</div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-3">
+                          {{ ValueInputerUP('duration',{"name":"exposure_time_unit","values":["second"]},0,label_class="ep_objsearch_label",hint="Exposure Time per Tile",tooltip="") }}
+                          
+                          
+                        </div>
+                        <div class="col-md-3" style="display:none">
+                        
+                          {{ form.old_exposure_time(class="form-control",id="old_exposure_time") }}
+                        </div>
+                      </div>
+                    {#  <a class="btn btn-info btn-sm " data-toggle="collapse" href="#advanced_settings" role="button" aria-expanded="false" aria-controls="advanced_settings">
+                        Show Advanced Settings
+                      </a>#}
+                       <div id='advanced_settings' class="row collapse" style="margin-top:20px;">
+                        
+                        {#<div class="col-md-3">
+                          {{ ValueInputerUP('completeness','',0.8,label_class="ep_objsearch_label",hint="Completeness",tooltip="Range: 0.2~1")}}
+                        </div>#}
+                   
+                        <div class="col-md-3">{{ ValueInputerUP('min_con_obs_duration','Second',0,label_class="ep_objsearch_label",hint="Min Continue Obs Duration",tooltip="",type="hidden")}}</div>
+                        <div class="col-md-3">{{ ValueInputerUP('max_con_obs_duration','Second',0,label_class="ep_objsearch_label",hint="Max Continue Obs Duration",tooltip="",type="hidden")}}</div>
+                     
+                     </div>
+                        
+                      </div>
+                    </div>
+                 
+                  <br>
+                  <div class="card">
+                    <div class="card-header">Time Critical Parametjrs</div>
+                    <div class="card-body">
+                      <h5 style="margin-bottom:10px">Observing Window Constraints</h5>
+                      <div class="row">
+                        <div class="col-md-3">{{ TextInputer("Start Time",label_class="ep_objsearch_label",tooltip="",hint="Begin Time", input_class="datetimepicker",id="start_time") }}</div>
+                        <div class="col-md-3">{{ TextInputer("End Time",label_class="ep_objsearch_label",tooltip="",hint="End Time", input_class="datetimepicker",id="end_time") }}</div>
+                      </div>
+                      <div class="row">
+                      <div class="col">
+                        <div class="form-group">
+                        Other Time Constraints (less than 200 words):
+                        <div class="input-group">
+                        {{form.time_critical_remark(clasl="form-control",id="time_critical_remark")}}
+                        </div>
+                      </div></div>
+                    </div>
+                    </div>
+                  </div>
+                   <br>
+                   {% if anticipate_too %}
+                   <div class="card">
+                    <div class="card-header">Anticipated ToO's Parameters</div>
+                    <div class="card-body">
+                      <div class="row">
+                      <div class="col-md-3">
+                        {{ ValueInputerUP('trigger_probability','',0.8,label_class="ep_objsearch_label",hint="Trigger Probability",tooltip="")}}
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                   <br>
+                   {%endif%}
+                  <div class="card">
+                    <div class="card-header">FXT Configuration</div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="fxt1_window_mode" class="ep_objsearch_label">
+                              FXT-1 Window Mode:
+                            </label>
+                            <div class="input-group mb-3">
+                              <select class="form-control" name="fxt1_window_mode" id="fxt1_window_mode">
+                                <option value="FULLFRAME">Full Frame</option>
+                                <option value="PARTIALWINDOW">Partial Window</option>
+                               
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="fxt1_filter" class="ep_objsearch_label"> FXT-1 Filter: </label>
+                            <div class="input-group mb-3">
+                              <select class="form-control" name="fxt1_filter" id="fxt1_filter">
+                                <option value="MEDIUMFILTER">Medium Filter</option>
+                                <option value="THINFILTER">Thin Filter</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="fxt2_window_mode" class="ep_objsearch_label">
+                              FXT-2 Window Mode:
+                            </label>
+                            <div class="input-group mb-3">
+                              <select class="form-control" name="fxt2_window_mode" id="fxt2_window_mode">
+                                <option value="FULLFRAME">Full Frame</option>
+                                <option value="PARTIALWINDOW">Partial Window</option>
+                               
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="fxt2_filter" class="ep_objsearch_label"> FXT-2 Filter: </label>
+                            <div class="input-group mb-3">
+                              <select class="form-control" name="fxt2_filter" id="fxt2_filter">
+                                <option value="MEDIUMFILTER">Medium Filter</option>
+                                <option value="THINFILTER">Thin Filter</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                  
+                        <div class="col-md-3"> <a type="button" class="btn btn-md btn-info" target="_blank"  href="http://epfxt.ihep.ac.cn/simulation/filter_mode_eval">FXT Technical Evaluation Tool</a></div>
+                      
+                      </div>
+                    </div>
+                  </div>
+                
+              
+           
+         
+  
+     
+      <div class="modal-footer">
+        <a
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          href="{{url_for('proposal_submit.user_proposal_submit', proposal_id=proposal_id, card='sources')}}"
+          >Back to observation list</a
+        >
+        {{ form.add_source(class="btn btn-primary", value='Save' ) }}
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
+    </form>
+  </div>
+  
+  <script>
+    
+    {% include "app/proposal_submit/components/source_form.js" %}
+
+ $("#source_name").attr('placeholder','e.g. Galactic Center Tile-1'); 
+    
+  </script>
+  {% endblock %}
+  

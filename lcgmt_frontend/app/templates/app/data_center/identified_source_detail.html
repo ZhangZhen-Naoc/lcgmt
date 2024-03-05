@@ -1,0 +1,164 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %} {% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{ render_breadcrumb_item('data_center.identified_source_list', _('Source List'))
+    }} {{ render_breadcrumb_item('data_center.identified_source_detail', _('Source Detail')) }}
+  </ol>
+</nav>
+
+<div class="card w-100">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">{% if source.simbad_name is none %}
+      Unnamed Source (Transient or Burst)
+  {% else %}
+  {{source.simbad_name}}
+  {% endif %}</div>
+  </div>
+  <div class="card-body ep_datasearch_card">
+    {# 第一行：源基本信息和源快视图 #} 
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table table-bordered table-hover">
+          <!-- <caption><h6>Query Results</h6></caption> -->
+          <tr>
+            <th>RA, Dec</th>
+            <td>{{source.ra| round(3, 'floor')}}, {{source.dec| round(3, 'floor')}}</td>
+          </tr>
+      
+          <tr>
+            <th>RA (HMS), Dec (DMS)</th>
+            <td>{{ra_hms}},{{dec_dms}}</td>
+          </tr>
+          <tr>
+            <th>Galactic l, b</th>
+            <td>{{source.galactic_l| round(3, 'floor')}}, {{source.galactic_b| round(3, 'floor')}}</td>
+          </tr>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <table class="table table-bordered table-hover">
+          <tr>
+            <th>Pos Err (Arcmin)</th>
+            <td>{{(source.pos_err*60)| round(3, 'floor')}}</td>
+          </tr>
+          <tr>
+            <th>Reference Flux</th>
+            <td>
+              {% if source.ref_flux is none %}
+                  Nan
+              {% else %}
+              {{"%.2e"%(source.ref_flux)}}
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>Source Detected Number</th>
+            <td>{{source.wxt_detections|length}}</td>
+          </tr>
+          
+        </table>
+        </div>
+ 
+    </div>
+    </div>
+    <div id="spinner-div">
+      Loading...
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    {# 第四行：长期光变 #}
+    <div class="card w-100 " style="margin-top: 20px" id="lc-container">
+        <div class="card-header bg-light">
+          <div class="card-header-title" style="color: #004386; font-weight: bold; font-size: 16px">
+            Long Term Light Curve
+          </div>
+        </div>
+        <div class="card-body">
+          {% set ra=source.ra %}
+          {% set dec=source.dec %}
+          {% include 'app/data_center/components/longterm_lc.html' %}
+        </div>
+    </div>
+   
+    <div class="row" style="margin-top: 20px">
+      <div class="col-md-12">
+        {# 第二行：Aladin显示证认信息、第三行：包含这个位置的观测 #} 
+        <div class="card w-100">
+          <div class="card-header bg-light">
+              <div style="color: #004386; font-weight: bold; font-size: 16px">
+              Source in Skymap
+              <span> </span>
+              <a
+                  target="_blank"
+                  class="btn ep_openBtn btn-sm" style="float:right; "
+                  href="https://sky.esa.int/esasky/?target={{source.ra}}%20{{source.dec}}&hips=DSS2+color&fov=0.2&cooframe=J2000&sci=true&lang=zh"
+                  >ESA Sky</a
+              >
+              <a
+                  target="_blank"
+                  class="btn ep_openBtn btn-sm" style="float:right;margin-left: 10px;"
+                  href="https://asas-sn.osu.edu/variables?ra={{source.ra}}&dec={{source.dec}}&radius=3&vmag_min=&vmag_max=&amplitude_min=&amplitude_max=&period_min=&period_max=&lksl_min=&lksl_max=&class_prob_min=&class_prob_max=&parallax_over_err_min=&parallax_over_err_max=&name=&references[]=I&references[]=II&references[]=III&references[]=IV&references[]=V&references[]=IX&sort_by=raj2000&sort_order=asc&show_non_periodic=true&show_without_class=true&asassn_discov_only=false&"
+                  >ASAS-SN</a
+              >
+              </div>
+          </div>
+          
+          <div class="card-body" id="with-aladin">
+             {# <div class="row">
+              <div class="col">
+                  <span class="badge badge-light"><h6>Catalog Legend:</h6></span>
+                  <span class="badge badge-danger"><h6>Error Circle (10 arcmins)</h6></span>
+                  <span class="badge badge-warning"><h6>EP Reference</h6></span>
+                  <span class="badge badge-success"><h6>2RXS</h6></span>
+                  <span class="badge badge-primary"><h6>SIMBAD</h6></span>
+                  <span class="badge badge-primary" style="background-color: purple"><h6>SWIFT 2SXPS</h6></span>
+                  <span class="badge badge-info"><h6>MAXI</h6></span>
+                  <span class="badge badge-primary" style="background-color: #03dac5"><h6>AllWISE</h6></span>
+                  <span class="badge badge-primary" style="background-color: brown"><h6>Dark Energy Survey</h6></span>
+              </div>
+              </div>
+              #}
+              <div id="aladin-lite-div"></div>
+          </div>
+          </div>
+          
+       {% include 'app/data_center/components/related_source_observation.html' %}
+      </div>
+    </div>
+
+
+   
+    
+    {# 第五行：相关观测，用到 sourceObs #} 
+    {% include 'app/data_center/components/related_observations_for_source.html' %} 
+    {# 第六行：Alerts #}
+    {% include 'app/data_center/components/alerts.html' %}
+    {% include 'app/data_center/components/grbs.html' %}
+ 
+    
+   
+   
+  </div>
+</div>
+
+<script>
+  $("#obs_table").DataTable({
+    //跟数组下标一样，第一列从0开始，这里表格初始化时，第四列默认降序
+    order: [[5, "desc"]],
+  });
+  $(".dataTables_length").addClass("bs-select");
+
+  $(".thumb").click(function () {
+    var caption = $(this).find("figcaption");
+
+    $("#imageModalTitle").text(caption.text());
+    var imagesrc = $(this).attr("imgsrc");
+    $("#image-model").attr("src", imagesrc);
+
+    $("#image-modal-div").modal("show");
+  });
+</script>
+
+{% endblock %}

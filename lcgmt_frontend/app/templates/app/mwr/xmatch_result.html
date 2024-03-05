@@ -1,0 +1,357 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center Result') }}{% endblock %}
+{% block content %}
+
+<div class="row">
+
+    <div class="card bg-light w-100">
+        <div class="card-header">
+            <h4>{{_('Cross-Matching Results')}}</h4>
+        </div>
+        <div class="card-body" id='main-content'>
+
+            <div class="alert alert-primary" role="alert">
+                {{_(' Match Results of Input: ')}} {{ra}} {{dec}} {{radius}}
+            </div>
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    {% for wavelength in wavelength_list %}
+
+                    <a class="nav-item nav-link {% if loop.index==1 %} active show {% endif %}"
+                        id="nav-{{wavelength}}-tab" data-toggle="tab" href="#nav-{{wavelength}}-tabpanel" role="tab"
+                        aria-controls="nav-{{wavelength}}-tabpanel">
+                        <button type="button" class="btn btn-outline-secondary" aria-pressed="true">{{wavelength|capitalize}} {# <span
+                                class="badge badge-primary" >{{row_data_list[wavelength]|length}}</span>#}</button>
+                    </a>
+
+
+                    {% endfor %}
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                {% for wavelength in wavelength_list %}
+
+                <div class="tab-pane fade {% if loop.index==1 %} show active {% endif %}"
+                    id="nav-{{wavelength}}-tabpanel" role="tabpanel" aria-labelledby="nav-{{wavelength}}-tab">
+                  {#  {% set column_names = column_names_list[wavelength] %}
+                    {% set row_data = row_data_list[wavelength] %}
+                    <h4><span class="badge badge-success">
+                            Overview of the matched source in {{wavelength}} band:
+                        </span>
+                    </h4>
+                    <div class="table-responsive">
+
+                        <table class="table table-striped table-hover table-sm">
+
+                            <thead class="thead-dark">
+                                <tr>
+                                    {% for col in column_names %}
+                                    {% if not col.endswith("hidden")%}
+                                    <th>{{col}}</th>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in row_data %}
+                                <form method=post action="{{url_for('.match_detail')}}" target="_blank">
+
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="columns" value="{{column_names}}" />
+                                    <input type="hidden" name="matched" value="{{row}}" />
+                                    <tr>
+                                        {% for col, row_ in zip(column_names, row) %}
+                                        {% if col == 'Option' %}
+                                        <td>
+                                            <button type="submit" name="option" class="btn btn-outline-info">
+                                                {{ _('Check Details') }}
+                                            </button>
+                                        </td>
+                                        {% elif not col.endswith("hidden")%}
+
+                                        <td>{{row_}}</td>
+
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                </form>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    #}
+
+                    {% set single_cat_column_list = single_cat_column_dict[wavelength] %}
+                    {% set single_cat_row_data_list = single_cat_row_data_dict[wavelength] %}
+
+                    <h4><span class="badge badge-warning">
+                            Details of cross-matching with each catalogues in {{wavelength}}:
+                        </span></h4>
+                    <div class="table-responsive">
+
+                        {% for single_cat_column in single_cat_column_list %}
+                        {% set loop_index = loop.index-1%}
+
+                        <table class="table table-striped table-hover table-sm">
+
+                            <thead class="thead-light">
+                                <tr>
+                                    {% for col in single_cat_column %}
+                                    {% if loop.index == 2 %}
+                                   
+                                    {% set cat_name = col[:-3] %}
+                                    <a type='button' class="btn btn-primary btn-sm" target="_blank"  href="{{url_for('.raw_csv',cat=cat_name,ra=ra,dec=dec,radius=radius)}}">Download the result in CSV</a>
+                                    {% endif %}
+                                    {% if not col.endswith("hidden")%}
+                                    <th>{{col}}</th>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in single_cat_row_data_list[loop_index] %}
+                              {#  <form method=post action="{{url_for('.match_detail')}}" target="_blank">
+
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="columns" value="{{single_cat_column}}" />
+                                    <input type="hidden" name="matched" value="{{row}}" />#}
+                                    <tr>
+                                        {% for col, row_ in zip(single_cat_column, row) %}
+                                        {% if col.endswith('ID') %}
+                                        <td>
+                                            <a type="btn btn-primary" name="option" class="btn btn-outline-success btn-sm" target="_blank" href="{{url_for('.match_detail',cat=col,id=row_)}}">
+                                                {{row_}}
+                                            </button>
+                                        </td>
+                                        {% elif not col.endswith("hidden")%}
+                                        <td>{{row_}}</td>
+
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                    {#  </form>#}
+
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                        
+                        {% endfor%}
+
+                    </div>
+                </div>
+                {%endfor%}
+            </div>
+
+
+
+            <h4><span class="badge badge-info">
+                    The location of matched objects in catalogues of each wavelength. Input: {{ra}} {{dec}} {{radius}}
+                </span></h4>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="btn-group">
+                        <button id="bt-goto" type="button" class="btn btn-outline-primary btn-block"
+                            style="margin-bottom: 5px;">Go To Target</button>
+                        {% for wavelength in wavelength_list %}
+                        {#
+                        {% if wavelength == 'optical' %}
+                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 5px;">Show Results in
+                            {{wavelength|capitalize}}
+                        </button>
+                        {% elif wavelength == 'infrared' %}
+                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 5px;">Show Results in
+                            {{wavelength|capitalize}}
+                        </button>
+                        {% elif wavelength == 'ultraviolet' %}
+                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 5px;">Show Results in
+                            {{wavelength|capitalize}}
+                        </button>
+                        {% elif wavelength == 'x-ray' %}
+                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 5px;">Show Results in
+                            {{wavelength|capitalize}}
+                        </button>
+                        {% elif wavelength == 'gamma-ray' %}
+                        <button type="button" class="btn btn-outline-dark" style="margin-bottom:5px;">Show Results in
+                            {{wavelength|capitalize}} </button>
+                        {% elif wavelength == 'radio' %}
+                        #}
+                        <button id="bt-{{wavelength}}" type="button" class="btn btn-outline-dark"
+                            style="margin-bottom: 8px;">{{wavelength|capitalize}}
+                        </button>
+                        {#
+                        {% endif %}
+                        #}
+                        {% endfor %}
+                    </div>
+                </div>
+                </div>
+                <div class="row">
+                <div class="col-md-12">
+
+                    <div id="aladin-lite-div">
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#aladin-lite-div').width($('#main-content').width());
+        $('#aladin-lite-div').height(700);
+
+    });
+    var ra = {{ ra }};
+    var dec = {{ dec }};
+    var radius = {{ radius }}/3600.0; 
+    let aladin;
+  A.init.then(() => {
+    aladin = A.aladin("#aladin-lite-div", {
+      fov: 37,
+      fullScreen: false,
+      cooFrame: "j2000d",
+      fov: 0.5, // initial field of view in degrees
+            target: '{{ra}} {{dec}}', // initial target
+            reticleColor: '#ff89ff', // change reticle color
+            reticleSize: 64 // change reticle size
+
+    });
+    aladin.setProjection("AIT");
+    var overlay = A.graphicOverlay({ color: '#ee2345', lineWidth: 1 });
+    aladin.addOverlay(overlay);
+    overlay.add(A.circle(ra, dec, radius, { color: 'green' }));
+});
+    // overlay.add(A.circle(ra, dec, 0.04, {color: 'red'}));
+
+    var postion_info = {{ wavelength_cat_id_ra_dec_dict| safe}}
+    {% for wavelength in wavelength_list %}
+
+    $('#nav-{{wavelength}}-tab').on('click', function () {
+        showDetails('{{wavelength}}');
+        changeBaseSurvey('{{wavelength}}');
+    });
+
+    $('#bt-{{wavelength}}').on('click', function () {
+        showDetails('{{wavelength}}');
+        changeBaseSurvey('{{wavelength}}');
+    });
+    {% endfor %}
+
+    $('#bt-goto').on('click', function () {
+        gotoPosition(ra, dec);
+    });
+
+    function showDetails(wavelength) {
+        aladin.removeLayers();
+        var overlay = A.graphicOverlay({ color: '#ee2345', lineWidth: 1 });
+        aladin.addOverlay(overlay);
+        overlay.add(A.circle(ra, dec, radius, { color: 'green' }));
+        var catalogue = A.catalog({ name: 'matched objects', shape: drawFunction });
+        aladin.addCatalog(catalogue);
+
+        var cats = postion_info[wavelength]
+
+        for (var catname in cats) {
+            var cat_info = cats[catname];
+            console.log(cat_info);
+            for (var index in cat_info) {
+                info = cat_info[index];
+                overlay.add(A.circle(info[1], info[2], info[3] / 3600.0, { color: 'cyan' }));
+                var source = A.source(info[1], info[2], { name: catname, size: info[3], otype: 'ID' + info[0] });
+                catalogue.addSources(source)
+            }
+        }
+    }
+    function changeBaseSurvey(wavelength) {
+        if (wavelength == 'optical') {
+            var url = "CDS/P/DSS2/color";
+            aladin.setImageSurvey(url);
+            // aladin.setOverlayImageLayer(
+            //     aladin.createImageSurvey(
+            //         "SKYMAPPER",
+            //         wavelength,
+            //         "http://skymapper.anu.edu.au/CDS_P_skymapper-color/",
+            //         "equatorial",
+            //         9,
+            //         { imgFormat: "jpg" }
+            //     )
+            // );
+            // aladin.getOverlayImageLayer().setAlpha(0.5);
+        }
+        else if (wavelength == 'infrared') {
+            var url = "P/allWISE/color";
+            aladin.setImageSurvey(url);
+            
+        }
+        else if (wavelength == 'ultraviolet') {
+            var url = "P/GALEXGR6/AIS/color";
+            aladin.setImageSurvey(url);
+        }
+        else if (wavelength == 'radio') {
+            var url = "P/CHIPASS";
+            aladin.setImageSurvey(url);
+        }
+        else if (wavelength == 'x-ray') {
+            var url = "P/allWISE/color";
+            aladin.setImageSurvey(url);
+        
+        }
+        else if (wavelength == 'gamma-ray') {
+            var url = "P/Fermi/color";
+            aladin.setImageSurvey(url);
+        }
+
+    }
+
+
+
+
+    // define custom draw function
+    var drawFunction = function (source, canvasCtx, viewParams) {
+
+        var fov = Math.max(viewParams['fov'][0], viewParams['fov'][1]);
+
+
+        if (fov > 10) {
+            return;
+        }
+
+        canvasCtx.globalAlpha = 0.9;
+        canvasCtx.globalAlpha = 1;
+
+        var xShift = 20;
+
+        canvasCtx.font = '15px Arial'
+        canvasCtx.fillStyle = '#eee';
+        canvasCtx.fillText(source.data['otype'], source.x + xShift, source.y - 4);
+
+        // object type is displayed only if fov<2°
+        if (fov > 2) {
+            return;
+        }
+        canvasCtx.font = '12px Arial'
+        canvasCtx.fillStyle = '#abc';
+        canvasCtx.fillText(source.data['name'], source.x + 2 + xShift, source.y + 10);
+    };
+    var gotoPosition = function (ra, dec) {
+        aladin.gotoRaDec(ra, dec);
+        aladin.setFov(0.5);
+    };
+
+
+</script>
+{% endblock %}

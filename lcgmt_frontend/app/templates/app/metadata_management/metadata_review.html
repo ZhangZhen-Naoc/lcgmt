@@ -1,0 +1,155 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}{{_('Metadata Review')}}{% endblock %}
+
+{% block content %}
+<div class="card dashboard-card">
+    <div class="card-body">
+        <div class="col-md-8 offset-md-2">
+            <form method="post">
+                {{ form.csrf_token }}
+                <div class="form-group required">
+                    <label class="form-control-label fast-form-label" for="result">{{_('Review Opinion')}}</label>
+                    {{ form.result(class = 'form-check fast-form-checkbox') }}
+                </div>
+                {{ form.submit(class ="btn btn-secondary btn-sm fast-form-button") }}
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <table class="table table-borderless">
+        <tr>
+            <th>Title(Chinese)</th>
+            <td>{{resource.title_zh}}</td>
+        </tr>
+        <tr>
+            <th>Title(English)</th>
+            <td>{{resource.title_en}}</td>
+        </tr>
+        <tr>
+            <th>Shortname(Chinese)</th>
+            <td>{{resource.shortname_zh}}</td>
+        </tr>
+        <tr>
+            <th>Shortname(English)</th>
+            <td>{{resource.shortname_en}}</td>
+        </tr>
+        <tr>
+            <th>Description (Chinese)</th>
+            <td>{{resource.description_zh}}</td>
+        </tr>
+        <tr>
+            <th>Description (English)</th>
+            <td>{{resource.description_en}}</td>
+        </tr>
+        <tr>
+            <th>{{_('Type')}}</th>
+            <td>{{resource.get_type()}}</td>
+        </tr>
+        <tr>
+            <th>{{_('Created')}}</th>
+            <td>{{resource.created}}</td>
+        </tr>
+        <tr>
+            <th>{{_('Updated')}}</th>
+            <td>{{resource.updated}}</td>
+        </tr>
+        <!--        <tr>-->
+        <!--            <th>{{_('Publicated')}}</th>-->
+        <!--            <td>{{resource.shortname_en}}</td>-->
+        <!--        </tr>-->
+        <tr>
+            <th>{{_('Authors')}}</th>
+            <td>
+                {% if resource.get_authors()%}
+                <table>
+                    <tr>
+                        <th>{{_('Author name(Chinese)')}}</th>
+                        <th>{{_('Author name(English)')}}</th>
+                        <th>{{_('Affiliation(Chinese)')}}</th>
+                        <th>{{_('Affiliation(English)')}}</th>
+                        <th>{{_('Email')}}</th>
+                        <th>{{_('Telephone')}}</th>
+                    </tr>
+                    {% for author in resource.get_authors() %}
+                    <tr>
+                        <td>{{author.name_zh}}</td>
+                        <td>{{author.name_en}}</td>
+                        <td>{{author.affiliation_zh}}</td>
+                        <td>{{author.affiliation_en}}</td>
+                        <td>{{author.email}}</td>
+                        <td>{{author.telephone}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{{_('Publisher')}}</th>
+            <td>{{resource.get_publisher()}}</td>
+        </tr>
+        <tr>
+            <th>{{_('Keywords(Chinese)')}}</th>
+            <td>{%if resource.keyword_zh%}{{resource.keyword_zh|join(" , ")}}{% endif %}</td>
+        </tr>
+        <tr>
+            <th>{{_('Keywords(English)')}}</th>
+            <td>{%if resource.keyword_en%}{{resource.keyword_en|join(" , ")}}{% endif %}</td>
+        </tr>
+        <!--        <tr>-->
+        <!--            <th>{{_('URL')}}</th>-->
+        <!--            <td>{{resource.url}}</td>-->
+        <!--        </tr>-->
+        <tr>
+            <th>{{_('Tags')}}</th>
+            <td>
+                <table>
+                    {% for key, value in resource.get_tags().items() %}
+                    <td>
+                    <th>{{key}}</th>
+                    <td>{{value | join(" , ")}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <th>{{_('Share Methods')}}</th>
+            <td>{{resource.share_methods|join(",")}}</td>
+        </tr>
+        <tr>
+            <th>{{_('Share Scope')}}</th>
+            <td>{{resource.get_share_scope()}}</td>
+        </tr>
+        <tr>
+            <th>{{_('Apply procedure')}}</th>
+            <td>{{resource.apply_procedure}}</td>
+        </tr>
+        <tr>
+            <th>{{_('Acknowledgement (Chinese)')}}</th>
+            <td>{{resource.acknowledgement_zh or ''}}</td>
+        </tr>
+        <tr>
+            <th>{{_('Acknowledgement (English)')}}</th>
+            <td>{{resource.acknowledgement_en or ''}}</td>
+        </tr>
+        <tr>
+            <th>{{_('Rights')}}</th>
+            <td>{% if resource.get_rights()%}
+                中文:<br/>
+                {% for r in resource.get_rights() %}
+                {{r.title_zh}} :<a href="{{r.url_zh}}">{{r.url_zh}}</a><br/>
+                {% endfor %}
+                English:<br/>
+                {% for r in resource.get_rights() %}
+                {{r.title_en}} :<a href="{{r.url_en}}">{{r.url_en}}</a><br/>
+                {% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+</div>
+{% endblock %}

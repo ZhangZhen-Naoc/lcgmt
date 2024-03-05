@@ -1,0 +1,153 @@
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+{% extends 'app/base.html' %}
+
+
+
+{% block content %}
+<div class="container-fluid" style=" padding:0px; background-color:transparent;">        
+   <nav aria-label="breadcrumb" style="margin-bottom: 15px;">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li><li class="breadcrumb-item"><a href="{{ url_for('cms.view_article',id=107)}}">Science Team</a></li>
+        <li class="breadcrumb-item active" aria-current="page">STP Member</li>
+    </ol>
+    </nav>
+    <div class="user-header user-profile dashboard-card">
+      <div class="user-profile-content">
+
+          <div class="row user-profile-simple-card">
+
+              <div class="col-md-2">
+                      <div class="user-profile-pic">
+						{% if user.avatar_l|length>0 %}
+                          <img class="user-profile-pic-img"
+                               src="{{ url_for('main.get_avatar', filename=user.avatar_l) }}">
+                      {% else %}
+					  <img class="user-profile-pic-img"
+					  src="{{ url_for('static', filename='images/dashboard/userImg.png') }}">
+					  {% endif %}
+							</div>
+              </div><!--end avatar-->
+              <div class="col-md-10" style="margin: 15px 0px; padding: 15px 10px; background-color: #ddd; border-radius: 10px; color: #3D4553;">
+                 <div class="user-profile-info">
+                      <div style="font-size: 18px; font-weight: bold;">
+                      {{user.name}} </div>
+                      <ul class="user-profile-contact" style="list-style-type: none; margin: 0px; padding: 0px;">
+                          <!-- <li>
+                              <img src="{{ url_for('static', filename='/images/dashboard/phoneIcon.png') }}">{{user.phone}}
+                          </li> -->
+                          <li >
+                              <img src="{{ url_for('static', filename='/images/dashboard/emailIcon.png') }}">{{user.email}}
+                          </li>
+                         
+                      </ul>
+                  </div>
+                  
+
+                  <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">STP:</span> {{stpmember.stp}}</div>
+                  <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Affiliation:</span> {{user.affiliation}}</div>
+				  {%if user.display_personal_info %}
+                  <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Position:</span> {{user.position}}</div>
+       
+                  <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Research Topics:</span> {{user.research_field}}</div>
+                  <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Personal Website:</span> <a href="{{user.website}}"> {{user.website}}</a></div>
+                  <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Research Statement:</span> <p>{{user.research_statement}}</p></div>
+                  <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Publications:</span> <p>{{user.publication|safe}}</p></div>
+
+                  <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">User Group:</span> {{user.user_group}}</div>
+				  {% endif %}
+
+                  
+              </div>
+
+          </div><!--end row-->
+      </div><!--end profile-->
+  </div>
+
+</div>
+
+<style>
+    /*Members Page*/
+.memberName{
+	padding: 0px 10px;
+	border-radius: 5px;
+	background-color: #eee;
+	display: inline-block;
+	margin: 5px 7px;
+}
+.memberCard {
+	width: 1280px;
+	margin: 10px auto;
+	border-radius: 15px;
+	padding: 10px 0px;
+}
+.memberCardText {
+	width: 1280px;
+	margin: 10px auto;
+	font-size: 16px;
+	line-height: 30px;
+}
+.memberBacktoTop {
+	font-size: 16px;
+	font-weight: bold;	
+	margin-right: 20px;
+	position: fixed;
+	bottom: 180px;
+	right: 200px;
+}
+.memberBacktoTop a {
+	color: #000;
+}
+.member-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	grid-gap: 1rem;
+}
+.member-card {
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+	overflow: hidden;
+	/* è®¾ç½®æœ€å°é«˜åº¦ä¸ºå†…å®¹é«˜åº¦ */
+	min-height: min-content;
+}
+.member-photo {
+	height: 200px;
+	overflow: hidden;
+}
+.member-photo img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.member-info {
+	padding: 1rem;
+}
+.member-info h2 {
+	font-size: 1.5rem;
+	margin-bottom: 0.5rem;
+}
+.member-info p {
+	font-size: 1rem;
+	line-height: 1.5;
+	margin-bottom: 1rem;
+}
+.historyMember {
+	font-weight: bolder;
+	float: right;
+	display: block;
+	line-height: 30px;
+	margin-bottom: 10px;
+	padding: 5px 20px;
+	border-radius: 10px;
+	font-size: 14px;
+}
+.historyMember:hover {
+	font-weight: bolder;
+	color: #eee;
+	background-color: #777;
+}
+    </style>
+{% endblock %}
+

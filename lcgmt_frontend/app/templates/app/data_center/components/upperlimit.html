@@ -1,0 +1,48 @@
+
+<div class="card w-100" id="spectrum-container">
+
+
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Upperlimit of transient candidate <span class="badge badge-secondary" style="padding:10px;">{{source.source_name}}</div>
+        </h5>
+    </div>
+    <div class="card-body">
+    <div class="row">
+      <div class="col" id="upperlimit">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var upperlimit = JSON.parse({{source.xray_counterpart|tojson}});
+  console.log(upperlimit);
+  var showdiv = document.getElementById("upperlimit");
+    var ul = upperlimit['upperlimit'];
+  for(var key in ul)
+  {
+    showdiv.innerHTML+='<h5><strong>'+key+'</strong></h5>';
+    var ele = ul[key];
+    for (var index in ele)
+    {
+        var info = ele[index];
+        showdiv.innerHTML+='<div class="row " id="'+key+index+'"></div>';
+        for (var ik in info)
+        {
+           var infodiv= document.getElementById(key+index);
+           infodiv.innerHTML+='<dt class="col-3">'+ik+'</dt>';
+           infodiv.innerHTML+='<dd class="col-3">'+info[ik]+'</dd>';
+           
+        } 
+        if(index!=ele.length-1) 
+        { 
+        showdiv.innerHTML+='<br>';}
+
+        
+    }
+    showdiv.innerHTML+='<hr>';
+  }
+
+ 
+</script>

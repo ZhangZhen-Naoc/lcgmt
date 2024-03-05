@@ -1,0 +1,59 @@
+{% extends 'app/simulator/base.html' %} {% block bread %} {% from
+'bootstrap/nav.html' import render_breadcrumb_item %}
+
+<nav aria-label="breadcrumb" style="margin-bottom: 10px">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{
+    render_breadcrumb_item('simulator.index', _('Simulator')) }} {{
+    render_breadcrumb_item('simulator.simulate_result', _('Simulation Result'))
+    }}
+  </ol>
+</nav>
+{% endblock %} {%block simu_content%}
+<div class="row">
+  <div class="col text-right" style="padding-bottom: 1.5rem">
+    <a href="{{url_for('simulator.simulate_tasks')}}" class="btn ep_openBtn"
+      ><i class="fa fa-arrow-circle-left" style="margin-right: 5px"></i>Back to
+      task list</a
+    >
+    <a href="{{url_for('simulator.index')}}" class="btn btn-info">
+      <i class="fa fa-arrow-circle-left" style="margin-right: 5px"></i>Back to
+      Input
+    </a>
+  </div>
+</div>
+
+<!--output-->
+<div class="card">
+  <div class="card-header">
+    <h4 style="color: #003366; font-weight: bold">
+      Output
+      <a href="{{url_for('.download',id=result.id)}}" class="badge ep_openBtn"
+        ><i class="fa fa-arrow-circle-down"></i>
+        Download simulation result
+        <!-- <i class="fa fa-arrow-circle-down"></i>
+        <strong>Download simulation result</strong> -->
+      </a>
+    </h4>
+  </div>
+  <div class="card-body">{%block output %} {% endblock%}</div>
+</div>
+
+<!--quicklook-->
+<div class="card">
+  <div class="card-header">
+    <h4 style="color: #003366; font-weight: bold">Quick Look</h4>
+  </div>
+  <div class="card-body">{%block quicklook%} {%endblock%}</div>
+</div>
+<div>{% include "app/simulator/components/input.html" %}</div>
+
+<style>
+  table.simulation-result-quicklook > thead > tr > th {
+    text-align: center;
+  }
+  table.simulation-result-quicklook > tbody > tr > th {
+    vertical-align: middle;
+  }
+</style>
+{% endblock%}

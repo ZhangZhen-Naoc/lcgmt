@@ -1,0 +1,91 @@
+{% extends 'app/sysadmin/index.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{_('Comments Management')}}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        {{ render_breadcrumb_item('main.index', _('Home')) }}
+        {{ render_breadcrumb_item('sysadmin.index', _('Dashboard')) }}
+        {{ render_breadcrumb_item('comment.comments', _('Comments')) }}
+    </ol>
+</nav>
+<div class="container-fluid main-mmdcs-container">
+  <div class="row">
+    <div class="col-md-12 mmdcs-user-title">{{_('Comments Management')}}</div>
+    <div class="col-md-12 col-lg-2 col-xl-2">
+      <div class="dashboard-card mmdcs-user-left-col">
+          <a class="btn btn-outline-secondary mmdcs-user-left-col-list {% if request.args.get('filter') == 'all' %}active{% endif %}" href="{{ url_for('.comments', filter='all') }}"><div>{{_('All')}}</div></a>
+          <a class="btn btn-outline-secondary mmdcs-user-left-col-list {% if request.args.get('filter') == 'unresponsed' %}active{% endif %}" href="{{ url_for('.comments', filter='unresponsed') }}"><div>{{_('Unresponsed')}}</div></a>
+          <a class="btn btn-outline-secondary mmdcs-user-left-col-list {% if request.args.get('filter') == 'responsed_but_not_verified' %}active{% endif %}" href="{{ url_for('.comments', filter='responsed_but_not_verified') }}"><div>{{_('Responsed(not verified)')}}</div></a>
+          <a class="btn btn-outline-secondary mmdcs-user-left-col-list {% if request.args.get('filter') == 'responsed_and_released' %}active{% endif %}" href="{{ url_for('.comments', filter='responsed_and_released') }}"><div>{{_('Responsed(released)')}}</div></a>
+      </div>
+    </div>
+
+
+            {% if comments %}
+    <div class="col-md-12 col-lg-10 col-xl-10">
+        <div class="card-body">{{ comments.count() }} {{_('Comment')}}</div>
+            {% for com in comments %}
+      <div class="card dashboard-card">
+        <div class="card-header mmdcs-message-header">
+		<img class="card-message-from-img" src={{url_for("static",filename="/images/dashboard/otherUserImg.png")}} alt="...">{{ com.submitter.name }}
+            {% if com.ref_link %}
+            {{_('Reference Link')}}:<a href="{{com.ref_link|safe}}">{{com.ref_link|safe}}</a>
+            {% endif %}
+            <div class="mmdcs-message-time">{{ moment(com.submitted_time,local=True).fromNow(refresh=True) }}</div>
+        </div>
+        <div class="card-body">
+          <p class="card-text mmdcs-message-text"><blockquote>{{ com.comment|safe }}</blockquote></p>
+            {% if com.comment_response|length > 0 %}
+            <div class="form-group required">
+                {% if current_user.can('COMMENT_ADMIN') %}
+                <form style="float:right;" class="incline" action="{{url_for('.publish_comment_response', response_id=com.comment_response[-1].id, submitter_id=com.submitter_id, check_status='Approval')}}" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="check_status" value="{% if com.comment_response[-1].check_status != 'Approval' %}Approval{%else%}Denial{%endif%}">
+                    <input type="submit" onclick="return confirm('Are you sure?');" class="btn btn-secondary btn-sm" value="{% if com.comment_response[-1].check_status != 'Approval' %}{{_('Release')}}{%else%}{{_('Hide')}}{%endif%}">
+                </form>
+                {% endif %}
+            <form class="form-control" action="{{url_for('.update_comment_response', comment_id=com.id, response_id=com.comment_response[-1].id)}}" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label class="form-control-label" for="content">{{_('Response')}}</label>
+                <textarea class="form-control ckeditor" name="content">{{com.comment_response[-1].response_content}}</textarea>
+                <input type="submit" onclick="return confirm('Are you sure?');" class="btn btn-secondary btn-sm" value="{{_('Update')}}">
+            </form>
+            </div>
+            {% else %}
+            <form class="form-control" action="{{url_for('.add_comment_response', comment_id=com.id)}}" method="post">
+            <div class="form-group required">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label class="form-control-label" for="content">{{_('Response')}}</label>
+                <textarea class="form-control ckeditor" name="content"></textarea>
+            </div>
+                <input type="submit" onclick="return confirm('Are you sure?');"
+                       class="btn btn-secondary btn-sm" value="{{_('Submit')}}">
+            </form>
+            {% endif %}
+
+        </div>
+      </div>
+            {% endfor %}
+            <div class="card-body">
+                    <div class="text-right page-footer">
+                        {{ render_pagination(pagination) }}
+                    </div>
+            </div>
+    </div>
+            {% else %}
+                <div class="tip text-center">
+                    <h6>{{_('No Comment.')}}</h6>
+                </div>
+            {% endif %}
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='admin/ckeditor/ckeditor.js') }}"></script>
+{% endblock %}

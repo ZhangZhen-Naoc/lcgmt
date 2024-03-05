@@ -1,0 +1,204 @@
+{% extends 'app/data_center/source_candidate_list.html' %}
+{%block sources_table%}
+<table class="table table-hover table-bordered table-striped compact" id="source_table" style="background-color: #fff;">
+                    
+    <thead class="table-secondary">
+        <tr>
+            <th>Name</th>
+            <th>Version</th>
+            <th>Type</th>
+            <th>Classification</th>
+            <th>Common Name</th>
+            <th>Pdf</th>
+            <th>LC</th>
+            <th>Spec</th>
+            <th>Esti_Flux</th>
+            <th>Ref_Flux</th>
+            <th>Sep</th>  
+            <th>RA</th>
+            <th>Dec</th>
+            <th>Pos_E</th>
+            <th>R_RA</th>
+            <th>R_Dec</th>
+            <th>S_Time</th>
+            <!-- s -->
+            <th>Net_Counts</th>
+            <th>Bkg_Counts</th>
+            <th>Net_Rate</th>
+            <th>Expo_map_time</th>
+            <th>Significance</th>
+
+            <th>Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for row in sources %}
+        {% set row_id = row.source.id|string+'_'+row.wxt_detection.id|string %}
+        {% set source_display_name = 'ep'+row.wxt_detection.obs_id|string+'wxt'+row.detnam[4:6]|string+'s'+row.index_in_det|string%}
+   
+        <tr>
+            <td>
+                
+                <a class="btn btn-secondary btn-sm" target="_blank" 
+                    href="{{url_for('data_center.source_candidate_detail',sourceId=row.source.id, wxtdetectionId=row.wxt_detection.id)}}">{{source_display_name}}</a>
+            </td>
+            <td>{{row.wxt_detection.version}}</td>
+            <td>{{ row.src_type or ''}}</td>
+            <td>{{row.classification or ''}}</td>
+            <td>{{row.simbad_name or ''}}</td>
+            <td>
+                <i class="fas fa-file-pdf fa-lg pdfthumb" imgsrc="{{url_for('data_center.get_quick_look_detection_pdf', obs_id=row.wxt_detection.obs_id,cmos_id=row.detnam,version=row.wxt_detection.version)}}">
+            <figure class="figure">
+                <figcaption class="figure-caption" hidden>{{source_display_name}} Detection Pdf</figcaption>
+            </figure>
+            </i></td>
+            <td><i class="fas fa-chart-area fa-lg thumb" imgsrc="{{url_for('data_center.get_quick_look_light_curve', obs_id=row.wxt_detection.obs_id,cmos_id=row.detnam,index_in_det=row.index_in_det,version=row.wxt_detection.version)}}"><figure class="figure">
+                <figcaption class="figure-caption" hidden>{{source_display_name}} Light Curve</figcaption>
+            </figure>
+            </i></td>
+            <td><i class="far fa-chart-bar fa-lg thumb" imgsrc="{{url_for('data_center.get_quick_look_spectrum', obs_id=row.wxt_detection.obs_id,cmos_id=row.wxt_detection.detnam,index_in_det=row.index_in_det,version=row.wxt_detection.version)}}"><figure class="figure">
+                <figcaption class="figure-caption" hidden>{{source_display_name}} Spectrum</figcaption>
+            </figure></i></td>
+            <td>{{"%.2e"%(row.net_rate*2*1e-9)}}</td>
+            <td>{{row['ref_flux']}}</td>
+            {%  if row['ref_sep'] is none %}
+            <td> None </td>
+            {% else %}
+            <td> {{ "%.2f"%row['ref_sep'] }}</td>
+            {% endif %}
+
+            <td>{{"%.3f"%row.ra}}</td>
+            <td>{{row.dec| round(3, 'floor')}}</td>
+            <td>{{(row.pos_err*60)| round(3, 'floor')}}</td>
+
+            {%  if row['ref_ra'] is none %}
+            <td> None </td>
+            {% else %}
+            <td> {{ "%.3f"%row['ref_ra'] }}</td>
+            {% endif %}
+
+            {%  if row['ref_dec'] is none %}
+            <td> None </td>
+            {% else %}
+            <td> {{ "%.3f"%row['ref_dec'] }}</td>
+            {% endif %}
+        
+            <td>{{row.wxt_detection.observation.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+            {#<td>{{row['observed_num']}}</td>
+            <td>{{row['obs_num_sor_loc']}}</td>#}
+            <td>{{row.net_counts| round(2, 'floor')}}</td>
+            <td>{{row.bkg_counts| round(2, 'floor')}}</td>
+            <td>{{row.net_rate| round(3, 'floor')}}</td>
+            <td>{{row.exp_time| int}}</td>
+            <td>{{row.src_significance| round(2, 'floor')}}</td>
+
+            <td>{{row.comments or ''}}</td>
+        </tr>
+    
+        {% endfor %}
+    </tbody>
+</table>
+<!--pdf Modal -->
+<div class="modal fade" id="pdf-modal-div" tabindex="-1" role="dialog" aria-labelledby="pdfModalTitle" aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="pdfModalTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" id="model-body">
+        <!-- <img id="image-model" src="" class="rounded mx-auto d-block img-fluid" alt="Responsive image"> -->
+        <iframe src="" id="pdf-model"  type="application/pdf" width="800px" height="800px">
+            
+        </iframe>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        
+    </div>
+    </div>
+</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="image-modal-div" tabindex="-1" role="didlog" aria-labelledby="imageModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="model-body">
+          <img id="image-model" src="" class="rounded mx-auto d-block img-fluid" alt="Responsive image">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    $(".thumb").click(function () {
+        var caption = $(this).find('figcaption')
+        $("#imageModalTitle").text(caption.text());
+        // console.log(img.attr("src"));
+        var imagesrc = $(this).attr('imgsrc');
+        
+
+
+        $("#image-model").attr("src",imagesrc);
+        
+        $("#image-modal-div").modal('show');
+
+    });
+
+    $(".pdfthumb").click(function () {
+        var caption = $(this).find('figcaption')
+        $("#pdfModalTitle").text(caption.text());
+        // console.log(img.attr("src"));
+        var imagesrc = $(this).attr('imgsrc');
+        
+
+
+        $("#pdf-model").attr("src",imagesrc);
+        
+        $("#pdf-modal-div").modal('show');
+
+    });
+    $(document).ready(function (){
+        jQuery.fn.dataTableExt.oSort['allnumeric-asc'] = function(a,b) {
+        var x = parseFloat(a);
+        var y = parseFloat(b);
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        };
+
+        jQuery.fn.dataTableExt.oSort['allnumeric-desc'] = function(a,b) {
+        var x = parseFloat(a);
+        var y = parseFloat(b);
+        return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+        };
+        $('#source_table').DataTable({  
+            dom:"<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-12 col-md-5'l><'col-sm-12 col-md-7'p>>",
+            //跟数组下标一样，第一列从0开始，这里表格初始化时，第12列默认降序
+            "order": [[ 12, "desc" ]],
+            "aoColumnDefs": [{ "sType": "atlnumeric", "aTargets": [ 4,5,6,7,8,9,10,11 ] } ],
+            buttons:[{
+            extend: 'csv',
+            text: 'Export CSV',
+            className: 'btn-space',
+            exportOptions: {
+                orthogonal: null
+            }
+            }]
+        });
+        $('.dataTables_length').addClass('bs-select');
+    })
+</script>
+{% endblock%}

@@ -1,0 +1,47 @@
+<div class="card w-100" style="margin-top: 20px;">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">GCN Alerts</div>
+        
+    </div>
+    <div class="card-body">
+        {% for grb in grb_alerts %}
+            <div>
+                <div class="card w-100" style="margin-top: 20px;">
+                    <div class="card-header bg-light ep-cardheader">
+                        <div class="card-header-title">GCN Alert</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4 border">
+                                <table class="table">
+                                    <tr>
+                                        <th> RA</th>
+                                        <td style='text-align:left;'> {{grb.RA}}
+                                    </tr>
+                                    <tr>
+                                        <th> Dec</th>
+                                        <td style='text-align:left;'> {{grb.DEC}}
+                                    </tr>
+                                    <tr>
+                                        <th> Time</th>
+                                        <td style='text-align:left;'> {{grb.TimeInstant}}
+                                    </tr>
+                                </table>
+                                
+
+                            </div>
+                            <div class="col-8 border">
+                                
+                                
+                                    {{grb.FullContents| escape}}
+                                
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor%}
+    </div>
+</div>

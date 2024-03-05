@@ -1,0 +1,127 @@
+
+<div class="col-md-5">
+  <table class="table table-bordered table-hover table-sm">
+    <!-- <caption><h6>Query Results</h6></caption> -->
+    <tr>
+      <th>RA, Dec</th>
+      <td>{{sourceInDetection.ra| round(3, 'floor')}}, {{sourceInDetection.dec| round(3, 'floor')}}</td>
+    </tr>
+
+    <tr>
+      <th>RA (HMS), Dec (DMS)</th>
+      <td>{{ra_hms}},{{dec_dms}}</td>
+    </tr>
+    <tr>
+      <th>Galactic l, b</th>
+      <td>{{sourceInDetection.galactic_l| round(3, 'floor')}}, {{sourceInDetection.galactic_b| round(3, 'floor')}}</td>
+    </tr>
+
+    <tr>
+      <th>Pos Err (Arcmin)</th>
+      <td>{{(sourceInDetection.pos_err*60)| round(3, 'floor')}}</td>
+    </tr>
+    <tr>
+      <th>Exposure Time (s)</th>
+      <td>{{sourceInDetection.exp_time| int}}</td>
+    </tr>
+    <tr>
+      <th>Observation Start</th>
+      <td>{{sourceInDetection.wxt_detection.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+    </tr>
+    <tr>
+      <th>Net Rate</th>
+      <td>{{(sourceInDetection.net_rate)|round(3, 'floor')}}</td>
+    </tr>
+    <tr>
+      <th>Estimated Flux</th>
+
+      <td>{{"%.2e"%(sourceInDetection.net_rate*2*1e-9)}}</td>
+    </tr>
+    <tr>
+      <th>Counts</th>
+      <td>{{sourceInDetection.net_counts| round(3, 'floor')}}</td>
+    </tr>
+    <tr>
+      <th>Background Counts</th>
+      <td>{{sourceInDetection.bkg_counts| round(3, 'floor')}}</td>
+    </tr>
+    <tr>
+      <th>Significance</th>
+      <td>{{sourceInDetection.src_significance| round(3, 'floor')}}</td>
+    </tr>
+    <tr>
+      <th>Source Detected Number</th>
+      <td>{{sourceInDetection.source.wxt_detections|length}}</td>
+    </tr>
+    <tr>
+      <th>Observation Number</th>
+      <td class="obs_num_sor_loc">
+        <span class="wxt_obs_num_sor_loc">0</span> WXT, <span class="fxt_obs_num_sor_loc">0</span> FXT
+      </td>
+    </tr>
+  </table>
+ {% if current_user.can('TA_TOOLS')%}
+  <a
+    type="button"
+    class="btn ep_openBtn"
+    target="_blank"
+    style="padding: 5px 10px"
+    href="{{url_for('data_center.issue',src_obs_id=sourceInDetection.id, instrument='WXT')}}"
+  >
+    {% if not sourceInDetection.issue %} Open an issue in Redmine {% else %} Check Issue {{sourceInDetection.issue.issue_id}} in redmine {% endif %}
+  </a>
+
+  <!-- 相关issue-->
+  <div style="margin-top: 10px; margin-bottom: 10px">
+    <span>Issues of related observation </span>
+    <select id="issue-selector" class="form-control">
+      {% for row in sourceObs %} {% if row.issue and row != sourceInDetection %}
+      <option value="{{row.id}}">{{row.name}}</option>
+      {% endif %} {% endfor %}
+    </select>
+    {% for row in sourceObs %} {% if row.issue and row != sourceInDetection %}
+    <div style="margin-top: 10px" id="issue-{{row.id}}" class="issue-pannel">
+      <a type="button" class="btn btn-info" target="_blank" href="{{url_for('data_center.issue',src_obs_id=row.id,instrument='WXT')}}">
+        Issue {{row.issue.issue_id}}
+      </a>
+      {% if sourceInDetection.issue %} {% if not row.issue.isRelatedTo(sourceInDetection.issue)%}
+      <a
+        type="button"
+        class="btn btn-info"
+        target="_blank"
+        href="{{url_for('data_center.relate_issue',issue1_id=sourceInDetection.issue.issue_id,issue2_id=row.issue.issue_id)}}"
+      >
+        Relate to issue {{row.issue.issue_id}}
+      </a>
+      {% else %}
+      <a
+        type="button"
+        class="btn btn-outline-danger"
+        target="_blank"
+        href="{{url_for('data_center.unrelate_issue',issue1_id=sourceInDetection.issue.issue_id,issue2_id=row.issue.issue_id)}}"
+      >
+        Unrelate from {{row.issue.issue_id}}
+      </a>
+      {% endif%} {% endif %}
+    </div>
+    {% endif %} {% endfor %}
+   
+    <script>
+      $().ready(function () {
+        $("#issue-selector").change(function () {
+          id = $(this).val();
+          $(".issue-pannel").hide();
+          $(`#issue-${id}`).show();
+        });
+        $("#issue-selector").change();
+      });
+    </script>
+  </div>
+  {% endif %}
+</div>
+
+  
+     
+
+
+

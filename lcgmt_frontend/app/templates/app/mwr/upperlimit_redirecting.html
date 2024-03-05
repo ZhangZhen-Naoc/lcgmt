@@ -1,0 +1,13 @@
+{% extends 'app/base.html' %}
+{% block title %}{{ _('Upper Limit') }}{% endblock %}
+{% block content %}
+<p>
+There are no sources found in x-ray catalogue, calculating Upper Limit for you.........
+</p>
+<p>
+<strong>Please wait about 30 seconds................</strong>
+</p>
+<script>
+    window.location.replace("{{url_for("mwr.upperlimit",ra=ra,dec=dec)}}");
+</script>
+{% endblock %}

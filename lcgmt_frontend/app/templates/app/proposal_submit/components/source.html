@@ -1,0 +1,60 @@
+{% macro SourceTable(source,idx=0,anticipated_too=False) %}
+<div class="proposal_view">
+<div class="card">
+<div class="card-head">Observation {{idx}}</div>
+<div class="card-body">
+    <dl class="row src-table" id="src-table-{{idx}}" ></dl>
+</div>
+
+</div>
+</div>
+</dl>
+
+<script>
+var src = {
+    "Source Priority":"{{source.source_index_in_proposal}}",
+    "Source Name":"{{source.source_name}}",
+    Ra:"{{source.ra}}",
+    Dec:"{{source.dec}}",
+    "Total Exposure Time":"{{source.exposure_time}} s ",
+    {% if source.source_type in ['SingleObs'] %}
+    "Continous Exposure":"{{source.continous_exposure}}",
+    {% endif %}
+    "Completeness":"{{source.completeness}}",
+    "Min Continue Observation Duration":"{{source.exposure_per_vist_min}} s",
+    "Max Continue Observation Duration":"{{source.exposure_per_vist_max}} s",
+    "Multiple Observation":"{{source.multiple_observation}}",
+    "Exposure time per visit min":"{{source.exposure_per_vist_min}} s",
+    "Exposure time per visit max":"{{source.exposure_per_vist_max}} s",
+    {% if source.source_type in ['MonitoringObs'] %}
+    "Number of visits":"{{source.visit_number}}",
+    "Monitoring cadence":"{{source.monitoring_cadence}} {{source.cadence_unit}}",
+    "Precision":"{{source.precision}} {{source.precision_unit}}",
+    {% endif %}
+    {% if source.start_time is not none %}
+    "Start Time":"{{source.start_time}}",
+    "End Time":"{{source.end_time}}",
+    "Time Critical Remark":"{{source.time_critical_remark}}",
+    {% endif %}
+   
+    {% if anticipated_too %}
+    "Trigger Probability":"{{source.trigger_probability}}",
+    {% endif %}
+    "FXT-1 Window Mode":"{{source.fxt1_window_mode.name}}",
+    "FXT-1 Filter":"{{source.fxt1_filter.name}}",
+    "FXT-2 Window Mode":"{{source.fxt2_window_mode.name}}",
+    "FXT-2 Filter":"{{source.fxt2_filter.name}}",
+    {% if source.source_type in ['SingleObs', 'MonitoringObs']%}
+    "0.3-10Kev Flux":"{{source.fxt_flux}}",
+    "Powerlaw Photon Index":"{{source.flux_pl_index}}",
+    "V-band Magnitude":"{{source.v_mag}}",
+    "Variable Source":"{{source.variable_source}}",
+    "Extend Source":"{{source.extend_source}}",
+    
+    {%endif%}
+}
+
+create_source_dl("src-table-{{idx}}",src)
+
+</script>
+{% endmacro %}

@@ -1,0 +1,35 @@
+
+        
+        <table class="table simulation-result-quicklook">
+            <thead>
+                <tr>
+                
+                    <th>Light Curve</th>
+                    <th>Image </th>
+                    <th>Spectrum</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Stacked -->
+                <tr>
+                    
+                    {% for resource_type in result.resource_types%}
+                    <td><img width="100%" id="{{resource_type.replace(" ","_")}}stacked_small" data-toggle="modal" data-target="#{{resource_type.replace(" ","_")}}stacked" src={{result.resource_url(resource_type)}}></td>
+                    <div class="modal  fade" id="{{resource_type.replace(" ","_")}}stacked" >
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- 大图 -->
+                                <div class="modal-body">
+                                    <img  id="{{resource_type.replace(" ","_")}}stacked_large" src={{result.resource_url(resource_type)}}>
+                                </div>
+                            </div>   
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                </tr>
+            </tbody>
+
+        </table>
+
+        

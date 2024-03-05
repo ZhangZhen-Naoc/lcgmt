@@ -1,0 +1,44 @@
+{% extends 'app/base.html' %} {% block title %}EP Science Team List{% endblock %} {% block content %}
+<div class="container-fluid" style="margin: 0px; padding: 0px; font-family: 微软雅黑, Arial, Helvetica, sans-serif;">
+
+  <nav aria-label="breadcrumb" style="margin-bottom: 15px;">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li><li class="breadcrumb-item">Helpdesk</li>
+       
+    </ol>
+</nav>
+<div class="card w-100" style="border: 0px;">
+  <div class="card-body ep-newsView">
+    <div class="row justify-content-center">
+   
+      <div class="col-md-5">
+      
+      <script async id="2f75cb7c-9168-4bf7-ac80-53d0c438b478" data-yt-url="https://ephd.youtrack.cloud" src="https://ephd.youtrack.cloud/static/simplified/form/form-entry.js" data-theme="light" data-lang="en"></script>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<style>
+.my-iframe {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9视频宽高比 */
+    height: 0;
+    overflow: hidden;
+  }
+  
+  /* iframe样式 */
+  .my-iframe iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+</style>
+
+{% endblock %}

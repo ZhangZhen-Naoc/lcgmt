@@ -1,0 +1,8 @@
+{% extends 'app/simulator/result_base.html' %} {% block output %}
+<dl class="row">
+  <dt class="col-3">SNR</dt>
+  <dd class="col-3">{{"%.2f"%result.sn}}</dd>
+</dl>
+
+{% endblock output %} {% block quicklook %}{% include
+"app/simulator/components/monitoring_quicklook.html" %}{% endblock quicklook %}

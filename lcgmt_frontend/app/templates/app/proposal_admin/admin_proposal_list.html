@@ -1,0 +1,781 @@
+{% extends 'app/sysadmin/index.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}{{_('Proposal List')}}{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+    $(document).ready(function () {
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == variable) { return pair[1]; }
+            }
+            return (false);
+        }
+
+
+        var season_id = "{{season_id}}";
+
+        // 发送评审数据
+        $('.review_score').on("click", function () {
+            var proposal_id = $(this).attr('proposal_id');
+            var proposal_no = $(this).attr('proposal_no');
+            var page = getQueryVariable('page');
+            var review_finished = $(this).attr('review_finished');
+        
+            var priority = $(this).attr('priority');
+            var assigned = $(this).attr('assigned');
+            if (page == false) { page = 1; }
+
+            if (review_finished != 'False') {
+                $('#my_review_result #priority').val(priority);
+                $('#my_review_result #pid').val(proposal_no);
+                $('#my_review_result #assigned').val(assigned);
+            }
+            else {
+                $('#my_review_result #priority').val('-');
+                $('#my_review_result #pid').val('');
+                $('#my_review_result #assigned').val('');
+            }
+
+            $('#result_proposal_no').html(proposal_no);
+            $('#my_review_result').attr('proposal_id', proposal_id);
+            $("#add_review_result").modal('show');
+        });
+
+
+        // 传输评审结果数据
+        $('#my_review_result').submit(function (e) {
+            var proposal_id = $(this).attr('proposal_id');
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('proposal_admin.admin_add_review_result') }}" + "?proposal_id=" + proposal_id + "&season_id=" + season_id,
+                dataType: "json",
+                data: $('#my_review_result').serialize(),
+                success: function (res) {
+                    window.location.reload();
+                },
+                error: function () {
+                }
+            });
+
+        });
+
+
+
+        // 选择的类别
+        $('#priority_select').change(function () {
+            var priority = $(this).val();
+            var search_value = $('#search_value').val();
+            var science_type = $('#science_type').val();
+            window.location.href = "{{ url_for('proposal_admin.admin_proposal_list',season_id=season_id) }}" + "?search_value=" + search_value + "&priority=" + priority + "&science_type=" + science_type;
+        });
+
+        // 选择的类别
+        $('#science_type').change(function () {
+            var priority = $('#priority_select').val();
+            var search_value = $('#search_value').val();
+            var science_type = $('#science_type').val();
+            window.locawion.href = "{{ url_for('proposal_admin.admin_proposal_list',season_id=season_id) }}" + "?search_value=" + search_value + "&priority=" + priority + "&science_type=" + science_type;
+        });
+
+        //搜素的内容
+        $('#search').on("click", function () {
+            var search_value = $('#search_value').val();
+            var priority = $('#priority_select').val();
+            var science_type = $('#science_type').val();
+            window.location.href = "{{ url_for('proposal_admin.admin_proposal_list',season_id=season_id) }}" + "?search_value=" + search_value + "&priority=" + priority + "&science_type=" + science_type;
+        });
+
+
+        // 撤回这个申请
+        $('.withdraw').on("click", function () {
+            var proposal_id = $(this).attr('proposal_id');
+            var proposal_no = $(this).attr('proposal_no');
+            $('#withdraw_proposal_name').html(proposal_no);
+            $('#confirm_withdraw_proposal').attr('proposal_id', proposal_id)
+            $("#proposal_withdraw").modal('show');
+        });
+
+        $('#confirm_withdraw_proposal').on("click", function () {
+            var proposal_id = $(this).attr('proposal_id');
+            window.location.href = "{{ url_for('proposal_admin.admin_withdraw_proposal') }}?proposal_id=" + proposal_id;
+        });
+
+
+        // 创建项目、源表等
+        $('.operate').on("click", function () {
+            var proposal_id = $(this).attr('proposal_id');
+            var proposal_no = $(this).attr('proposal_no');
+            var pid = $(this).attr('pid');
+            var priority = $(this).attr('priority');
+            var assigned = $(this).attr('assigned');
+
+            // 项目创建初始化
+            // if (priority == 'A') {
+            //     $('#import_source').val('YES');
+            // }
+            // else {
+            //     $('#import_source').val('NO');
+            // }
+
+            if (priority == 'Z') {
+                priority = '--'
+                pid = '--'
+            }
+
+            $('#proposal_priority').html(priority);
+            $('#proposal_pid').html(pid);
+            $('#proposal_assigned').html(assigned);
+            $('#my_proposal_create_project').attr('proposal_id', proposal_id);
+
+            //创建源表初始化
+            // $('#proposal_priority_source').html(priority);
+            // $('#proposal_pid_source').html(pid);
+            // $('#proposal_assigned_source').html(assigned);
+            // $('#import_source_confirm').attr('proposal_id', proposal_id);
+            //下载源表
+            // $('#download_source_confirm').attr('proposal_id', proposal_id);
+       4    // 显示
+            $("#proposal_operate").modal('show');
+        });
+
+
+        // 传输项目创建
+        $('#my_proposal_create_project').submit(function (e) {
+            var proposal_id = $(this).attr('proposal_id');
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('proposal_admin.admin_create_project') }}" + "?proposal_id=" + proposal_id + "&season_id=" + season_id,
+                dataType: "json",
+                data: $('#my_proposal_create_project').serialize(),
+                success: function (res) {
+                    if(res['success']=='yes')
+                        alert('观测提案已成功提交至科学运行分系统');
+                    else
+                        alert(res['message']['msg']);
+                    window.location.reload();
+                },
+                error: function (res) {
+                    alert(res.error)
+                }
+            });
+            e.preventDefault();
+        });
+
+
+        // 传输源表导入指令
+        $('#import_source_confirm').on("click", function () {
+            var proposal_id = $(this).attr('proposal_id');
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('proposal_admin.admin_import_source') }}" + "?proposal_id=" + proposal_id + "&season_id=" + season_id,
+                dataType: "json",
+                data: {},
+                success: function (res) {
+                    window.location.reload();
+                },
+                error: function () {
+                }
+            });
+        });
+
+
+
+        // 文件下载
+        $('.download_file').on("click", function () {
+            $("#proposal_file_download").modal('show');
+        });
+
+        $('#sqb .download_sqb').on("click", function () {
+            var scientific_category = $('#sqb .sqb_scientific_type').val();
+            var domestic = $('#sqb .sqb_domestic').val();
+            window.location.href = "{{ url_for('proposal_admin.admin_get_all_proposal_pdf') }}?season_id=" + season_id + "&domestic=" + domestic + "&scientific_category=" + scientific_category + "&download_type=sqb";
+        });
+
+        $('#pid .download_pid').on("click", function () {
+            var scientific_category = $('#pid .pid_scientific_type').val();
+            var domestic = $('#pid .pid_domestic').val();
+            var priority = $('#pid .pid_priority').val();
+            window.location.href = "{{ url_for('proposal_admin.admin_get_all_proposal_pdf') }}?season_id=" + season_id + "&domestic=" + domestic + "&scientific_category=" + scientific_category + "&priority=" + priority + "&download_type=pid";
+        });
+
+
+        $('#excel .download_excel').on("click", function () {
+            var scientific_category = $('#excel .excel_scientific_type').val();
+            var domestic = $('#excel .excel_domestic').val();
+            window.location.href = "{{ url_for('proposal_admin.admin_get_all_proposal_excel') }}?season_id=" + season_id + "&domestic=" + domestic + "&scientific_category=" + scientific_category;
+        });
+
+
+        $('#all_sources .download_source_list_all').on("click", function () {
+            window.location.href = "{{ url_for('proposal_admin.admin_get_source_list_all') }}?season_id=" + season_id;
+        });
+
+
+        $('#download_source_confirm').on("click", function () {
+            var proposal_id = $(this).attr('proposal_id');
+            window.location.href = "{{ url_for('proposal_admin.admin_get_source_list') }}?proposal_id=" + proposal_id;
+        });
+
+
+        // 生成随机uuid(防止多用户请求进度条混乱)
+        function guid() {
+            return 'cccccccccccccccc';
+        }
+
+
+        $('.lala').on('click', function () {
+            console.log('ccc');
+            var uuid = guid();
+            var sitv = setInterval(function () {
+                var prog_url = "{{ url_for('proposal_admin.get_process',uuid='cccc') }}";
+                $.getJSON(prog_url, function (num_progress) {
+                    $('.progress-bar').css('width', num_progress.res + '%');
+                    $('.progress-bar').text(num_progress.res + '%');
+                    $("#process").modal('show');
+                });
+            }, 500);
+
+            var this_url = "{{ url_for('proposal_admin.process_data',uuid='cccc') }}";
+            $.getJSON(this_url, function (res) {
+                clearInterval(sitv);
+                if (res.res != null) {
+                    $('.progress-bar').css('width', '100%');
+                    $('.progress-bar').text('100%');
+                    setTimeout(function () {
+                        alert('下载成功!');
+                    }, 100);
+                } else {
+                    $('.progress-bar').css('background', 'red');
+                    setTimeout(function () {
+                        alert('失败了!');
+                    }, 1);
+                }
+            });
+        });
+
+
+        $('.lapla').on("click", function () {
+            $("#process").modal('show');
+        });
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+
+
+
+<hr>
+
+<!--<a role="button" class="btn btn-success bt-md lala active" href="#">{{_('lalla')}}</a>-->
+
+
+
+<div class="container-fluid">
+    <div class="card w-100">
+        <div class="card-header bg-light ep-cardheader">
+            <div class="card-header-title">Proposal List for Admin</div>
+        </div>
+        <div class="card-body ep_datasearch_card" id='main-content'>
+            <div class="container-fluid">
+                <div class="row" style="font-size:18px;">
+                    <div class="col-md-4">
+                        <strong>{{_('Season')}}:</strong>{{ season }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>{{_('Request')}}:</strong>{{ total_request_hour }} Seconds
+                    </div>
+                    <div class="col-md-4">
+                        <strong>{{_('Assigned')}}:</strong>{{ total_assigned_hour }} Seconds
+                    </div>
+                </div>
+                <hr>
+                <div class="row" style="font-size:18px;">
+
+                    <div class="col-md-2">
+                        <strong>{{_('Total')}}:</strong>{{ number }}
+                    </div>
+                    <div class="col-md-2">
+                        <strong>P1 - P10:</strong> {{number_a}}
+                    </div>
+                    <div class="col-md-2">
+                        <strong>X:</strong> {{number_x}}
+                    </div>
+                   {#<div class="col-md-2">
+                        <strong>B:</strong> {{number_b}}
+                    </div>
+                    <div class="col-md-2">
+                        <strong>C:</strong> {{number_c}}
+                    </div>
+                    <div class="col-md-2">
+                        <strong>D:</strong> {{number_d}}
+                    </div>#}
+                    <div class="col-md-2">
+                        <strong>Other:</strong> {{number_other}}
+                    </div>
+                </div>
+            
+            
+
+         <hr>
+                <div class="row">
+                <div class="col-md-12">
+                    <div class="nav nav-pills">
+                        <li class="nav-item">
+                            <a role="button" class="btn btn-success bt-md active"
+                                href="{{ url_for('proposal_admin.admin_season_list') }}">{{_('Back to list')}}</a>
+                        </li>
+                       {# <li class="nav-item" style="margin-left:10px;">
+                            <a role="button" class="btn btn-success bt-md download_file active" href="#">{{_('File
+                                Download')}}</a>
+                        </li>#}
+                        <li class="nav-item" style="margin-left:200px;text-align: middle;">
+
+                        </li>
+                        <li class="nav-item" style="margin-left:5px;">
+                            {{ form_priority_select.science_type(class=" form-control",style="width: 200px;") }}
+                        </li>
+                        <li class="nav-item" style="margin-left:5px;">
+                            {{ form_priority_select.priority_select(class="form-control") }}
+                        </li>
+
+                        <li class="nav-item" style="margin-left:5px;text-align: middle;">
+                            {{ form_search.search_value(class="form-control",size="20",placeholder=_('NO, Name or
+                            Email')) }}
+                        </li>
+                        <li class="nav-item" style="margin-left:5px;text-align: middle;">
+                            {{ form_search.search(class="form-control btn btn-dark",size="5",value=_("Search")) }}
+                        </li>
+                        <li class="nav-item" style="margin-left:5px;text-align: middle;">
+                            <a role="button" class="btn btn-dark bt-md active"
+                                href="{{ url_for('proposal_admin.admin_proposal_list',season_id=season_id) }}">{{_('Clear')}}</a>
+                        </li>
+                    </div>
+                </div>
+            </div>
+         
+<br>
+           <div class="row">
+                <div class="col-md-12">
+            <table class="table table-bordered ">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col" style="text-align:center;vertical-align:middle;">{{_('NO')}}</th>
+                        <th scope="col" style="text-align:center;vertical-align:middle;">{{_('PI')}}</th>
+                        <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Seconds')}}(R/A)</th>
+                        <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Tech')}} & {{_('Sci')}} &
+                            {{_('Overall')}}</th>
+                        <th scope="col" style="text-align:center;vertical-align:middle;">{{_('AVG')}} & {{_('SEM')}}
+                        </th>
+                        <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Grade')}}</th>
+                        <th scope="col" style="text-align:center;vertical-align:middle;">Project
+                        </th>
+                        <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Proposal')}}</th>
+                        <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Operation')}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for p in proposals %}
+                    <tr>
+                        <td style="text-align:center;vertical-align:middle;">{{ p.get_no()[-3:] }}</td>
+                        <td wtyle="text-align:center;vertical-align:middle;word-wrap:break-word; width:100px;">{{
+                            p.get_pi_name() }}</td>
+                        <td style="text-align:center;vertical-align:middle;">
+                            {{ '%0.1f' | format(p.srcs_total_time['seconds']) }} /
+                            {% if p.scientific_review_finished %}
+                            {{ p.total_time_assigned }}
+                            {% else %}
+                            --
+                            {% endif %}
+                        </td>
+                        <td style="text-align:center;vertical-align:middle;">
+                            <div class="btn-group">
+                                {% if p.technical_review_finished %}
+                                <a class="btn btn-success active"  title="Technical review finished" 
+                                    role="button">{{p.get_proposal_technical_review_result()}}</a>
+                                {%else%}
+                                <a class="btn btn-secondary active" title="Technical review not finished"
+                                    role="button">{{p.get_proposal_technical_review_result()}}</a>
+                                {% endif %}
+
+                                {% if p.get_review_experts_count() == 0%}
+                                <a class="btn btn-secondary active" role="button">
+                                    {{ p.get_review_experts_count() }} - {{ p.get_review_experts_read_count() }} - {{
+                                    p.get_review_experts_submit_count() }}
+                                </a>
+                                {% else %}
+                                {% if p.get_review_experts_count() == p.get_review_experts_submit_count() %}
+                                <a class="btn btn-success active" role="button">
+                                    {{ p.get_review_experts_count() }} - {{ p.get_review_experts_read_count() }} - {{
+                                    p.get_review_experts_submit_count() }}
+                                </a>
+                                {% else%}
+                                <a class="btn btn-info active" role="button">
+                                    {{ p.get_review_experts_count() }} - {{ p.get_review_experts_read_count() }} - {{
+                                    p.get_review_experts_submit_count() }}
+                                </a>
+                                {% endif%}
+                                {% endif %}
+
+                                {% if p.final_review_comment_finished %}
+                                <a class="btn btn-success active" title="Final review finished" role="button">
+                                    Y
+                                </a>
+                                {% else %}
+                                <a class="btn btn-secondary active"  title="Final review not finished"  role="button">
+                                    N
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td style="text-align:center;vertical-align:middle;">
+                            {{p.get_average_error()[0] |float | round(2, 'floor') }} / {{p.get_average_error()[1] |float
+                            |
+                            round(2, 'floor') }}
+                        </td>
+                        <td style="text-align:center;vertical-align:middle;">
+                            {% if p.scientific_review_finished %}
+                            {{p.priority}}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td style="text-align:center;vertical-align:middle;">
+                            {% if p.scientific_review_finished %}
+                            {% if p.priority !='D' %}
+                            {% if p.project_created %}
+                            <a class="btn btn-success active" title="Obs project created" role="button">Y</a>
+                            {%else%}
+                            <a class="btn btn-secondary active"  title="Obs project not created" role="button">N </a>
+                            {% endif %}
+                            {%else%}
+                            -
+                            {% endif %}
+                            {% else %}
+                            -
+                            {% endif %}
+
+                         
+                   
+                        </td>
+                        <td style="text-align:center;vertical-align:middle;">
+
+                            <a href="{{ url_for('proposal_submit.user_get_pdf',proposal_id=p.id,filename=p.get_file_name()) }}"
+                                class="btn btn-info active" role="button">
+                                {{_('View')}}
+                            </a>
+                        </td>
+                        <td style="text-align:center;vertical-align:middle;">
+                            <div class="btn-group">
+                                <a href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=p.id) }}?name=&email=&reviewer_type=All&card=technical"
+                                    class="btn btn-primary active" role="button">
+                                    {{_('Enter')}}
+                                </a>
+                                <a class="btn btn-secondary withdraw active" role="button" proposal_id="{{p.id}}"
+                                    proposal_no="{{p.get_no()}}">
+                                    {{_('Withdraw')}}
+                                </a>
+                                <a class="btn btn-warning active review_score" role="button" proposal_id="{{p.id}}"
+                                    proposal_no="{{p.get_no()}}" review_finished="{{p.review_finished}}" pid="{{p.pid}}"
+                                    priority="{{p.priority}}" assigned="{{p.total_time_assigned}}">
+                                    {{_('Grade ')}}
+                                </a>
+                                <a class="btn btn-dark active operate" role="button" proposal_id="{{p.id}}"
+                                    pid="{{p.pid}}" priority="{{p.priority}}" assigned="{{p.total_time_assigned}}"
+                                    proposal_no="{{p.get_no()}}">
+                                    {{_('Project')}} 
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+
+{{ render_pagination(pagination,endpoint=None,prev=_('Previous Page'),next=_('Next Page'),ellipses='…',align='center')
+}}
+
+<!-- Modal  for  withdraw  -->
+<div class="modal fade bd-example-modal-lg" id="process" tabindex="-1" data-backdrop="static" data-keyboard="false"
+    role="dialog" aria-labelledby="withdraw_proposal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="download_process"><strong>{{_('Processing......')}}</strong></h5>
+            </div>
+            <div class="modal-body">
+                <br>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width: 15%">22%
+                    </div>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="proposal_file_download" tabindex="-1" role="dialog"
+    aria-labelledby="proposal_download" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+
+
+                <h5><strong>{{_('Download SQB')}}:</strong></h5>
+                <div class="alert alert-secondary" role="alert" id="sqb">
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-3" align="center">
+                                <strong>{{_('Scientific Category')}} {{ download.science_type(class="form-control
+                                    sqb_scientific_type") }} </strong>
+                            </div>
+                            <div class="col-md-3" align="center">
+                                <strong> {{_('Type')}} {{ download.international_scale(class="form-control
+                                    sqb_domestic") }}</strong>
+                            </div>
+                            <div class="col-md-3" align="center">
+                            </div>
+                            <div class="col-md-3" align="center">
+                                <br>
+                                <a role="button" class="btn btn-info download_sqb" data-dismiss="modal">{{_('Download
+                                    SQB')}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <h5><strong>{{_('Download Excel')}}:</strong></h5>
+                <div class="alert alert-secondary" role="alert" id="excel">
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-3" align="center">
+                                <strong>{{_('Scientific Category')}} {{ download.science_type(class="form-control
+                                    excel_scientific_type") }} </strong>
+                            </div>
+                            <div class="col-md-3" align="center">
+                                <strong> {{_('Type')}} {{ download.international_scale(class="form-control
+                                    excel_domestic") }}</strong>
+                            </div>
+                            <div class="col-md-3" align="center">
+                            </div>
+                            <div class="col-md-3" align="center">
+                                <br>
+                                <a role="button" class="btn btn-info download_excel" data-dismiss="modal">{{_('Download
+                                    Excel')}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <h5><strong>{{_('Download PID')}}:</strong></h5>
+                <div class="alert alert-secondary" role="alert" id="pid">
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-3" align="center">
+                                <strong>{{_('Scientific Category')}} {{ download.science_type(class="form-control
+                                    pid_scientific_type") }} </strong>
+                            </div>
+                            <div class="col-md-3" align="center">
+                                <strong> {{_('Type')}} {{ download.international_scale(class="form-control
+                                    pid_domestic") }}</strong>
+                            </div>
+                            <div class="col-md-3" align="center">
+                                <strong> {{_('Priority')}} {{ download.priority_select(class="form-control
+                                    pid_priority") }}</strong>
+                            </div>
+                            <div class="col-md-3" align="center">
+                                <br>
+                                <a role="button" class="btn btn-info download_pid" data-dismiss="modal">{{_('Download
+                                    PID')}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <h5><strong>{{_('Download All Source List')}}:</strong></h5>
+                <div class="alert alert-secondary" role="alert" id="all_sources">
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-3" align="center">
+                            </div>
+                            <div class="col-md-3" align="center">
+                            </div>
+                            <div class="col-md-3" align="center">
+                            </div>
+                            <div class="col-md-3" align="center">
+                                <br>
+                                <a role="button" class="btn btn-info download_source_list_all"
+                                    data-dismiss="modal">{{_('Download Source List')}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="modal-footer">
+                <a role="button" class="btn btn-secondary" data-dismiss="modal">{{_('Close')}}</a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal  for  score -->
+<div class="modal fade bd-example-modal-lg" id="add_review_result" tabindex="-1" role="dialog"
+    aria-labelledby="review_result" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="review_result"><strong>{{_('Fill in Review Result')}}: <a
+                            id="result_proposal_no"></a></strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0" id="my_review_result">
+                {{ form_result.csrf_token() }}
+                <input id="pid" name="pid" value="" type="hidden">
+                <div class="modal-body">
+                    {{render_form(form_result)}}
+                 
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal  for  withdraw  -->
+<div class="modal fade bd-example-modal-lg" id="proposal_withdraw" tabindex="-1" role="dialog"
+    aria-labelledby="withdraw_proposal" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="withdraw_proposal"><strong>{{_('Withdraw Proposal')}}</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="form-row">
+                        <strong> {{_('Proposal NO')}}: &nbsp;&nbsp;<a id="withdraw_proposal_name"></a></strong>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a role="button" class="btn btn-secondary" data-dismiss="modal">{{_('Close')}}</a>
+                <a role="button" class="btn btn-secondary" data-dismiss="modal"
+                    id="confirm_withdraw_proposal">{{_('Confirm')}}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal  for  Project-->
+<div class="modal fade bd-example-modal-lg" id="proposal_operate" tabindex="-1" role="dialog"
+    aria-labelledby="withdraw_propos>al" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" >
+        <div class="modal-content" style="width:600px">
+            <div class="modal-header">   <h5<strong><i>{{_('Create Project')}}:</i></strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+
+
+                <form class="col-md-12" id="my_proposal_create_project">
+                  
+                 
+              
+                        <div class="row justify-content-md-center">
+                            {{ form_create_project.csrf_token() }}
+                                <dt class="col-6">Proposal NO</dt>
+                                <dd class="col-6"><a id="proposal_pid"></a></dd>
+                        </div>
+                        <div class="row justify-content-md-center">
+                                <dt class="col-6">Grade</dt>
+                                <dd class="col-6"> <a id="proposal_priority"></a></dd>
+                       </div>
+                        <div class="row justify-content-md-center">
+
+                                <dt class="col-6">Assigned Time</dt>
+                                <dd class="col-6"> <a id="proposal_assigned"></a></dd>
+                        </div>
+                        <br>
+                        <div class="row justify-content-md-center">
+                            <div class="col-4">    {{ form_create_project.create_project(class="btn btn-info", value='Confirm to Create') }}</div>
+                        </div>
+                         
+                              
+                        
+                       
+                    </div>
+                </form>
+               
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+</div>
+<script>
+    $('a').tooltip();
+</script>
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,241 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}{{_('Resources List')}}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!--    <div class="page-header">-->
+    <!--        <h1>{{_('Resource List')}}</h1>-->
+    <!--    </div>-->
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column mt-3">
+                    <li class="nav-item mt-3">
+                        <div class="col-md-4">
+                            <a href="{{ url_for('.create_resource') }}" class="btn btn-primary btn-sm">
+                                {{ _('Add new resource') }}
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('.show_resources') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-home">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            全部资源 <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('.show_resources', status = 0) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-file">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            元数据待审核
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('.show_resources', status = 20) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-file">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            数据待审核
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('.show_resources', type=1) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-file">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            普通数据集
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('.show_resources', type=3) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-file">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            星表数据集
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('.show_resources', type=6) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-file">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            数据表格
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('.show_resources7, type=7) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-file">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            数据资源组
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('.show_resources', type=8) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-file">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            论文数据
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('.show_resources', type=9) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-file">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            科普数据
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('project.admin_project_list') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-file">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            汇交项目
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="chartjs-size-monitor"
+                 style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                <div class="chartjs-size-monitor-expand"
+                     style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                </div>
+                <div class="chartjs-size-monitor-shrink"
+                     style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom">
+                <div class="page-header">
+                    <h1>{{_('Resource List')}}</h1>
+                </div>
+            </div>
+            <!--            <div class="btn-toolbar mb-3">-->
+            <!--                <div class="col-md-4">-->
+            <!--                    <a href="{{ url_for('.create_resource') }}" class="btn btn-primary btn-sm text-white">-->
+            <!--                        {{ _('Add new resource') }}-->
+            <!--                    </a>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <div class="table-responsive">
+                <!--                <div id="toolbar" class="toolbar">-->
+                <!--                    <button id="publish" class="btn btn-primary align-center" onclick="publish()">发布</button>-->
+                <!--                    <button id="push" class="btn btn-primary align-center">推送共享网</button>-->
+                <!--                </div>-->
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ _('ID') }}</th>
+                        <th>{{ _('Title') }}</th>
+                        <th>{{ _('Type') }}</th>
+                        <!--                        <th>{{ _7'title_en') }}</th>-->
+                        <th>{{ _('Created') }}</th>
+                        <th>{{ _('Updated') }}</th>
+                        <!--                        <th>{{ _('URL') }}</th>-->
+                        <!--                        <th>{{ _('Version') }}</th>-->
+                        <th>{{ _('Status') }}</th>
+                        <th>{{ _('Operations') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for resource in resources %}
+                    <tr>
+                        <td>{{ resource.id }}</td>
+                        <td>{{ resource.title_zh }}<br>{{resource.title_en}}</td>
+                        <td>{% if resource.type %}{{ type[resource.type] }}{% endif %}</td>
+                        <!--                        <td>{{ resource.title_en }}</td>-->
+                        <td>{% if resource.created %}{{ resource.created.strftime('%Y-%m-%d %H:%M:%S') }}{% endif %}
+                        </td>
+                        <td>{% if resource.updated %}{{ resource.updated.strftime('%Y-%m-%d %H:%M:%S') }}{% endif %}
+                        </td>
+                        <!--                        <td>{{ resource.url }}</td>-->
+                        <!--                        <td>{{ resource.version }}</td>-->
+                        <td>{% if resource.status %}{{ status[resource.status] }}{% endif %}</td>
+                        <td>
+                            <a class="btn btn-sm btn-primary text-white mb-1"
+                               href="{{ url_for('.edit_resource', id = resource.id, type = request.args.get('type'), status = request.args.get('status')) }}">{{
+                                _('Edit') }}</a>
+                            {% if resource.get_project_id() and resource.status in [0, 20]%}
+                            <a class="btn btn-sm btn-primary text-white mb-1" target="_blank"
+                               href="{{url_for('project.admin_view_project', project_id=resource.get_project_id(), card ='messages')}}">{{
+                                _('Message') }}</a>
+                            {% endif %}
+                            {% if resource.status == 0 %}
+                            <a class="btn btn-sm btn-primary text-white mb-1" target="_blank"
+                               href="{{url_for('.metadata_review', resource_id = resource.id, status = request.args.get('status'))}}">{{
+                                _('Metatata Review') }}</a>
+                            {% endif %}
+                            {% if resource.status in [20, 3] %}
+                            <a class="btn btn-sm btn-primary text-white mb-1"
+                               href="{{url_for('metadata_submission.metadata_view', resource_id=resource.id)}}">{{
+                                _('View Metadata') }}</a>
+                            {% endif %}
+                            {% if resource.status == 20 %}
+                            <a class="btn btn-sm btn-primary text-white mb-1" target="_blank"
+                               href="{{url_for('file_upload.admin_index', project_id= resource.get_project_id(), resource_id=resource.id)}}">{{
+                                _('Data Review') }}</a>
+                            {% endif %}
+                            {% if resource.status == 2 %}
+                            <a class="btn btn-sm btn-primary text-white mb-1"
+                               href="{{url_for('.publish_resource', resource_id=resource.id)}}">{{ _('Publish') }}</a>
+                            {% endif %}
+                            <!--                            <div class="btn-group-sm btn-group" role="group">-->
+                            <!--                                <button id="TableEditor" type="button" class="btn btn-primary btngroup">{{_('edit')}}-->
+                            <!--                                </button>-->
+                            <!--                                <button id="TablePublish" type="button" class="btn btn-primary btngroup" data-target:-->
+                            <!--                                "">{{_('publish')}}</button>-->
+                            <!--                            </div>-->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right page-footer">
+                {{ render_pagination(pagination) }}
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

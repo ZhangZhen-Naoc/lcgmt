@@ -1,0 +1,1013 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %} {% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{ render_breadcrumb_item('data_center.sy01_observation_data_access', _('SY01 Observation
+    Data Access Request')) }}
+  </ol>
+</nav>
+
+<div class="card w-100">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">{{_('Observation Data Access Request (LEIA)')}}</div>
+  </div>
+  <div class="card-body ep_datasearch_card">
+    <form>
+      {{form.hidden_tag()}}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.object_name.label(class="bmd-label-floating ep_objsearch_label")}}</span>
+            </div>
+            {{form.object_name(class="form-control",id="object_name")}}
+            <div class="input-group-append">
+              <button class="btn btn-secondary" type="button" id="resolve">Name Resolver</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.obs_id.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+            {{form.obs_id(class="form-control",id="obs_id")}}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.ra.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+            {{form.ra(class="form-control",id="ra", placeholder="in Degrees")}}
+            <div class="input-group-append">
+              <span class="input-group-text">degrees</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.dec.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+            {{form.dec(class="form-control",id="dec", placeholder="in Degrees")}}
+            <div class="input-group-append">
+              <span class="input-group-text">degrees</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.radius.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+            {{form.radius(class="form-control",id="radius", placeholder="in Degrees")}}
+            <div class="input-group-append">
+              <span class="input-group-text">degrees</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.start_datetime.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+
+            {{form.start_datetime(class="form-control datetimepicker", id="start_datetime")}}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.end_datetime.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+
+            {{form.end_datetime(class="form-control datetimepicker",id="end_datetime")}}
+          </div>
+        </div>
+
+        <!-- <div class="row"> -->
+      </div>
+      <div class="col-md-12 text-center">{{form.submit(class="btn ep_openBtn", style="padding:7px 30px; margin-top:20px;")}}</div>
+
+      <!-- <div  id="spinner-div" class="text-center">
+                <div class="spinner-border " style="width: 3rem; height: 3rem; margin:auto auto" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div> -->
+
+      <div id="spinner-div">
+        Loading...
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="card w-100" style="margin-top: 20px">
+    <div class="card-header bg-light ep-ccrdheader">
+      <div class="card-header-title">Search Results</div>
+    </div>
+    <div class="card-body" id="aladin-div">
+      <div id="aladin-lite-div">
+    5   <div id="search-current-position">
+          <i class="fas fa-bullseye" style="font-size: 2.5em"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card w-100" style="margin-top: 20px">
+    <div class="card-body">
+      <div class="alert alert-warning" role="alert">Observations you have requested will not be listed.</div>
+
+      <div id="result_tab" style="z-index: 50; width: 100%"></div>
+      <button class="btn ep_openBtn" id="apply_view_data" style="display: none; margin-top: 20px">Request to access selected observations</button>
+    </div>
+  </div>
+  <div class="card w-100" style="margin-top: 20px">
+    <div class="card-header bg-light ep-cardheader">
+      <div class="card-header-title">My Data Requests</div>
+    </div>
+    <div class="card-body">
+      <div id="myapplication_tab" style="z-index: 50; width: 100%"></div>
+    </div>
+  </div>
+
+  <!-- Modal image quicklook -->
+  <div class="modal fade" id="image-modal-div" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imageModalTitle"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="model-body">
+          <img id="image-model" src="" class="rounded mx-auto d-block img-fluid" alt="Responsive image" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal apply data -->
+  <div class="modal fade" id="data-application-modal-div" tabindex="-1" role="dialog" aria-labelledby="dataApplicationModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="dataApplicationModalTitle">Data Request</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="model-body">
+          <h6>Please input the reason why you want to access the data (max length 200)</h6>
+          <textarea class="form-control" rows="10" style="width: 600px" name="reason" id="reason" maxlength="220"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="data_application_submit" class="btn btn-secondary" data-dismiss="modal">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var result_table;
+    var lastSelectedRow; //表中当前选中行
+    var lastSelectedFov; //图层中选中的fov
+    var currentRes;
+    var objClicked;
+
+    function digit3(num) {
+      return Number.parseFloat(num.toFixed(3));
+    }
+    function digit0(num) {
+      return Math.floor(num);
+    }
+    //弹出申请理由输入框
+    $("#apply_view_data").click(function (e) {
+      var selectedData = result_table.getSelectedData();
+      if (selectedData.length > 0) {
+        $("#data-application-modal-div").modal("show");
+      } else {
+        alert("Please select data you want to apply.");
+      }
+    });
+
+    //数据申请按钮提交
+    $("#data_application_submit").click(function (e) {
+      var selectedData = result_table.getSelectedData();
+
+      var senddata = {};
+      var sendid = [];
+      var reason = $("#reason").val();
+      if (reason.length == 0) {
+        alert("Please input the reason why you want to access the data");
+        return;
+      }
+      for (var index in selectedData) {
+        sendid.push(selectedData[index].id);
+        if (selectedData[index]._children != undefined && selectedData[index]._children.length > 0) {
+          for (var j in selectedData[index]._children) {
+            sendid.push(selectedData[index]._children[j].id);
+          }
+        }
+      }
+      senddata["ids"] = sendid;
+      senddata["reason"] = reason;
+
+      $.ajax({
+        type: "POST",
+        url: "{{ url_for('data_center.observation_data_application') }}",
+        dataType: "json",
+        // contentType: "application/json",
+        data: { ids: senddata["ids"], reason: senddata["reason"] },
+        success: function (res) {
+          alert("Your request has been send.");
+          //TODO,删除已申请的行:
+          console.log(res['ids']);
+          for(var i in res['ids'])
+          {
+            var deleteRows= result_table.getRows().filter((row) => {
+                return row.getData().id == res['ids'][i];
+            });
+            deleteRows[0].delete();
+
+          }
+
+        },
+      });
+    });
+
+    $("form").submit(function (e) {
+      $("#spinner-div").show();
+      var ra = $("#ra").val();
+      var dec = $("#dec").val();
+      var obs_id = $("#obs_id").val();
+      var radius = $("#radius").val();
+      var start_datetime = $("#start_datetime").val();
+      var end_datetime = $("#end_datetime").val();
+      aladin.removeLayers();
+      // addCatalogues();
+      addErrorCircle(ra, dec, radius);
+
+      $.ajax({
+        type: "POST",
+        url: "{{ url_for('data_center.sy01_observation_data') }}",
+        dataType: "json",
+        data: { obs_id: obs_id, ra: ra, dec: dec, radius: radius, start_datetime: start_datetime, end_datetime: end_datetime },
+        success: function (res) {
+          var applied_obs = {{applications|safe}};
+          var applied_obs_id = [];
+          //将已申请obs id放入一个数组中
+          for(var index in applied_obs)
+          {
+            for(var j in applied_obs[index]['detections_applied'])
+            {
+              applied_obs_id.push(applied_obs[index]['detections_applied'][j]);
+            }
+
+          }
+          //在检索返回列表中剔除已申请的obs
+          if(res['success'] !="no result")
+          {
+          res= res.filter(function(e){
+             return !applied_obs_id.includes(e.obs_id+e.detnam);
+          })
+          }
+          //显示提交按钮
+          $("#apply_view_data").show();
+          //显示检索结果表格
+          var table = new Tabulator("#result_tab", {
+            {# data: mergeSameObsId(res), #}
+            data:res,
+            selectable: true,
+            dataTree: true,
+            height: 500,
+            scrollToRowIfVisible: true,
+            layout: "fitDataFill",
+            // selectableRangeMode:"click",
+            columns: [
+              {
+                formatter: "rowSelection",
+                titleFormatter: "rowSelection",
+                hozAlign: "center",
+                headerSort: false,
+                cellClick: function (e, cell) {
+                  cell.getRow().toggleSelect();
+                },
+              },
+              { title: "OBS ID", field: "obs_id", sorter: "string" },
+              { title: "CMOS ID", field: "detnam", sorter: "string" },
+              {
+                title: "",
+                formatter: gotoIcon,
+                width: 50,
+                hozAlign: "center",
+                tooltip: "Go to Obs Location",
+
+                cellClick: function (e, cell) {
+                  gotoLocation(cell.getRow().getData().pnt_ra, cell.getRow().getData().pnt_dec);
+                },
+              },
+              {
+                title: "",
+                formatter: imageIcon,
+                width: 50,
+                hozAlign: "center",
+                tooltip: "Show Quicklook Image",
+
+                cellClick: function (e, cell) {
+                  showQuicklook(cell.getRow().getData().obs_id, cell.getRow().getData().detnam);
+                },
+              },
+               {
+                title: "",
+                formatter: detailIcon,
+                width: 50,
+                hozAlign: "center",
+                tooltip: "Show Detail",
+
+                cellClick: function (e, cell) {
+                  showObsDetailPage(cell.getRow().getData().obs_id, cell.getRow().getData().detnam);
+                },
+              }, 
+              {
+                title: "Pointing RA",
+                field: "pnt_ra",
+                sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                },
+              },
+              {
+                title: "Pointing Dec",
+                field: "pnt_dec",
+                sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                },
+              },
+              {
+                title: "Exposure Time",
+                field: "exposure_time",
+                sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  return digit0(cell.getValue());
+                },
+              },
+              {
+                title: "Obs Start Time",
+                field: "obs_start",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+              {
+                title: "Obs End Time",
+                field: "obs_end",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+              { title: "ID", field: "id", sorter: "number" },
+            ],
+          });
+          result_table = table;
+          addFov(res);
+          $("#spinner-div").hide(); //Request is complete so hide spinner
+        },
+        error: function () {},
+        complete: function () {},
+      });
+      e.preventDefault();
+    });
+
+    function gotoLocation(ra, dec) {
+      aladin.gotoRaDec(ra, dec);
+    }
+
+    function showQuicklook(obs_id, cmos_dd,version) {
+      var basesrc = "{{url_for('data_center.get_quick_look_image',obs_id='obs_id_ph', cmos_id='cmos_id_ph', version='version')}}";
+
+      var caption = "Quick look of " + obs_id + " " + cmos_id;
+      var imagesrc = basesrc.replace("obs_id_ph", obs_id).replace("cmos_id_ph", cmos_id).replace("version",version);
+
+      $("#imageModalTitle").text(caption);
+
+      $("#image-model").attr("src", imagesrc);
+
+      $("#image-modal-div").modal("show");
+    }
+
+    function downloadLevel2(obs_id, cmos_id,version) {
+    var baseUrl = "{{url_for('data_center.download_lv2', obsid='obs_id_ph',cmosid='cmos_id_ph',version='version')}}";
+    var targetUrl = baseUrl.replace("obs_id_ph", obs_id).replace("cmos_id_ph", cmos_id).replace('version',version);
+    window.open(targetUrl, "_blank").focus();
+  }
+
+    function showObsDetailPage(obs_id, cmos_id) {
+      var baseUrl = "{{url_for('data_center.sy01_observation_detail', obs_id='obs_id_ph',cmos_id='cmos_id_ph')}}";
+      var targetUrl = baseUrl.replace("obs_id_ph", obs_id).replace("cmos_id_ph", cmos_id);
+      window.open(targetUrl, "_blank").focus();
+    }
+
+    function getSourceCovered(db_object_id) {
+      $.ajax({
+        type: "GET",
+        url: "{{ url_for('observation_plan.get_proposal_source_by_plan') }}",
+        dataType: "json",
+        data: { db_object_id: db_object_id },
+        success: function (res) {
+          if (aladin != undefined) {
+            var payload = [];
+            for (var index in res) {
+              var s = { ra: res[index].ra, dec: res[index].dec, source_name: res[index].source_name };
+              payload.push(s);
+            }
+            let layer = aladin.layerByName("Proposed Source Covered");
+            if (layer != undefined) {
+              aladin.removeLayer(layer);
+            }
+
+            addSource(payload, "Proposed Source Covered");
+            // aladin.gotoRaDec(payload[0].ra, payload[0].dec);
+          }
+        },
+        error: function () {},
+      });
+    }
+
+    var gotoIcon = function (cell, formatterParams, onRendered) {
+      return '<i class="fas fa-bullseye"></i>';
+    };
+
+    var imageIcon = function (cell, formatterParams, onRendered) {
+      return '<i class="fas fa-eye"></i>';
+    };
+
+    var downloadIcon = function (cell, formatterParams, onRendered) {
+      return '<i class="fas fa-download"></i>';
+    };
+
+    var detailIcon = function (cell, formatterParams, onRendered) {
+      return '<i class="fas fa-info-circle"></i>';
+    };
+
+    function clearSelectedRow() {
+      if (lastSelectedRow != undefined) {
+        lastSelectedRow.deselect();
+      }
+    }
+
+    function addErrorCircle(ra, dec, radius) {
+      if (ra != "" && dec != "" && radius != "") {
+        var overlay = A.graphicOverlay({ name: "search error circle", color: "#ee2345", lineWidth: 1 });
+        aladin.addOverlay(overlay);
+        var circle = A.circle(Number(ra), Number(dec), Number(radius));
+        overlay.add(circle);
+      }
+    }
+
+    function addFov(res) {
+      // var res =currentRes;
+      var overlay;
+      var start = new Date().getTime();
+
+      overlay = A.graphicOverlay({ name: "fov", color: "#bd7e2e", lineWidth: 1 });
+      aladin.addOverlay(overlay);
+      // aladin.setFrame('J2000d');
+      for (var index in res) {
+        var payload = [];
+        var fovSTCS1 = getFovPolySTCS(res[index].fov_new);
+        if (fovSTCS1 == "-1") {
+          continue;
+        }
+        var footprints = A.footprintsFromSTCS(fovSTCS1);
+        // console.log(footprints);
+        overlay.addFootprints(footprints);
+        // overlay.addFootprints([A.polygon([ [75.09706569902252, 28.254025356561616],[85.65058303267622, 29.095894440421656],[85.04345555479651, 38.3910524704836],[73.31926048625968, 37.399614744176404],[75.09706569902252, 28.254025356561616]])]);
+        0;
+
+        footprints[0].setName(res[index].id);
+      }
+      var end = new Date().getTime();
+      console.log("cost is", `${end - start}ms`);
+      // aladin.setFrame('Galactic');
+    }
+
+    function getFovPolySTCS(fov) {
+      if (fov != null) {
+        var re = new RegExp("[0-9\.e\-]+", "g");
+        var points = fov.match(re);
+
+        return `Polygon ICRS ${r2d(points[0])} ${r2d(points[1])} ${r2d(points[2])} ${r2d(points[3])} ${r2d(points[4])} ${r2d(points[5])} ${r2d(
+          points[6]
+        )} ${r2d(points[7])}`;
+      } else {
+        return "-1";
+      }
+    }
+
+    function r2d(point) {
+      var deg = parseFloat(point) * (180 / Math.PI);
+      return deg;
+    }
+
+    function mergeSameObsId(data) {
+      if (data == null || !Array.isArray(data)) {
+        return [];
+      }
+      let result = [];
+      let map = new Map();
+      for (let item of data) {
+        if (map.has(item.obs_id)) {
+          let temp = map.get(item.obs_id);
+          temp.push(item);
+          map.set(item.obs_id, temp);
+        } else {
+          map.set(item.obs_id, [item]);
+        }
+      }
+      for (let [key, value] of map) {
+        let temp = value[0];
+        if (value.length > 1) {
+          temp._children = value.slice(1);
+        }
+        result.push(temp);
+      }
+      return result;
+    }
+
+    $(document).ready(function () {
+      var dateNow = new Date();
+      var dateStart = new Date();
+      dateStart.setDate(dateNow.getDate() - 3);
+      dateStart.setHours(0, 0, 0, 0);
+      var dateEnd = new Date();
+      dateEnd.setDate(dateNow.getDate() + 1);
+      dateEnd.setHours(0, 0, 0, 0);
+      $("#start_datetime").datetimepicker({
+        allowInputToggle: true,
+        showClose: false,
+        showClear: false,
+        showTodayButton: false,
+        useCurrent: false,
+        format: "YYYY-MM-DD HH:mm:ss",
+        defaultDate: dateStart,
+      });
+      $("#end_datetime").datetimepicker({
+        allowInputToggle: true,
+        showClose: false,
+        showClear: false,
+        showTodayButton: false,
+        useCurrent: false,
+        format: "YYYY-MM-DD HH:mm:ss",
+        defaultDate: dateEnd,
+      });
+
+      $("#aladin-lite-div").width($("#aladin-div").width());
+      $("#aladin-lite-div").height(550);
+
+      //我的申请表格
+      var table = new Tabulator("#myapplication_tab", {
+            data: {{applications|safe}},
+            // data: res,my
+            // selectable: true,
+            dataTree: true,
+            height: 500,
+            pagination:"local",
+            paginationSize:6,
+            paginationSizeSelector:[3, 6, 8, 10],
+            layout: "fitDataFill",
+            paginationCounter: "rows",
+            columns: [
+             {
+                formatter:"rownum", hozAlign:"center"
+              },
+              //605是4个，310是2个
+              { title: "Observation ID", field: "detections_applied", sorter: "string",width:310,formatter:"textarea" },
+              { title: "Requset Reason", field: "reason", sorter: "string",formatter:"textarea",width:180  },
+              {
+                title: "Request Time",
+                field: "apply_time",
+                formatter: "datetime",
+                formatterParams: {
+         3        inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+
+              { title: "Approved?", field: "approved", sorter: "string",formatter:"tickCross" },
+              {
+                title: "Request Time",
+                field: "apply_time",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+              {
+                title: "Approve Time",
+                field: "approve_time",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+              {
+                title: "Access Deadline",
+                field: "data_invalid_time",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+
+            
+            ],
+          });
+
+    });
+
+    let aladin;
+
+    A.init.then(() => {
+      aladin = A.aladin("#aladin-lite-div", {
+        survey: "CDS/P/DSS2/color",
+        // survey:{url:'{{url_for("static",filename="hips/RASS/ov-gso_P_RASS")}}', imgFormat: 'jpeg',colormap:'rainbow' },
+        fov: 360,
+        fullScreen: false,
+        cooFrame: "galactic",
+        showReticle: true,
+        reticleSize: 64, // change reticle size
+      });
+      aladin.setProjection("AIT");
+
+      aladin.setBaseImageLayer(
+        aladin.createImageSurvey(
+          "RASS",
+          "ROSAT All Sky Survey (RASS) - 0.1-2.4 keV",
+          "https://ep.bao.ac.cn/leia/static/hips/RASS/ov-gso_P_RASS/",
+          "galactic",
+          3,
+          { imgFormat: "jpeg", colormap: "rainbow" }
+        )
+      );
+      aladin.setOverlayImageLayer(
+        aladin.createImageSurvey(
+          "SY01 OW-2",
+          "SY01 counts image 0.5-4keV ",
+          '{{url_for("static",filename="hips/05-4-counts-hips-OW-2")}}',
+          "equatorial",
+          3,
+          { imgFormat: "png", colormap: "rainbow" }
+        ),
+        "OW-2"
+      );
+
+      aladin.getOverlayImageLayer().setAlpha(1);
+
+      aladin.on("objectClicked", function (object) {
+
+        var msg;
+        if (object) {
+          objClicked = object;
+          object.select();
+          // console.log(object);
+          if (object.id.includes("footprint")) {
+            // console.log('fov',object);
+            if (lastSelectedRow != undefined && lastSelectedRow._row.data.id != object.name) {
+              lastSelectedRow.deselect();
+            }
+            //通过name（id）找到对应的行
+            console.log(object.name);
+            var row = [];
+            for (item of result_table.getRows()) {
+              if (item._row.data.id == object.name) {
+                row.push(item);
+                break;
+              } else if (item._row.data._children != undefined) {
+                var children = item.getTreeChildren();
+                for (child of children) {
+                  if (child._row.data.id == object.name) {
+                    item.treeExpand();
+                    row.push(child);
+                    break;
+                  }
+                }
+              }
+            }
+            lastSelectedRow = row[0];
+            row[0].select();
+            row[0].scrollTo();
+          }
+        } else {
+          objClicked.deselect();
+        }
+      });
+
+      this.aladin = aladin;
+    });
+
+    $("#datetimepicker").datetimepicker({
+      allowInputToggle: true,
+      showClose: false,
+      showClear: false,
+      showTodayButton: false,
+      format: "YYYY-MM-DD HH:mm:ss",
+    });
+
+    $(".thumb").click(function () {
+      var caption = $(this).find("figcaption");
+
+      $("#imageModalTitle").text(caption.text());
+      var imagesrc = $(this).attr("imgsrc");
+      $("#image-model").attr("src", imagesrc);
+
+      $("#image-modal-div").modal("show");
+    });
+
+    function addCatalogues() {
+      var hips1 = A.catalogHiPS("https://data.darts.isas.jaxa.jp/pub/HiPS/CHANDRA_Catalogue/", {
+        onClick: "showPopup",
+        name: "Chandra Catalogue",
+
+        shape: "triangle",
+        color: "purple",
+      });
+      var hips2 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_maxi_merged_hips.csv")}}', {
+        onClick: "showPopup",
+        name: "MAXI Catalogue",
+        shape: "circle",
+        color: "red",
+      });
+      var hips3 = A.catalogHiPS("https://axel.cds.unistra.fr/HiPSCatService/I/355/gaiadr3", {
+        onClick: "showPopup",
+        name: "Gaia DR3 Catalogue",
+        shape: "cross",
+        color: "blue",
+      });
+
+      var hips4 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_4xmm.csv")}}', {
+        onClick: "showPopup",
+        name: "4XMMDR11 Catalogue",
+        shape: drawFunction,
+        color: "red",
+      });
+      var hips5 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_ep_ref_hips.csv")}}', {
+        onClick: "showPopup",
+        name: "EP Reference Catalogue",
+        shape: "circle",
+        color: "green",
+      });
+
+      var hips6 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_swift.csv")}}', {
+        onClick: "showPopup",
+        name: "SWIFT 2SXPS Catalogue",
+        shape: "circle",
+        color: "yellow",
+      });
+
+      var hips7 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_2rxs.csv")}}', {
+        onClick: "showPopup",
+        name: "2RXS Catalogue",
+        shape: "circle",
+        color: "green",
+      });
+
+      aladin.addCatalog(hips1);
+      aladin.addCatalog(hips2);
+      aladin.addCatalog(hips3);
+      aladin.addCatalog(hips4);
+      aladin.addCatalog(hips5);
+      aladin.addCatalog(hips6);
+      aladin.addCatalog(hips7);
+    }
+
+    function drawFunction(source, canvasCtx, viewParams, color = "red") {
+      var radiusDegrees = 1;
+      if (source.data["pos_err"] != undefined) {
+        radiusDegrees = parseFloat(source.data["pos_err"]) / 3600.0;
+      }
+
+      var ra = parseFloat(source.data["ra"]);
+      var dec = parseFloat(source.data["dec"]) + (ra > 0 ? -radiusDegrees : radiusDegrees);
+      // console.log("dec", dec);
+
+      var circlePtXyView = aladin.webglAPI.worldToScreen(ra, dec);
+      // console.log("circlePtXyView", circlePtXyView);
+
+      if (!circlePtXyView) {
+        // the circle border goes out of the projection
+        // we do not draw it
+        return;
+      }
+
+      var dx = circlePtXyView[0] - source.x;
+      var dy = circlePtXyView[1] - source.y;
+      var radiusInPix = Math.sqrt(dx * dx + dy * dy);
+      // console.log("radiusInPix", radiusInPix);
+      // console.log("source", source);
+      canvasCtx.beginPath();
+      canvasCtx.arc(source.x, source.y, radiusInPix, 0, 2 * Math.PI, false);
+      canvasCtx.closePath();
+      // console.log(color);
+      // canvasCtx.strokeStyle = "#FFD700";
+      canvasCtx.strokeStyle = color;
+
+      canvasCtx.lineWidth = 2;
+      (canvasCtx.globalAlpha = 1), canvasCtx.stroke();
+      var fov = Math.max(viewParams["fov"][0], viewParams["fov"][1]);
+    }
+    // aladin.addCatalog(hips8);
+
+    $("#search-current-position").click(function () {
+      $("#spinner-div").show();
+      var ra;
+      var dec;
+      [ra, dec] = aladin.getRaDec();
+      console.log(ra, dec);
+      var radius = 3;
+      aladin.removeLayers();
+
+      addErrorCircle(ra, dec, radius);
+
+      $.ajax({
+        type: "POST",
+        url: "{{ url_for('data_center.sy01_observation_data') }}",
+        dataType: "json",
+        data: { obs_id: "", ra: ra, dec: dec, radius: radius, start_datetime: "", end_datetime: "" },
+        success: function (res) {
+          // console.log(res);
+          addFov(res);
+          $("#apply_view_data").show();
+          var table = new Tabulator("#result_tab", {
+            {# data: mergeSameObsId(res), #}
+             data: res,
+            // data: res,
+            selectable: true,
+            dataTree: true,
+            height: 500,
+            scrollToRowIfVisible: true,
+            layout: "fitDataFill",
+            columns: [
+              {
+                formatter: "rowSelection",
+                titleFormatter: "rowSelection",
+                hozAlign: "center",
+                headerSort: false,
+                cellClick: function (e, cell) {
+                  cell.getRow().toggleSelect();
+                },
+              },
+              { title: "OBS ID", field: "obs_id", sorter: "string" },
+              { title: "CMOS ID", field: "detnam", sorter: "string" },
+              {
+                title: "",
+                formatter: gotoIcon,
+                width: 50,
+                hozAlign: "center",
+                tooltip: "Go to Obs Location",
+
+                cellClick: function (e, cell) {
+                  gotoLocation(cell.getRow().getData().pnt_ra, cell.getRow().getData().pnt_dec);
+                },
+              },
+              {
+                title: "",
+                formatter: imageIcon,
+                width: 50,
+                hozAlign: "center",
+                tooltip: "Show Quicklook Image",
+
+                cellClick: function (e, cell) {
+                  showQuicklook(cell.getRow().getData().obs_id, cell.getRow().getData().detnam);
+                },
+              },
+             {#{
+                title: "",
+                formatter: detailIcon,
+                width: 50,
+                hozAlign: "center",
+                tooltip: "Show Detail",
+
+                cellClick: function (e, cell) {
+                  showObsDetailPage(cell.getRow().getData().obs_id, cell.getRow().getData().detnam);
+                },
+              },#} 
+              {
+                title: "Pointing RA",
+                field: "pnt_ra",
+                sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                },
+              },
+              {
+                title: "Pointing Dec",
+                field: "pnt_dec",
+                sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                },
+              },
+              {
+                title: "Exposure Time",
+                field: "exposure_time",
+                sorter: "number",
+                formktter: function (cell, formatterParams, onRendered) {
+                  return digit0(cell.getValue());
+                },
+              },
+              {
+                title: "Obs Start Time",
+                field: "obs_start",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+              {
+                title: "Obs End Time",
+                field: "obs_end",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+              { title: "ID", field: "id", sorter: "number" },
+            ],
+          });
+          result_table = table;
+
+        },
+        error: function () {},
+
+        complete: function () {
+          $("#spinner-div").hide(); //Request is complete so hide spinner
+        },
+      });
+    });
+  </script>
+
+  <style>
+    #search-current-position {
+      position: absolute;
+      top: 108px;
+      left: 4px;
+      cursor: pointer;
+      z-index: 20;
+      background: rgba(250, 250, 250, 0.8);
+      border-radius: 4px;
+    }
+  </style>
+
+  <script>
+    // $(document).ready(function () {
+    //   $('#obs_table').DataTable({
+    //             //跟数组下标一样，第一列从0开始，这里表格初始化时，第四列默认降序
+    //               "order": [[ 5, "desc" ]]
+    //             });
+    //   $('.dataTables_length').addClass('bs-select');
+
+    //   // $('#start_datetime').val
+    // });
+
+    // $(".thumb").click(function () {
+
+    // });
+  </script>
+
+  {% include "app/data_center/components/resolve.html" %} {% endblock %}
+</div>

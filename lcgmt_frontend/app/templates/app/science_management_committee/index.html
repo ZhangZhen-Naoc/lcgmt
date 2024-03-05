@@ -1,0 +1,76 @@
+{% from 'bootstrap/pagination.html' import render_pagination %} {% extends 'app/base.html' %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block title %}{{ _('Dashboard') }}{% endblock %} {% block navbar %} {{ super() }} {% endblock %} {% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{ render_breadcrumb_item('science_management_committee.index', _('Science Management
+    Committee')) }}
+  </ol>
+</nav>
+<div class="row">
+  <div class="col-md-6">
+    <div class="card border-secondary mb-3">
+      <div class="card-header"><span class="oi oi-people"></span> {{ _('Documents') }}</niv>
+      <div class="card-body">
+        {% if current_user.can('EPSMC_VIEW') %} {% if document_articles %}
+
+        <ul class="ep_category_articleList" style="margin: 20px; padding: 0px">
+          {% for article in document_articles %}
+          <li id="article-{{ article.id }}" class="list-group-item w100">
+            <a class="float-left text-left" href="{{ url_for('cms.view_article', id=article.id) }}"> {{ article.title }}</a>
+
+            <div class="text-right small">{{ article.created|date('%Y') }}-{{ article.created|date('%m') }}-{{ article.created|date('%d') }}</div>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <div class="page-footer ep_category_articleListFooter">{{ render_pagination(pagination_document) }}</div>
+        {% endif %} {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card border-secondary mb-3">
+      <div class="card-header"><span class="oi oi-people"></span> {{ _('Meetings') }}</div>
+      <div class="card-body">
+        {% if current_user.can('EPSMC_VIEW') %} {% if summary_articles %}
+
+        <ul class="ep_category_articleList" style="margin: 20px; padding: 0px">
+          {% for article in summary_articles %}
+          <li id="article-{{ article.id }}" class="list-group-item w100">
+            <a class="float-left text-left" href="{{ url_for('cms.view_article', id=article.id) }}"> {{ article.title }}</a>
+
+            <div class="text-right small">{{ article.created|date('%Y') }}-{{ article.created|date('%m') }}-{{ article.created|date('%d') }}</div>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <div class="page-footer ep_category_articleListFooter">{{ render_pagination(pagination_meeting_summary) }}</div>
+        {% endif %} {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card border-secondary mb-3">
+      <div class="card-header"><span class="oi oi-people"></span> {{ _('Proposal Lists') }}</div>
+      <div class="card-body">
+        {% if current_user.can('EPSMC_VIEW') %} {% if proposal_lists_articles %}
+
+        <ul class="ep_category_articleList" style="margin: 20px; padding: 0px">
+          {% for article in proposal_lists_articles %}
+          <li id="article-{{ article.id }}" class="list-group-item w100">
+            <a class="float-left text-left" href="{{ url_for('cms.view_article', id=article.id) }}"> {{ article.title }}</a>
+
+            <div class="text-right small">{{ article.created|date('%Y') }}-{{ article.created|date('%m') }}-{{ article.created|date('%d') }}</div>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <div class="page-footer ep_category_articleListFooter">{{ render_pagination(pagination_proposal_lists) }}</div>
+        {% endif %} {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}{{_('Metadata List')}}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class='sectionTitle-lg'>{{ _('Metadata') }}</div>
+    <div class="row m-1">
+        <div class='col-md-3'>
+            <a href="{{ url_for('form_submition.formSubmit') }}" target="_blank" class="btn btn-block btn-primary btn-sm text-white">
+                {{ _('Add Metadata') }}
+            </a>
+        </div>
+        <div class='col-md-3'>
+            <a href="{{url_for('project.admin_view_project', project_id=project_id, card ='messages')}}" target="_blank" class="btn btn-block btn-primary btn-sm text-white">
+                {{ _('Message') }}
+            </a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr class="table-primary">
+                <th>{{ _('ID') }}</th>
+                <th>{{ _('Title') }}</th>
+                <th>{{ _('Created') }}</th>
+                <th>{{ _('Status') }}</th>
+                <th>{{ _('Operations') }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for resource in resources %}
+            <td>{{ resource.id }}</td>
+            <td>{{ resource.title_zh }}<br>{{resource.title_en}}</td>
+            <td>{{ resource.created }}</td>
+            <td>{% if resource.status == 0 %}
+                {{_('Metadata under review')}}
+                {% elif resource.status == 1%}
+                {{_('metadata approved')}}
+                {% elif resource.status == 11%}
+                {{_('metadata rejected')}}
+                {% elif resource.status == 20%}
+                {{_('Data under review')}}
+                {% elif resource.status == 2%}
+                {{_('data approved')}}
+                {% elif resource.status == 21%}
+                {{_('data rejected')}}
+                {% elif resource.status == 3%}
+                {{_('published')}}
+                {% else %}
+                {{_('uncommitted')}}
+                {% endif %}
+            </td>
+            <td>
+                <a class="btn btn-sm btn-primary text-white mb-1"
+                   href="{{url_for('.metadata_view',resource_id=resource.id)}}">
+                    {{ _('View Metadata') }}
+                </a>
+                {# 提交前显示编辑和提交按钮 #}
+                {% if resource.status == None %}
+                <a class="btn btn-sm btn-primary text-white mb-1"
+                   href="">{{ _('Edit') }}</a>
+                <a class="btn btn-sm btn-primary text-white mb-1"
+                   href="{{url_for('.submit_metadata', resource_id=resource.id)}}">{{ _('Submit') }}</a>
+                {# 通过审核后显示上传数据和提交审核按钮 #}
+                {% elif resource.status == 1 %}
+                <a class="btn btn-sm btn-primary text-white mb-1"
+                   href="{{url_for('file_upload.user_index',project_id=project_id, resource_id=resource.id)}}">{{
+                    _('Upload/Manage Data') }}</a>
+                <a class="btn btn-sm btn-primary text-white mb-1"
+                   href="{{url_for('.submit_data', resource_id=resource.id)}}">{{
+                    _('Submit Data') }}</a>
+                {% elif resource.status == 2 %}
+                {%endif%}
+            </td>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {#
+    <div class="text-right page-footer"> {{ render_pagination(pagination) }}</div>
+    #}
+</div>
+</div>
+
+{% endblock %}

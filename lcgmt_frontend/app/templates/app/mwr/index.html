@@ -1,0 +1,39 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% from 'input.html' import ValueInputer %} {% from 'input.html' import ValueInputerUP %}{% block title %}{{ _('Time Domain
+Astronomical Information Center') }}{% endblock %} {% block content %}
+
+<div class="w-100">
+  <form id="mwrForm" method="post" action="{{url_for('.index')}}" class="needs-validation" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    {% include "app/mwr/components/table_selector.html" %}
+    <div class="card" style="margin-top: 15px">
+      <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">{{_('2: Input query details:')}}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-deck">
+          <div class="card">
+            <div class="card-header">
+              <h6 class="table-title-sm">{{ _('Cone Query') }}</h6>
+            </div>
+
+            <div class="card-body">
+              {{ ValueInputer('ra','degree',83.53953,label_class="ep_objsearch_label") }} {{
+              ValueInputer('dec','degree',22.0152,label_class="ep_objsearch_label") }} {{
+              ValueInputer('radius','arcsec',180,label_class="ep_objsearch_label", max=180) }} {{
+              ValueInputer('scale','',1.5,label_class="ep_objsearch_label", max=5) }} {{
+              ValueInputer('prob_threshold','',0.3,label_class="ep_objsearch_label", max=1) }}
+              <div style="text-align: center; margin-top: 20px">
+                <button class="btn ep_openBtn" type="submit">{{_('Submit Query')}}</button>
+              </div>
+            </div>
+          </div>
+
+          {%include "app/mwr/components/match_full_table_form.html"%}
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'app/base.html' %} 
+ {% from 'input.html' import ValueInputer, StringInputer,Label %}
+{% block content %}
+<script src="{{url_for('static',filename='js/app/lc/lcgmt.jsx')}}"  type="text/babel"></script>
+<script>
+        
+</script>
+<div class="card w-100">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">Source Selection</div>
+    <div class="input-group-append">
+        <div class="row">
+            <div class="col-4">
+            {{ ValueInputer('ra','degree',12.1964,label_class="ep_objsearch_label") }} 
+            </div>
+            <div class="col-4">
+            {{ValueInputer('dec','degree',31.957,label_class="ep_objsearch_label") }} 
+            </div>
+            <div class="col-4">
+            {{ValueInputer('radius','arcsec',180,label_class="ep_objsearch_label", max=180) }}
+            </div>
+            <div class="col-4">
+            <button class="btn btn-secondary" id="searchSrc">Search</button>
+            </div>
+            <!-- <div class="col-4">
+            {{StringInputer('object_name','object_name')}}
+            </div>
+            <div class="col-4">
+            <button class="btn btn-secondary" style="" type="button" id="resolve">Name Resolver</button>
+            </div> -->
+        </div>
+        
+    </div>
+    <div class="row">
+        <div id="srcs"></div>
+    </div>
+    {% include "app/data_center/components/resolve.html" %}
+  </div>
+  <div class="card-body ep_datasearch_card">
+  </div>
+</div>
+
+<div class="card w-100">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">Light Curve</div>
+  </div>
+  <div class="card-body ep_datasearch_card">
+    <form>
+        <input hidden  name="srcid" value=12223412>
+    <div class="row">
+        <!-- <div class="form-group col-6">
+        <label for="energy-range" id="energy-range-label" class="ep_objsearch_label">Energy Range</label>
+        <div id="energy-range-slider"></div>
+        <input type="hidden" id="energy-start" name="energy_start">
+        <input type="hidden" id="energy-end" name="energy_end">
+      </div>
+      <div class="form-group col-6"></div> 
+      -->
+      <div class="form-group col-3">
+  
+        <label class="ep_objsearch_label" for="start_time">
+        <span class="label-title">  Start_time  </span>
+        
+        </label>
+
+        <div class="input-group">
+            <input type="text" onchange="query_lc()" class="form-control datetimepicker" name="start_time" id="start_time" placeholder="" value="2022-12-01 00:00:00" autocomplete="off">
+        </div>
+      </div>
+      <div class="form-group col-3">
+  
+        <label class="ep_objsearch_label" for="end_time">
+        <span class="label-title">  End_time  </span>
+        
+        </label>
+
+        <div class="input-group">
+            <input type="text" onchange="query_lc()" class="form-control datetimepicker" name="end_time" id="end_time" placeholder="" value="2023-02-01 00:00:00" autocomplete="off">
+        </div>
+      </div>
+      <div class="form-group col-6"></div>
+      <div class="form-group col-6" >
+        <label for="time-bin" id="timebin-label">Time Bin</label>
+        <div id="time-bin-slider"></div>
+        <input type="range" onchange="query_lc()" hidden class="form-control-range input-range" id="timebin" name="timebin">
+      </div>
+      <div class="form-group col-6"></div>
+      <div id="lc-chart" style="width: 1200px;height:400px;"></div>
+      </div>
+      </form>
+    </div>
+        
+  </div>
+</div>
+
+<script>
+ 
+</script>
+{% endblock %}

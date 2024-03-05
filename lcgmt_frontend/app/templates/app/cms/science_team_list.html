@@ -1,0 +1,167 @@
+{% extends 'app/base.html' %} {% block title %}EP Science Team List{% endblock %} {% block content %}
+<div class="container-fluid" style="margin: 0px; padding: 0px; font-family: 微软雅黑, Arial, Helvetica, sans-serif;">
+
+  <nav aria-label="breadcrumb" style="margin-bottom: 15px;">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li><li class="breadcrumb-item">Science Team</li><li class="breadcrumb-item">{{ _('STP') }}</li>
+       
+    </ol>
+</nav>
+  <div class="card w-100" style="border: 0px;">
+    <div class="card-body ep-newsView">
+        {% if article %}
+        <div id='article_body' style="margin: 0px 20px; background-color:#fff; padding:20px;">
+            <h3 class="ep_article_title">{{ article.title }}</h3>
+            
+            <div class="articleContent">
+                {{ article.content | safe }}</div>
+        </div>
+       
+        {% else %}
+        <div class="card">
+            <div class="card-body" style="padding: 10px 50px;">
+                <h3 class="card-title">{{ _('Article not found!') }}</h3>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+  $("select").select2({});
+
+  $("form").submit(function (e) {
+    // alert("submit");
+    var inte_count = 0;
+    var error_msg = "";
+    if ($("#agntde").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("agntde", "一");
+    }
+    if ($("#fet").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("fet", "二");
+    }
+    if ($("#mma").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("mma", "三");
+    }
+    if ($("#cso").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("cso", "四");
+    }
+    if ($("#os").is(":checked")) {
+      inte_count++;
+      if ($("#os_type").val().length <= 0) {
+        error_msg += "如果选择工作组五，请填写具体的研究方向。\r\n";
+      }
+      error_msg += CheckPaperInput("os", "五");
+    }
+    if ($("#fuoa").is(":checked")) {
+      if ($("#fuoa_intro").val().length <= 0) {
+        error_msg += "如果选择工作组六，请介绍可配合EP开展观测的其他波段的观测设备或资源。\r\n";
+      }
+      error_msg += CheckPaperInput("fuoa", "六");
+    }
+    if (inte_count > 2 || inte_count == 0) {
+      error_msg += "请正确选择有意加入的领域工作组，1-5 需选一至两个， 6 无限制。\r\n";
+    }
+    var file_input = $("#application_file").get(0).files[0];
+    if (!file_input)
+    {
+      error_msg += "请上传《EP科学领域工作组中方正式成员申请表》。\r\n";
+    }
+
+    if (error_msg.length > 0) {
+      e.preventDefault();
+      alert(error_msg);
+    }
+  });
+
+
+    //选择文件后更新Button内容
+  $5"input[type='file']").change(function (event) {
+    let filename = event.currentTarget.files[0].name;
+    $(this)
+      .siblings("label")
+      .text(() => {
+        return filename;
+      });
+  });
+
+  function CheckPaperInput(element, index) {
+    var message = "";
+
+    if (
+      ($("#" + element + "_p1_title").val().length > 0 &&
+        $("#" + element + "_p1_journal").val().length > 0 &&
+        $("#" + element + "_p1_year").val().length > 0 &&
+        $("#" + element + "_p1_rank").val().length > 0) ||
+      ($("#" + element + "_p1_title").val().length == 0 &&
+        $("#" + element + "_p1_journal").val().length == 0 &&
+        $("#" + element + "_p1_year").val().length == 0 &&
+        $("#" + element + "_p1_rank").val().length == 0)
+    ) {
+      message += "";
+    } else {
+      message += "请在工作组" + index + "处完整填写第一篇代表性论著。\r\n";
+    }
+    if (
+      ($("#" + element + "_p2_title").val().length > 0 &&
+        $("#" + element + "_p2_journal").val().length > 0 &&
+        $("#" + element + "_p2_year").val().length > 0 &&
+        $("#" + element + "_p2_rank").val().length > 0) ||
+      ($("#" + element + "_p2_title").val().length == 0 &&
+        $("#" + element + "_p2_journal").val().length == 0 &&
+        $("#" + element + "_p2_year").val().length == 0 &&
+        $("#" + element + "_p2_rank").val().length == 0)
+    ) {
+      message += "";
+    } else {
+      message += "请在工作组" + index + "处完整填写第二篇代表性论著。\r\n";
+    }
+    if (
+      ($("#" + element + "_p3_title").val().length > 0 &&
+        $("#" + element + "_p3_journal").val().length > 0 &&
+        $("#" + element + "_p3_year").val().length > 0 &&
+        $("#" + element + "_p3_rank").val().length > 0) ||
+      ($("#" + element + "_p3_title").val().length == 0 &&
+        $("#" + element + "_p3_journal").val().length == 0 &&
+        $("#" + element + "_p3_year").val().length == 0 &&
+        $("#" + element + "_p3_rank").val().length == 0)
+    ) {
+      message += "";
+    } else {
+      message += "请在工作组" + index + "处完整填写第三篇代表性论著。\r\n";
+    }
+
+    return message;
+  }
+
+  function isInteger(obj) {
+    return typeof obj === "number" && obj % 1 === 0;
+  }
+
+  function CheckCollapse(element) {
+    if ($("#" + element).is(":checked") == true) {
+      $("#collapse_" + element).collapse("show");
+    } else {
+      $("#collapse_" + element).collapse("hide");
+    }
+  }
+
+  $(document).ready(function () {
+    CheckCollapse("os");
+    CheckCollapse("cso");
+    CheckCollapse("fet");
+    CheckCollapse("agntde");
+    CheckCollapse("mma");
+    CheckCollapse("fuoa");
+  });
+</script>
+
+{% endblock %}

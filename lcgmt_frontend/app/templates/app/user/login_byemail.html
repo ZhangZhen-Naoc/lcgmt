@@ -1,0 +1,29 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{% block title %}{{_('Login By Email')}}{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>{{_('Login By Email')}}</h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 offset-md-3">
+            <div class="card mb-3 w-100 bg-light">
+                <div class="card-body">
+                    {{ render_form(form, form_type='horizontal') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    $(function(){
+        html="<img id=\"verifycode\" onclick=\"this.src='{{url_for('user.verify_code')}}?'+new Date().time\" src=\"{{url_for('user.verify_code')}}\" />"
+        $('#verify_code').after(html);
+    });
+</script>
+{% endblock %}

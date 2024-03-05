@@ -1,0 +1,5 @@
+CREATE DATABASE IF NOT EXISTS nadc KEEP 36500;
+CREATE DATABASE IF NOT EXISTS single_stable;
+
+USE nadc;
+CREATE USER username PASS 'password';

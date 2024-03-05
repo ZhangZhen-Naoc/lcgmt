@@ -1,0 +1,156 @@
+
+<div class="col-md-5">
+  <table class="table table-bordered table-hover table-sm">
+    <!-- <caption><h6>Query Results</h6></caption> -->
+    <tr>
+      <th>RA, Dec</th>
+      <td>{{sourceInDetection.ra| round(3, 'floor')}}, {{sourceInDetection.dec| round(3, 'floor')}}</td>
+    </tr>
+
+    <tr>
+      <th>RA (HMS), Dec (DMS)</th>
+      <td>{{sourceInDetection.ra_hms}},{{sourceInDetection.dec_dms}}</td>
+    </tr>
+    <tr>
+      <th>Matched RA, Dec</th>
+      <td>{{sourceInDetection.ra_match}},{{sourceInDetection.dec_match}}</td>
+    </tr>
+    
+
+    <tr>
+      <th>Galactic l, b</th>
+      <td>{{sourceInDetection.galactic_l| round(3, 'floor')}}, {{sourceInDetection.galactic_b| round(3, 'floor')}}</td>
+    </tr>
+    <tr>
+      <th>Target Name</th>
+      <td>{{ sourceInDetection.target_name }}</td>
+    </tr>
+
+    {% if sourceInDetection.flux %}
+    <tr>
+      <th>Flux</th>
+      <td>{{sourceInDetection.flux| round(3, 'floor')}}</td>
+    </tr>
+    {% endif %}
+    {% if sourceInDetection.flux_err %}
+    <tr>
+      <th>Flux Err</th>
+      <td>{{sourceInDetection.flux_err| round(3, 'floor')}}</td>
+    </tr>
+    {% endif %}
+    <tr>
+      <th>Observation Start</th>
+      <td>{{sourceInDetection.detection.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+    </tr>
+    
+
+
+
+    <tr>
+      <th>Source Detected Number</th>
+      <td>{{sourceInDetection.source.detections|length}}</td>
+    </tr>
+      <tr>
+
+  <tr>
+    <th>Offset Target</th>
+    <td>{{ sourceInDetection.offset_target }}</td>
+  </tr>
+  <tr>
+    <th>Name Match</th>
+    <td>{{ sourceInDetection.name_match }}</td>
+  </tr>
+  <tr>
+    <th>EP Name</th>
+    <td>{{ sourceInDetection.ep_name }}</td>
+  </tr>
+  <tr>
+    <th>Flux Match</th>
+    <td>{{ sourceInDetection.flux_match }}</td>
+  </tr>
+
+
+  <tr>
+    <th>Flux</th>
+    <td>{{ sourceInDetection.flux | round(3, 'floor') }}</td>
+  </tr>
+  <tr>
+    <th>Flux Error</th>
+    <td>{{ sourceInDetection.flux_err | round(3, 'floor') }}</td>
+  </tr>
+  <tr>
+    <th>SNR</th>
+    <td>{{ sourceInDetection.snr }}</td>
+  </tr>
+  <tr>
+    <th>Flux Delta</th>
+    <td>{{ sourceInDetection.flux_delta | round(3, 'floor') }}</td>
+  </tr>
+  <tr>
+    <th>Flux Delta Error</th>
+    <td>{{ sourceInDetection.flux_delta_err | round(3, 'floor') }}</td>
+  </tr>
+  </table>
+
+  <a
+    type="button"
+    class="btn ep_openBtn"
+    target="_blank"
+    style="padding: 5px 10px"
+    href="{{url_for('data_center.issue',src_obs_id=sourceInDetection.id, instrument='FXT')}}"
+  >
+    {% if not sourceInDetection.issue %} Open an issue in Redmine {% else %} Check Issue {{sourceInDetection.issue.issue_id}} in redmine {% endif %}
+  </a>
+
+  <!-- 相关issue-->
+  <div style="margin-top: 10px; margin-bottom: 10px">
+    <span>Issues of related observation </span>
+    <select id="issue-selector" class="form-control">
+      {% for row in sourceObs %} {% if row.issue and row != sourceInDetection %}
+      <option value="{{row.id}}">{{row.name}}</option>
+      {% endif %} {% endfor %}
+    </select>
+    {% for row in sourceObs %} {% if row.issue and row != sourceInDetection %}
+    <div style="margin-top: 10px" id="issue-{{row.id}}" class="issue-pannel">
+      <a type="button" class="btn btn-info" target="_blank" href="{{url_for('data_center.issue',src_obs_id=row.id)}}">
+        Issue {{row.issue.issue_id}}
+      </a>
+      {% if sourceInDetection.issue %} {% if not row.issue.isRelatedTo(sourceInDetection.issue)%}
+      <a
+        type="button"
+        class="btn btn-info"
+        target="_blank"
+        href="{{url_for('data_center.relate_issue',issue1_id=sourceInDetection.issue.issue_id,issue2_id=row.issue.issue_id)}}"
+      >
+        Relate to issue {{row.issue.issue_id}}
+      </a>
+      {% else %}
+      <a
+        type="button"
+        class="btn btn-outline-danger"
+        target="_blank"
+        href="{{url_for('data_center.unrelate_issue',issue1_id=sourceInDetection.issue.issue_id,issue2_id=row.issue.issue_id)}}"
+      >
+        Unrelate from {{row.issue.issue_id}}
+      </a>
+      {% endif%} {% endif %}
+    </div>
+    {% endif %} {% endfor %}
+    <script>
+      $().ready(function () {
+        $("#issue-selector").change(function () {
+          id = $(this).val();
+          $(".issue-pannel").hide();
+          $(`#issue-${id}`).show();
+        });
+        $("#issue-selector").change();
+      });
+    </script>
+  </div>
+</div>
+
+  
+     
+
+
+

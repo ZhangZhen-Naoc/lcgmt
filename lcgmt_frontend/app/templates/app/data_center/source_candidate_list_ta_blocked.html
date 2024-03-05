@@ -1,0 +1,4 @@
+{% extends 'app/base.html' %}
+{% block content %}
+Other TA <b> {{ta.name}} </b>is Editing, please go to <a href='{{url_for('.source_candidate_list_get')}}'>Source candidate list</a>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+<div class="card w-100" id="lc-container">
+    <div class="card-header bg-light">
+      <div class="card-header-title" style="color: #004386; font-weight: bold; font-size: 16px">
+        Long Term Light Curve Overview
+      </div>
+    </div>
+    <div class="card-body" id="src-table-body">
+   
+    </div>
+</div>
+<script>
+    var lc_url = "{{ url_for('.lc_api') }}"
+</script>
+<script src="{{url_for('static',filename='js/app/lc/lc.js')}}"></script>
+<script src="{{url_for('static',filename='js/app/lc/overview.jsx')}}"  type="text/babel"></script>
+<script type="text/babel">
+    // 第一步，查找src列表
+    $.ajax({
+        url:"{{ url_for('data_center.identified_source_list_api') }}",
+        success:(data)=>{
+            const tbody = document.getElementById("src-table-body")
+            for (let item of data){
+                let card = document.createElement("div")
+                ReactDOM.render(LcCard(item), card);
+                
+
+                let chart = document.createElement("div")
+                chart.setAttribute("classification", item.classification)
+                chart.style.width = "1000px"
+                chart.style.height = "400px"
+                card.querySelector(".card-body").appendChild(chart)
+
+                
+                tbody.appendChild(card)
+                // 第二步，获取光变数据
+                $.ajax({
+                    url: lc_url,
+                    data:{
+                        src_id:item['id']
+                    },
+                    
+                    success:res=>{
+                        // 分离flux和upperlimit
+                        let fluxs = res.data.filter(item=>!item['upperlimit_flg'])
+                        let upperlimits = res.data.filter(item=>item['upperlimit_flg']&&item['exp_time']>100)
+                        // 转化为 [[time,flux],[time,flux]]格式
+                        let time_flux = fluxs.map(item=>[item['mjd'],item['flux']])
+                        let time_flux_err = fluxs.map(item=>[item['mjd'],item['flux']-item['flux_err'],item['flux']+item['flux_err']])
+                        let time_upperlimits = upperlimits.map(item=>[item['mjd'],item['flux']])
+                        //用于tooltip 
+                        let flux_names  = fluxs.map(item=>item['name'])
+                        let upperlimit_names = upperlimits.map(item=>item['name'])
+                        renderTable(chart,time_flux,time_upperlimits,time_flux_err,flux_names,upperlimit_names)
+                        
+                    }
+                }) 
+                
+            }
+            // 筛选框
+            let classifications = ["All"].concat(data.map(item=>item['classification']).filter((item, index, arr) => arr.indexOf(item) === index))
+            let card = document.createElement("div")
+            ReactDOM.render(Selector(classifications), card);
+            tbody.insertBefore(card,tbody.firstChild)
+        }
+    })
+    
+    
+</script>
+
+{% endblock %}

@@ -1,0 +1,158 @@
+<div class="card-body ep_datasearch_card">
+  <div id="spinner-div">
+    Loading...
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+          <form id="obs_search_form" >
+          {{form.hidden_tag()}}
+          <div class="row">
+            <div class="col-md-12">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    {{form.object_name.label(class="bmd-label-floating ep_objsearch_label")}}</span>
+                </div>
+                {{form.object_name(class="form-control",id="object_name")}}
+                <div class="input-group-append">
+                  <button class="btn btn-secondary" type="button"  id="resolve" >Name Resolver</button>
+               
+                </div>
+              
+
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                {{form.ra.label(class="bmd-label-floating ep_objsearch_label")}}
+              </span>
+            </div>
+                {{form.ra(class="form-control",id="ra", placeholder="in Degrees")}}
+                <div class="input-group-append">
+                  <span class="input-group-text">degrees</span>
+                </div>
+              </div>
+              
+            </div>
+            <div class="col-md-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                {{form.dec.label(class="bmd-label-floating ep_objsearch_label")}}
+              </span>
+            </div>
+                {{form.dec(class="form-control",id="dec", placeholder="in Degrees")}}
+                <div class="input-group-append">
+                  <span class="input-group-text">degrees</span>
+                </div>
+              </div>
+              
+            </div>
+            <div class="col-md-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                  {{form.radius.label(class="bmd-label-floating ep_objsearch_label")}}
+                  </span>
+                </div>
+                {{form.radius(class="form-control",id="radius", placeholder="in Degrees")}}
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="obs_id">
+                {{form.obs_id.label(class="bmd-label-floating ep_objsearch_label")}}
+              </span>
+              </div>
+                {{form.obs_id(class="form-control",id="obs_id")}}
+              </div>
+            </div>
+          
+            <div class="col-md-6">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="start_datetime">
+                
+                {{form.start_datetice.label(class="bmd-label-floating ep_objsearch_label")}}
+                </span>
+                </div>
+               
+
+                {{form.start_datetime(class="form-control", placeholder=" yyyy-mm-dd hh:mm:ss", id="start_datetime")}}
+           
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="end_datetime">
+                                {{form.end_datetime.label(class="bmd-label-floating ep_objsearch_label")}}
+                  </span>
+                </div>
+              
+                {{form.end_datetime(class="form-control",placeholder=" yyyy-mm-dd hh:mm:ss",id="end_datetime")}}
+    
+              </div>
+            </div>  
+
+           
+           
+
+       
+            <!-- <div class="row"> -->
+      
+              <div class="col-md-12">
+                <div class="input-group mb-3 ep-checkbox-line">
+                  <div class="input-group-prepend">
+                    <label>Instruments:</label></div>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" id="instrument_option_wxt" name="instrument1" value="wxt" checked> WXT
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" id="instrument_option_fxt" name="instrument2" value="fxt"> FXT
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 text-center">
+                {{form.submit(class="btn ep_openBtn", style="padding:7px 30px; margin-top:20px;")}}
+              </div>
+          </div>
+        </form>
+</div>
+
+<script>
+  $(document).ready(function () {
+    var dateNow = new Date();
+    var dateStart = new Date();
+    dateStart.setDate(dateNow.getDate() - 1);
+    dateStart.setHours(0, 0, 0, 0);
+    var dateEnd = new Date();
+    dateEnd.setDate(dateNow.getDate() + 1);
+    dateEnd.setHours(0, 0, 0, 0);
+    $("#start_datetime").datetimepicker({
+      allowInputToggle: true,
+      showClose: false,
+      showClear: false,
+      showTodayButton: false,
+      useCurrent: false,
+      format: "YYYY-MM-DD HH:mm:ss",
+      defaultDate: dateStart,
+    });
+    $("#end_datetime").datetimepicker({
+      allowInputToggle: true,
+      showClose: false,
+      showClear: false,
+      showTodayButton: false,
+      useCurrent: false,
+      format: "YYYY-MM-DD HH:mm:ss",
+      defaultDate: dateEnd,
+    });
+  });
+</script>
+
+{% include "app/data_center/components/resolve.html" %}

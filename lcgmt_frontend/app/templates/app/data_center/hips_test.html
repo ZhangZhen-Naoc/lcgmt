@@ -1,0 +1,125 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %} {% block content %}
+
+<div class="row">
+  <div class="col">
+    <button type="button" id="center" class="btn btn-outline-primary">Load Matched Results</button>
+    <button type="button" id="mwr" class="btn btn-outline-primary">Load Unmatch Results</button>
+    <!-- <button type="button" id="lmc" class="btn btn-outline-primary">LMC</button>
+                        <button type="button" id="smc" class="btn btn-outline-primary">SMC</button> -->
+    <input type="text" class="form-control" id="ra" placeholder="ra in degrees" />
+    <input type="text" class="form-control" id="dec" placeholder="dec in degrees" />
+
+    <button type="button" id="goto" class="btn btn-primary">Goto</button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12" id="with-aladin">
+    <div id="aladin-lite-div"></div>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $("#aladin-lite-div").width($("#with-aladin").width());
+    $("#aladin-lite-div").height(800);
+  });
+
+  let aladin;
+
+  A.init.then(() => {
+    aladin = A.aladin("#aladin-lite-div", {
+      survey: "CDS/P/DSS2/color",
+      // survey:{url:'{{url_for("static",filename="hips/RASS/ov-gso_P_RASS")}}', imgFormat: 'jpeg',colormap:'rainbow' },
+      fov: 360,
+      fullScreen: false,
+      cooFrame: "galactic",
+      showReticle: true,
+      reticleSize: 64, // change reticle size
+    });
+    aladin.setProjection("AIT");
+    for (var i in testlist) {
+      console.log(testlist[i]);
+      aladin.setOverlayImageLayer(
+        aladin.createImageSurvey(
+          testlist[i],
+          testlist[i],
+          "http://127.0.0.1:5501/data/multihips/raw_images_minus/test-1/" + testlist[i],
+          "equatorial",
+          3,
+          {
+            imgFormat: "png",
+            colormap: "rainbow",
+          }
+        ),
+        testlist[i]
+      );
+    }
+  
+  });
+
+  var testlist = [
+    "ep17000000089wxt13_100-150-flux.img",
+    "ep17000000089wxt14_100-150-flux.img",
+    "ep17000000089wxt15_100-150-flux.img",
+    "ep17000000089wxt16_100-150-flux.img",
+    "ep17000000093wxt13_100-150-flux.img",
+    "ep17000000093wxt14_100-150-flux.img",
+    "ep17000000093wxt15_100-150-flux.img",
+    "ep17000000093wxt16_100-150-flux.img",
+    "ep17000000103wxt13_100-150-flux.img",
+    "ep17000000103wxt14_100-150-flux.img",
+    "ep17000000103wxt15_100-150-flux.img",
+    "ep17000000103wxt16_100-150-flux.img",
+    "ep17000000151wxt13_100-150-flux.img",
+    "ep17000000151wxt14_100-150-flux.img",
+    "ep17000000151wxt15_100-150-flux.img",
+    "ep17000000151wxt16_100-150-flux.img",
+    "ep17000000152wxt13_100-150-flux.img",
+    "ep17000000152wxt14_100-150-flux.img",
+    "ep17000000152wxt15_100-150-flux.img",
+    "ep17000000152wxt16_100-150-flux.img",
+    "ep17000000160wxt13_100-150-flux.img",
+    "ep17000000160wxt14_100-150-flux.img",
+    "ep17000000160wxt15_100-150-flux.img",
+    "ep17000000160wxt16_100-150-flux.img",
+    "ep17000000161wxt13_100-150-flux.img",
+    "ep17000000161wxt14_100-150-flux.img",
+    "ep17000000161wxt15_100-150-flux.img",
+    "ep17000000161wxt16_100-150-flux.img",
+    "ep17000000164wxt13_100-150-flux.img",
+    "ep17000000164wxt14_100-150-flux.img",
+    "ep17000000164wxt15_100-150-flux.img",
+    "ep17000000164wxt16_100-150-flux.img",
+    "ep17000000165wxt13_100-150-flux.img",
+    "ep17000000165wxt14_100-150-flux.img",
+    "ep17000000165wxt15_100-150-flux.img",
+    "ep17000000165wxt16_100-150-flux.img",
+    "ep17000000185wxt13_100-150-flux.img",
+    "ep17000000185wxt14_100-150-flux.img",
+    "ep17000000185wxt15_100-150-flux.img",
+    "ep17000000185wxt16_100-150-flux.img",
+    "ep17000000186wxt13_100-150-flux.img",
+    "ep17000000186wxt14_100-150-flux.img",
+    "ep17000000186wxt15_100-150-flux.img",
+    "ep17000000186wxt16_100-150-flux.img",
+    "ep17000000189wxt13_100-150-flux.img",
+    "ep17000000189wxt14_100-150-flux.img",
+    "ep17000000189wxt15_100-150-flux.img",
+    "ep17000000189wxt16_100-150-flux.img",
+    "ep17000000190wxt13_100-150-flux.img",
+    "ep17000000190wxt14_100-150-flux.img",
+    "ep17000000190wxt15_100-150-flux.img",
+    "ep17000000190wxt16_100-150-flux.img",
+    "ep17000000195wxt13_100-150-flux.img",
+    "ep17000000195wxt14_100-150-flux.img",
+    "ep17000000195wxt15_100-150-flux.img",
+    "ep17000000195wxt16_100-150-flux.img",
+    "ep17000000196wxt13_100-150-flux.img",
+    "ep17000000196wxt14_100-150-flux.img",
+    "ep17000000196wxt15_100-150-flux.img",
+    "ep17000000196wxt16_100-150-flux.img",
+  ];
+</script>
+
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/form.html' import render_form %} {% from 'bootstrap/nav.html' import render_nav_item %} {% from
+'bootstrap/form.html' import render_form_row %} 
+
+{% block title %}PV Observations Call{% endblock %} 
+{% from 'input.html' import ValueInputerUP, ValueInputer, TextInputer, Label %}
+{% block content %} 
+<div class="card w-100" id="lc-container">
+    <div class="card-header bg-light">
+      <div class="card-header-title" style="color: #004386; font-weight: bold; font-size: 16px">
+        Einstein Probe Performance Verification (PV) Observations Call for Target Recommendation
+        <a
+            target
+            _blank
+            href="{{ url_for('static',filename='resources/EP_PV_Observation_Instructions.pdf')}}"
+            ><span class="badge badge-info">Download Instruction</span></a
+        >
+      </div>
+    </div>
+    <div class="card-body" id="src-table-body">
+        <script>
+            
+        </script>
+        <form
+            method="POST"
+            onsubmit="windows.alert('aaaaaaaaa')"
+            enctype="multipart/form-data"
+            action="{{ url_for('.pv_post')}}"
+            style="clear: both; padding-top: 20px"
+            class="ep-simulator-form"
+            id="pv_form"
+        >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="row">
+                <div class="col-md-3">
+                {{
+                    TextInputer("Recommemder's name",current_user.name,id="name")
+                }}
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ Label('STP','STP  (to which the targets are most relevant)','',tooltip='')}}
+                        <div class="input-group mb-1">
+                        <select class="form-control" name="stp">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            
+                        </select>
+                        </div>
+                    </div>
+                </div>
+                
+               
+            </div>
+            <div class="row">
+                <div class="spec-inputer spec-inputer-file col-md-3"
+                style="margin-top: 32px"
+                >
+                <label for="rec_file" class="btn ep-manage-btn"
+                    >Upload File (pdf)</label
+                >
+                <input type="file" hidden name="rec_file" id="rec_file" accept=".pdf"/>
+                <a style="margin-left: 3px"
+                    target
+                    _blank
+                    href="{{ url_for('static',filename='resources/EP_PV_Target_Recommendation_Form.docx')}}"
+                    ><span class="badge badge-info">Download Template</span></a
+                >
+            </div>
+            </div>
+
+
+            <div class="row">
+                <div style=" margin-top: 40px" class="col-3">
+                    <input
+                    type="submit"
+                    class="btn ep_openBtn"
+                    value="Submit"
+                    style="width: 130px; height: 38px"
+                    />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="{{url_for('static',filename='js/app/proposal_submit/pv.js')}}"></script>2
+{% endblock %} 

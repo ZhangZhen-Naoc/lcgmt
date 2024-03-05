@@ -1,0 +1,48 @@
+<div id="obs_cmos_inputer">
+    <single_obs v-for='idx in cnt'></single_obs>
+    <button class="btn btn-primary" @click="add" type="button">+ Add Observation</button>
+</div>
+
+<script>
+var single_obs = {
+    template: `
+    <div class="row">
+        <div class="col-md-6 mr-0">
+            {{TextInputer('obs','',label_class="ep_objsearch_label",hint="Obs ID",tooltip="")}}
+        </div>
+        <div class="col-md-6 mr-0">
+            {{ValueInputerUP('cmos','',13,label_class="ep_objsearch_label",hint="CMOS Num",tooltip="")}}
+        </div>
+    </div>
+    `
+}
+var runoobA = {
+  template: '<h1>自定义组件!</h1>'
+}
+ 
+const app = Vue.createApp({
+  components: {
+    single_obs,
+  },
+  data(){
+    return {
+        cnt:1
+    }
+    
+  },
+  methods:{
+    add(){
+        this.cnt++
+    }
+  },
+  delimiters: ["[[", "]]"],
+})
+ 
+app.mount('#obs_cmos_inputer')
+
+//设置obs和name为必填字段
+$(document).ready(function () {
+  $("[name=obs]").attr("required",true)
+  $("[name=cmos]").attr("required",true)
+})
+</script>

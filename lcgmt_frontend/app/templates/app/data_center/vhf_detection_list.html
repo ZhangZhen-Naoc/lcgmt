@@ -1,0 +1,512 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %} {% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{ render_breadcrumb_item('data_center.vhf_detection_list_access', _('VHF Detection')) }}
+  </ol>
+</nav>
+
+<div class="card w-100">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">{{_('VHF Alert Search')}}</div>
+  </div>
+  <div class="card-body ep_datasearch_card">
+    <form>
+      {{form.hidden_tag()}}
+      <div class="row">
+   
+        <div class="col-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.obs_id.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+            {{form.obs_id(class="form-control",id="obs_id")}}
+          </div>
+        </div>
+ 
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.start_datetime.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+
+            {{form.start_datetime(class="form-control datetimepicker", id="start_datetime")}}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.end_datetime.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+
+            {{form.end_datetime(class="form-control datetimepicker",id="end_datetime")}}
+          </div>
+        </div>
+
+  
+      </div>
+      <div class="col-md-12 text-center">{{form.submit(class="btn ep_openBtn", style="padding:7px 30px; margin-top:20px;")}}</div>
+
+      <div id="spinner-div">
+        Loading...
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      
+    </form>
+  </div>
+
+
+  <div class="card w-100" style="margin-top: 20px">
+  
+      <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Alert List <span id="items"></span>
+          <div style="float:right">
+
+     
+            <button class="btn ep_openBtn btn-sm" id="download_list"  >Export CSV</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+      <div id="result_tab" style="z-index: 50; width: 100%"></div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  {#
+  <div class="modal fade" id="image-modal-div" tabindex="-1" role="dialog" aria-labelledby="imageJodalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imageModalTitle"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="model-body">
+          <img id="image-model" src="" class="rounded mx-auto d-block img-fluid" alt="Responsive image" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  #}
+  <script>
+    var result_table;
+    var lastSelectedRow; //表中当前选中行
+    var lastSelectedFov; //图层中选中的fov
+    var currentRes;
+    var objClicked;
+    function digit3(num) {
+      return Number.parseFloat(num.toFixed(3));
+    }
+    function digit0(num) {
+      return Math.floor(num);
+    }
+    $("form").submit(function (e) {
+      $("#spinner-div").show();
+
+      var obs_id = $("#obs_id").val();
+
+      var start_datetime = $("#start_datetime").val();
+      var end_datetime = $("#end_datetime").val();
+
+      // addCatalogues();
+  
+
+      $.ajax({
+        type: "POST",
+        url: "{{ url_for('data_center.vhf_detection_list_api') }}",
+        dataType: "json",
+        data: { obs_id: obs_id, start_datetime: start_datetime, end_datetime: end_datetime },
+        success: function (res) {
+          // console.log(res);
+          if (res['success'] == 'no result') {
+            res =[];
+          }
+          for (let item of res) {
+            item['selected'] = false
+          }
+          // currentRes = res;
+          $("#items").html("(Find "+res.length+" results.)");
+          var table = new Tabulator("#result_tab", {
+            //data: mergeSameObsId(res),
+            data: res,
+            selectable: 1,
+            dataTree: true,
+            height: 500,
+            scrollToRowIfVisible: true,
+            layout: "fitDataFill",
+            columns: [
+            {
+              formatter: "rownum",
+              hozAlign: "center",
+            },
+    
+              { title: "OBS ID", field: "obs_id", sorter: "string" },
+              { title: "CMOS ID", field: "detnam", sorter: "string" },
+       
+            
+              {
+                title: "",
+                formatter: detailIcon,
+                width: 50,
+                hozAlign: "center",
+                tooltip: "Show Detail",
+
+                cellClick: function (e, cell) {
+                  showVHFObsDetailPage(cell.getRow().getData().obs_id, cell.getRow().getData().detnam);
+                },
+                download: false,
+              },
+             
+             
+              {
+                title: "Obs Time",
+                field: "obs_start",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+              {
+                title: "Trigger Time",
+                field: "trig_time",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+              {
+                title: "RA",
+                field: "ra",
+                sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                },
+              },
+              {
+                title: "Dec",
+                field: "dec",
+                sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                },
+              },
+              {
+                title: "Pos Err",
+                field: "pos_err",
+                sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                },
+              },
+              {
+                title: "Catalog",
+                field: "src_code",
+                // sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  try{
+                  var catalog=cell.getValue()[2];
+                  if(catalog!=null)
+               
+                  if(catalog == true)
+                  {
+                    return "Known";
+                  }
+                  else
+                  {
+                    return "Unknown";
+                  }
+                }
+                catch{}
+                },
+              },
+              {
+                title: "Variability (short)",
+                field: "src_code",
+                // sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  try{
+                  var catalog=cell.getValue()[3];
+                  if(catalog == true)
+                  {
+                    return "Strong";
+                  }
+                  else
+                  {
+                    return "Weak";
+                  }
+                }catch{}
+                },
+              },
+              {
+                title: "Variability (long)",
+                field: "src_code",
+                // sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  try{
+                  var catalog=cell.getValue()[4];
+                  if(catalog == true)
+                  {
+                    return "Strong";
+                  }
+                  else
+                  {
+                    return "Weak";
+                  }}
+                  catch{
+
+                  }
+                },
+              },
+              {
+                title: "HR",
+                field: "src_code",
+                // sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  try{
+                  var catalog=cell.getValue()[5];
+                  if(catalog == true)
+                  {
+                    return "Hard";
+                  }
+                  else
+                  {
+                    return "Soft";
+                  }
+                }catch{}
+                },
+              },
+              {
+                title: "Galac Lat",
+                field: "src_code",
+                // sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  try{
+                  var catalog=cell.getValue()[6];
+                  if(catalog == true)
+                  {
+                    return "High";
+                  }
+                  else
+                  {
+                    return "Low";
+                  }
+                }catch{}
+                },
+              },
+              {
+                title: "SNR",
+                field: "src_code",
+                // sorter: "number",
+                formatter: function (cell, formatterParams, onRendered) {
+                  try{
+                  var catalog=cell.getValue()[7];
+                  if(catalog == true)
+                  {
+                    return "> High thres";
+                  }
+                  else
+                  {
+                    return "<= High thres but > low thres";
+                  }
+                }catch{}
+                },
+              },
+              {
+                title: "X",
+                field: "x",
+                sorter: "number",
+              },
+              {
+                title: "Y",
+                field: "y",
+                sorter: "number",
+              },
+              {
+                title: "Variance ",
+                field: "var",
+                sorter: "number",
+              },
+              { title: "Net Rate", field: "net_rate" ,sorter:"number"},
+              { title: "HR_number", field: "hr" ,sorter:"number"},
+              { title: "Significance", field: "src_significance",sorter:"number" },
+              { title: "ID", field: "id", sorter: "number" },
+            ],
+          });
+          result_table = table;
+
+          result_table.on("rowSelected", function (row) {
+            if (lastSelectedRow != undefined && lastSelectedRow._row.data.id == row._row.data.id) {
+              return;
+            }
+            clearSelectedRow();
+            lastSelectedRow = row;
+
+            if (objClicked != undefined) {
+              objClicked.deselect();
+            }
+
+            // console.log(footprint);
+            objClicked = footprint;
+          });
+     
+          $("#spinner-div").hide(); //Request is complete so hide spinner
+        },
+        error: function () {},
+        complete: function () {},
+      });
+      e.preventDefault();
+    });
+
+
+    
+   
+    $("#download_list").click(function(){
+      result_table.download("csv", "vhf_obs_list.csv", {delimiter:","}); 
+     });
+
+  
+
+
+    function showVHFObsDetailPage(obs_id, cmos_id) {
+      var baseUrl = "{{url_for('data_center.vhf_detection_detail', obs_id='obs_id_ph',cmos_id='cmos_id_ph')}}";
+      var targetUrl = baseUrl.replace("obs_id_ph", obs_id).replace("cmos_id_ph", cmos_id);
+      window.open(targetUrl, "_blank").focus();
+    }
+
+    
+  
+
+
+    var downloadIcon = function (cell, formatterParams, onRendered) {
+      return '<i class="fas fa-download"></i>';
+    };
+
+    var detailIcon = function (cell, formatterParams, onRendered) {
+      return '<i class="fas fa-info-circle"></i>';
+    };
+
+    function clearSelectedRow() {
+      if (lastSelectedRow != undefined) {
+        lastSelectedRow.deselect();
+      }
+    }
+
+  
+    function r2d(point) {
+      var deg = parseFloat(point) * (180 / Math.PI);
+      return deg;
+    }
+
+    function mergeSameObsId(data) {
+      if (data == null || !Array.isArray(data)) {
+        return [];
+      }
+      let result = [];
+      let map = new Map();
+      for (let item of data) {
+        if (map.has(item.obs_id)) {
+          let temp = map.get(item.obs_id);
+          temp.push(item);
+          map.set(item.obs_id, temp);
+        } else {
+          map.set(item.obs_id, [item]);
+        }
+      }
+      for (let [key, value] of map) {
+        let temp = value[0];
+        if (value.length > 1) {
+          temp._children = value.slice(1);
+        }
+        result.push(temp);
+      }
+      return result;
+    }
+
+    $(document).ready(function () {
+      var dateNow = new Date();
+      var dateStart = new Date();
+      dateStart.setDate(dateNow.getDate() - 1);
+      dateStart.setHours(0, 0, 0, 0);
+      var dateEnd = new Date();
+      dateEnd.setDate(dateNow.getDate() + 1);
+      dateEnd.setHours(0, 0, 0, 0);
+      $("#start_datetime").datetimepicker({
+        allowInputToggle: true,
+        showClose: false,
+        showClear: false,
+        showTodayButton: false,
+        useCurrent: false,
+        format: "YYYY-MM-DD HH:mm:ss",
+        defaultDate: dateStart,
+      });
+      $("#end_datetime").datetimepicker({
+        allowInputToggle: true,
+        showClose: false,
+        showClear: false,
+        showTodayButton: false,
+        useCurrent: false,
+        format: "YYYY-MM-DD HH:mm:ss",
+        defaultDate: dateEnd,
+      });
+
+    });
+
+   
+
+    $("#datetimepicker").datetimepicker({
+      allowInputToggle: true,
+      showClose: false,
+      showClear: false,
+      showTodayButton: false,
+      format: "YYYY-MM-DD HH:mm:ss",
+    });
+
+  
+
+  
+
+  </script>
+
+  <style>
+    #search-current-position {
+      position: absolute;
+      top: 108px;
+      left: 4px;
+      cursor: pointer;
+      z-index: 20;
+      background: rgba(250, 250, 250, 0.8);
+      border-radius: 4px;
+    }
+  </style>
+
+  <script>
+    // $(document).ready(function () {
+    //   $('#obs_table').DataTable({
+    //             //跟数组下标一样，第一列从0开始，这里表格初始化时，第四列默认降序
+    //               "order": [[ 5, "desc" ]]
+    //             });
+    //   $('.dataTables_length').addClass('bs-select');
+
+    //   // $('#start_datetime').val
+    // });
+
+    // $(".thumb").click(function () {
+
+    // });
+  </script>
+
+  {% include "app/data_center/components/resolve.html" %} {% endblock %}
+</div>

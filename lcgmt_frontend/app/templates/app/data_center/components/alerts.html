@@ -1,0 +1,70 @@
+<div class="card w-100" style="margin-top: 20px;">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Atel Alerts</div>
+        
+    </div>
+    <div class="card-body">
+        {% for alert in atel_alerts %}
+            <div>
+                <div class="card w-100" style="margin-top: 20px;">
+                    <div class="card-header bg-light ep-cardheader">
+                        <div class="card-header-title">Atel Alert {{alert.fullcontent.atel_id}} {{alert.fullcontent.title}}</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4 border">
+                                <table class="table">
+                                    <tr>
+                                        <th> Authors</th>
+                                        <td style='text-align:left;'> {{alert.fullcontent.authors}}
+                                    </tr>
+                                    <tr>
+                                        <th> Backreflist</th>
+                                        <td style='text-align:left;'> {{alert.fullcontent.backreflist}}
+                                    </tr>
+                                    <tr>
+                                        <th> Email</th>
+                                        <td style='text-align:left;'> {{alert.fullcontent.email}}
+                                    </tr>
+                                    <tr>
+                                        <th> Reflist</th>
+                                        <td style='text-align:left;'> {{alert.fullcontent.reflist}}
+                                    </tr>
+                                    <tr>
+                                        <th> Tags</th>
+                                        <td style='text-align:left;'> {{alert.fullcontent.tags}}
+                                    </tr>
+                                    <tr>
+                                        <th> Title</th>
+                                        <td style='text-align:left;'> {{alert.fullcontent.title}}
+                                    </tr>
+                                    <tr>
+                                        <th> Atel Type</th>
+                                        <td style='text-align:left;'> {{alert.fullcontent.ateltype}}
+                                    </tr>
+                                    <tr>
+                                        <th> Published Date </th>
+                                        <td style='text-align:left;'> {{alert.fullcontent.datepublished}}
+                                    </tr>
+                                    <tr>
+                                        <th> Parsed Date</th>
+                                        <td style='text-align:left;'> {{alert.fullcontent.dateparsed}}
+                                    </tr>
+                                </table>
+                                
+
+                            </div>
+                            <div class="col-8 border">
+                                <script>
+                                    content = `{{alert.fullcontent.usertext}}`
+                                </script>
+                                {{alert.fullcontent.usertext | escape}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor%}
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<p>Dear Expert,</p>
+
+<p>Welcome to EP TDIC!</p>
+
+<p>You have been invited to review EP observation proposals!</p>
+
+<p>All the proposals will be reviewed through the website <a href="https://nadc.china-vo.org/ep">https://nadc.china-vo.org/ep</a>. We have created an account, which is your email address, for you at the website. Please go to the link below to verify your email address:<br>
+    <a href="{{ url_for('user.confirm', token=token, _external=True) }}">{{ url_for('user.confirm', token=token, _external=True) }}</a>
+</p>
+
+<p>Please change your password at link: <a href="{{ url_for('user.change_password', _external=True) }}">{{ url_for('user.change_password', _external=True) }}</a> .Your default password is: {{default_password}}</p>
+
+<p>(Please do not reply to this notification, this inbox is not monitored.)</p>

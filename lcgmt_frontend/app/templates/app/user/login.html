@@ -1,0 +1,63 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{% block title %}{{_('Login')}}{% endblock %}
+{% block content %}
+
+<div class="login-page-title-box" style="height: auto;">
+    <img class="login-page-title-img" style="margin:30px;" src="{{url_for('static',filename='/images/dashboard/userImg.png')}}">
+</div>
+<div class="container-fluid" style="margin:30px 0px 60px 0px;">
+    <div class="row">
+    <div class="col-sm-6 offset-sm-3">
+            <form id="loginForm" method="post" class="form-horizontal" style="background-color: #eee; padding: 20px 30px 30px 30px; border-radius: 10px; margin-bottom: 60px;">{{ form.csrf_token }}
+                <div class="form-group csstbp-login-form">
+                    <div class="input-group">
+                        <input type="email" class="form-control {% if form.email.errors %}is-invalid {%endif%}csstbp-login-input login-email-input" id="email" name="email" placeholder="{{_('Email')}}" >
+                    {% if form.email.errors %}
+                    <div class="invalid-feedback">{{ ', '.join(form.email.errors) }}</div>
+                    {% endif %}
+                    </div>
+                </div>
+                <div class="form-group csstbp-login-form">
+                    <input type="password" class="form-control {% if form.password.errors %}is-invalid {%endif%} csstbp-login-input login-password-input" id="password" name="password" placeholder="{{_('Password')}}">
+                    {% if form.password.errors %}
+                    <div class="invalid-feedback">{{ ', '.join(form.email.errors) }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group csstbp-login-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control {% if form.verify_code.errors %}is-invalid {%endif%}csstbp-login-input login-email-input" id="verify_code" name="verify_code" placeholder="{{_('Verify Code')}}" value="{{form.verify_code.data if form.verify_code.data}}">
+                        <img id="verifycode" onclick="this.src='{{url_for('user.verify_code')}}?'+new Date().time" src="{{url_for('user.verify_code')}}" />
+                    {% if form.verify_code.errors %}
+                    <div class="invalid-feedback">{{ ', '.join(form.verify_code.errors) }}</div>
+                    {% endif %}
+                    </div>
+                </div>
+                <div class="checkbox csstbp-login-checkbox">
+                    <label><input type="checkbox" name="remember_me" class="csstbp-login-checkbox-input">{{_('Remember Me')}}</label>
+                </div>
+                <div class="row register-button-row">
+                    <input type="submit" class="btn btn-primary btn-raised btn-block" value="{{_('Login')}}" />
+                </div>
+                <div class="row register-button-row">
+                    <a href="{{ url_for('.register') }}" class="btn btn-outline-primary btn-sm register-button" role="button">{{_('Register')}}</a>
+                    <a href="{{ url_for('.forget_password') }}" class="btn btn-outline-primary btn-sm forgetPW-button" role="button">{{_('Forget password')}}</a>
+                </div>
+               
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(function(){
+    check_elem_on('blur', 'email', check_email_valid, 'email');
+    check_elem_on('blur', 'password', check_empty, 'password');
+});
+
+</script>
+{% endblock %}

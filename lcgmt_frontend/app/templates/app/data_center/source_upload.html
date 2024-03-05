@@ -1,0 +1,86 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+{% from 'input.html' import ValueInputerUP, TextInputer,FileInputer, CheckBoxInputer %}
+{% block title %}{{ _('Upload Transient') }}{% endblock %}
+{% block content %}
+<form
+      method="POST"
+      enctype="multipart/form-data"
+      action="{{url_for('data_center.source_upload')}}"
+      style="clear: both; padding-top: 20px"
+      class="ep-simulator-form"
+    >
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <div class="card">
+        <div class="card-header">Upload Transint</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2 mr-0">
+                {{
+                TextInputer('name',"",label_class="ep_objsearch_label",hint="Transient Name",tooltip="")}}
+                </div>
+                <div class="col-md-2 mr-0">
+                {{
+                ValueInputerUP('ra','degree',0,label_class="ep_objsearch_label",hint="RA",tooltip="")}}
+                </div>
+                <div class="col-md-2 mr-0">
+                {{
+                ValueInputerUP('dec','degree',0,label_class="ep_objsearch_label",hint="Dec",tooltip="")}}
+                </div>
+                <div class="col-md-2 mr-0">
+                {{
+                ValueInputerUP('pos_err','degree',0,label_class="ep_objsearch_label",hint="Pos Err",tooltip="")}}
+                </div>
+                <div class="col-md-2 mr-0">
+                {{
+                ValueInputerUP('flux','erg/s',0,label_class="ep_objsearch_label",hint="Flux",tooltip="")}}
+                </div>
+                <div class="col-md-2 mr-0">
+                {{
+                ValueInputerUP('z','degree',0,label_class="ep_objsearch_label",hint="Redshift",tooltip="")}}
+                </div>
+                <div class="col-md-2 mr-0">
+                {{
+                ValueInputerUP('snr','',0,label_class="ep_objsearch_label",hint="SNR",tooltip="")}}
+                </div>
+                
+                
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Input Observations</h4>
+                    {%include "app/data_center/components/obs_cmos_inputer.html"%}
+                </div>
+                <div class="col-md-4">
+                    <h4>Input Files</h4>
+                    {{FileInputer("spec","Select Spectrum")}}
+                    {{FileInputer("img","Select Image")}}
+                    {{FileInputer("lc","Select Light Curve")}}
+                    {{FileInputer("bb","Select Black Body Parameters")}}
+                    {{FileInputer("pl","Select Power Law Parameters")}}
+
+                </div>
+                <div class="col-md-2">
+                    <h4>Input Types</h4>
+                    {%for type in types%}
+                        {{CheckBoxInputer("types",type)}}
+                    {% endfor %}
+                    
+
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 20px">
+            <input
+          type="submit"
+          class="btn ep_openBtn"
+          value="Upload"
+          style="width: 130px; height: 38px"
+        />
+            </div>
+        </div>
+        
+    </div>
+    
+</form>
+{%endblock%}

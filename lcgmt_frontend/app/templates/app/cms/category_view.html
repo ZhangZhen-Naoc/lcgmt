@@ -1,0 +1,39 @@
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+{% extends 'app/base.html' %}
+
+{% block title %}{{category.name }}{% if pagination.page>1 %}_第{{ pagination.page }}页{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style=" padding:0px; background-color:transparent;">        
+   <nav aria-label="breadcrumb" style="margin-bottom: 15px;">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li> <li class="breadcrumb-item active">{{root_menu_name}}</li>
+        <li class="breadcrumb-item active" aria-current="page"> {{ category.name }}</li>
+    </ol>
+    </nav>
+    
+
+    
+    <div class="card w-100">
+        <div class="card-header bg-light ep-cardheader">
+          <div class="card-header-title">{{ category.name }}</div>
+        </div>
+        <div class="card-body ep_datasearch_card">
+        {% if articles %}
+        
+            <ul class="ep_category_articleList" style="margin:20px; padding:0px;">
+                {% for article in articles %}
+                <li id="article-{{ article.id }}" class="list-group-item w100">
+                    <a class="float-left text-left" href="{{ url_for('cms.view_article', id=article.id) }}"> {{ article.title }}</a>
+
+                    <div class="text-right small">{{ article.created|date('%Y') }}-{{ article.created|date('%m') }}-{{ article.created|date('%d') }}</div>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="page-footer ep_category_articleListFooter">{{ render_pagination(pagination) }}</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

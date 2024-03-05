@@ -1,0 +1,103 @@
+<div class="card w-100" style="margin-top: 20px;">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Related Observations</div>
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped" id="obs_table">
+
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Name</th>
+                        <th>Quick Look</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Exposure Time</th>
+                        <th>PI</th>
+
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Pixels in Source Region</th>
+                        <th>Net Source Counts</th>
+                        <th>Background Counts</th>
+                        <th>Expousre map value</th>
+                        <th>Source Significance</th>
+                        <th>Classifter Output</th>
+                        <th>Observation Type</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for row in sourceObs%}
+                    <tr>
+                        <td>
+                            {% if not row.wxt_detection.observation.private or row.wxt_detection.observation.pi
+                            == current_user %}
+                            <a type="button" class="btn btn-secondary btn-sm"
+                                href="{{url_for('data_center.sy01_observation_detail',obs_id=row.wxt_detection.observation.obs_id, cmos_id=row.detnam)}}">{{row.name}}
+                            </a>
+                            {% else %}
+                            <a type="button" class="btn btn-outline-secondary btn-sm"
+                                href="{{url_for('data_center.sy01_observation_detail',obs_id=row.wxt_detection.observation.obs_id, cmos_id=row.detnam)}}"
+                                disabled>
+                                {{row.name}}
+                            </a>
+                            {% endif %}
+                        </td>
+                        
+                        
+                        <td>
+                            {% if not row.wxt_detection.observation.private or row.wxt_detection.observation.pi
+                            == current_user %}
+                            <i class="fas fa-image fa-lg thumb"
+                                imgsrc="{{url_for('data_center.get_quick_look_image',obs_id=row.wxt_detection.observation.obs_id, cmos_id=row.detnam, version=row.version)}}">
+                                <figure class="figure">
+                                    <figcaption class="figure-caption" hidden>
+                                        {{row.wxt_detection.observation.obs_id}} {{row.detnam}} Image
+                                    </figcaption>
+                                    
+                                </figure>
+                            </i>
+                            {% else %}
+                            <i class="fas fa-image fa-lg " style="color:grey"></i>
+
+                            {% endif %}
+                        </td>
+                        <td>{{row.wxt_detection.observation.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+                        <td>{{row.wxt_detection.observation.obs_end.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+                        <td>{{"%d"%row.wxt_detection.exposure_time }}</td>
+
+                        <td>{{row.wxt_detection.observation.pi.name}}</td>
+
+
+                        <td>{{row.x | round(3, 'floor')}}</td>
+                        <!-- <td>{{row.x_err}}</td> -->
+                        <td>{{row.y | round(3, 'floor')}}</td>
+                        <!-- <td>{{row.y_err}}</td> -->
+                        <td>{{row.npix_source}}</td>
+
+                        <td>{{row.net_counts | round(2, 'floor')}}</td>
+                        <td>{{row.bkg_counts | round(2, 'floor')}}</td>
+                        <!-- <td>{{row.net_rate}}</td> -->
+                        <td>{{"%d"%row.exp_time}}</td>
+                        <td>{{row.src_significance | round(2, 'floor')}}</td>
+                        <td>{{row.class_star | round(2, 'floor')}}</td>
+                        <td>{{row.wxt_detection.observation.obs_type}}</td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+</div>

@@ -1,0 +1,65 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Article') }}{% endblock %}
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {{ render_breadcrumb_item('main.index', _('Home')) }}
+            {{ render_breadcrumb_item('sysadmin.index', _('Dashboard')) }}
+            {{ render_breadcrumb_item('cms.index', _('Content Management')) }}
+            {{ render_breadcrumb_item('cms.edit_article', _('Edit Article')) }}
+        </ol>
+    </nav>
+
+{{ render_form(form) }}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+<script>
+var filemanager_connector_path='{{url_for('cms.filemanager')}}';
+var filemanager_fileRoot='{{url_for('cms.files', filename='')}}';
+
+CKEDITOR.editorConfig = function( config ){//默认配置
+    config.filebrowserBrowseUrl      = '{{url_for('static', filename='filemanager/index.html')}}';
+    config.filebrowserImageBrowseUrl = '{{url_for('static', filename='filemanager/index.html')}}';
+    config.filebrowserFlashBrowseUrl = '{{url_for('static', filename='filemanager/index.html')}}';
+    config.filebrowserUploadUrl      = '{{url_for('cms.filemanager',type='files')}}';
+    config.filebrowserImageUploadUrl = '{{url_for('cms.filemanager',type='image')}}';
+    config.filebrowserFlashUploadUrl = '{{url_for('cms.filemanager',type='flash')}}';
+    config.allowedContent=true;
+    config.extraAllowedContent='script';
+    config.removePlugins='newpage';
+    config.pasteFilter=null;
+    config.language = '{{get_locale()}}'.replace('zh_Hans_CN','zh-cn');
+};
+
+function thumbnail_btn_click(e){
+    var url="{{url_for('static', filename='filemanager/index.html', callback='setThumbnail')}}";
+    var width = 800;
+    var height = 600;
+    var win = window.open(url, "{{_('Select Carousel')}}", width, height, "menubar=0,toolbar=0");
+    return false;
+}
+function setThumbnail(path, width, height) {
+    $("#thumbnail_path").val(path);
+}
+$(function(){
+    $('#thumbnail_path').after('<a onclick="thumbnail_btn_click(this);" class="col-lg-1 btn btn-outline-info btn-sm ">选择</a>');
+});
+$(function(){
+    content_editor=CKEDITOR.replace('content');
+    CKEDITOR.add;
+    content_editor.config.height = 700;
+    content_editor.config.extraPlugins = ['markdown'];
+
+    //thumbnail_path_editor=CKEDITOR.replace('thumbnail_path');
+    //CKEDITOR.add;
+});
+</script>
+{% endblock %}

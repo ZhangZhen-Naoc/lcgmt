@@ -1,0 +1,23 @@
+[[source]]
+url = "https://mirrors.aliyun.com/pypi/simple/"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+influxdb-client = "*"
+psycopg2-binary = "*"
+requests = "*"
+pytest-mock = "*"
+pytest-iterassert = "*"
+pandas = "*"
+astropy = "*"
+pyvo = "*"
+flask = "*"
+flask-cors = "*"
+
+[dev-packages]
+pylint = "*"
+pytest = "*"
+autopep8 = "*"
+
+[requires]

@@ -1,0 +1,205 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block title %}{{ _('Content Management') }}{% endblock %} {% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{ render_breadcrumb_item('sysadmin.index', _('Dashboard')) }} {{
+    render_breadcrumb_item('cms.index', _('Content Management')) }}
+  </ol>
+</nav>
+<div class="row">
+  <div class="col-md-2 ep_dashboard_left" style="padding-right: 0px">
+    <div class="card bg-light w-100">
+      <div class="card-header">
+        <div style="padding: 15px 0px">
+          <strong>{{_('Article Category List')}}</strong>
+          {% if current_user.can('CMS_ADMIN') %}
+        </div>
+        <div class="float-right">
+          <a class="btn btn-secondary" href="{{url_for('cms.list_category')}}"><span class="oi oi-cog" aria-hidden="true"></span> {{_('Manage')}}</a>
+        </div>
+        {% endif %}
+      </div>
+      <div class="nav flex-column" role="tablist" aria-orientation="vertical">
+        <a class="nav-item nav-link {{'active' if -1==catid}}" href="{{url_for('cms.index')}}">{{_('All')}}</a>
+        {% for cat in cats %}
+        <a class="nav-item nav-link {{'active' if cat.id==catid}}" href="{{url_for('cms.index', catid=cat.id)}}">{{cat.name}}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-10 ep_dashboard_right">
+    <div class="card bg-light w-100">
+      <div class="card-header">
+        <div class="card-header-title"><strong>{{_('Article List')}}</strong></div>
+        <div class="float-left">
+          <a
+            class="btn {{'btn-secondary' if recommended==1 else 'btn-outline-secondary'}}"
+            href="{{ url_for('cms.index',catid=catid,recommended=0 if recommended else 1,ontop=ontop) }}"
+          >
+            <span class="oi oi-pin" aria-hidden="true"></span> {{_('OnHome')}}
+          </a>
+          <a
+            class="btn {{'btn-secondary' if ontop==1 else 'btn-outline-secondary'}}"
+            href="{{ url_for('cms.index',catid=catid,recommended=recommended,ontop=0 if ontop else 1) }}"
+          >
+            <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> {{_('Highlight')}}
+          </a>
+        </div>
+        <div class="float-right">
+          <a class="btn btn-secondary" href="{{ url_for('cms.list_carousel') }}">
+            <span class="oi oi-grid-two-up" aria-hidden="true"></span> {{ _('Carousel Management') }}
+          </a>
+          <a class="btn btn-info" href="{{ url_for('cms.edit_article') }}">
+            <span class="oi oi-document" aria-hidden="true"></span> {{_('New Article')}}
+          </a>
+        </div>
+      </div>
+      <div class="card-body">
+        {% if articles %}
+        <table class="table table-striped table-responsive">
+          <thead>
+            <tr>
+              <th>{{_('ID')}}</th>
+              <th>{{_('Title')}}</th>
+              <th>{{_('Hits')}}</th>
+              <th>{{_('Editor')}}</th>
+              <th>{{_('Publish')}}</th>
+              <th>{{_('OnHome')}}</th>
+              <th>{{_('Highlight')}}</th>
+              <th>{{_('Upcoming')}}</th>
+
+              <th>{{_('More Actions')}}</th>
+            </tr>
+          </thead>
+          {% for art in articles: %}
+          <tr>
+            <td>{{ art.id }}</td>
+            <td><a href="{{url_for('cms.edit_article', id=art.id)}}">{{ art.title }}</a></td>
+            <td>{{ art.hits }}</td>
+            <td>{{ art.editor.name }}</td>
+            <td>
+              <div style="text-align: center">{{ art.published }}</div>
+              <div>
+                {% if current_user.can('CMS_ADMIN') %} {% if not art.published %}
+                <form class="inline" action="{{ url_for('cms.publish_article', id=art.id, publish=1) }}" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <input
+                    type="submit"
+                    onclick="return confirm('{{_('Are you sure?')}}');"
+                    class="btn ep_openBtn btn-sm btn-block"
+                    value="{{_('Publish')}}"
+                  />
+                </form>
+                {% else %}
+                <form class="inline" action="{{ url_for('cms.publish_article', id=art.id, publish=0) }}" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <input
+                    type="submit"
+                    onclick="return confirm('{{_('Are you sure?')}}');"
+                    class="btn ep_closeBtn btn-sm btn-block"
+                    value="{{_('Hidden')}}"
+                  />
+                </form>
+                {% endif %} {% endif %}
+              </div>
+            </td>
+            <td>
+              <div style="text-align: center">{{ art.recommended }}</div>
+              <div>
+                {% if current_user.can('CMS_ADMIN') %} {% if not art.recommended %}
+                <form class="inline" action="{{ url_for('cms.recommend_article', id=art.id, recommended=1) }}" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <input
+                    type="submit"
+                    onclick="return confirm('{{_('Are you sure?')}}');"
+                    class="btn ep_openBtn btn-sm btn-block"
+                    value="{{_('OnHome')}}"
+                  />
+                </form>
+                {% else %}
+                <form class="inline" action="{{ url_for('cms.recommend_article', id=art.id, recommended=0) }}" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <input
+                    type="submit"
+                    onclick="return confirm('{{_('Are you sure?')}}');"
+                    class="btn ep_closeBtn btn-sm btn-block"
+                    value="{{_('OnHome')}}"
+                  />
+                </form>
+                {% endif %} {% endif %}
+              </div>
+            </td>
+            <td>
+              <div style="text-align: center">{{ art.ontop }}</div>
+              <div>
+                {% if current_user.can('CMS_ADMIN') %} {% if not art.ontop %}
+                <form class="inline" action="{{ url_for('cms.setontop_article', id=art.id, ontop=1) }}" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <input
+                    type="submit"
+                    onclick="return confirm('{{_('Are you sure?')}}');"
+                    class="btn ep_openBtn btn-sm btn-block"
+                    value="{{_('Highlight')}}"
+                  />
+                </form>
+                {% else %}
+                <form class="inline" action="{{ url_for('cms.setontop_article', id=art.id, ontop=0) }}" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <input
+                    type="submit"
+                    onclick="return confirm('{{_('Are you sure?')}}');"
+                    class="btn ep_closeBtn btn-sm btn-block"
+                    value="{{_('Not Highlight')}}"
+                  />
+                </form>
+                {% endif %} {% endif %}
+              </div>
+            </td>
+            <td>
+              <div style="text-align: center">{{ art.upcoming_event }}</div>
+              <div>
+                {% if current_user.can('CMS_ADMIN') %} {% if not art.upcoming_event %}
+                <form class="inline" action="{{ url_for('cms.setupcoming_event_article', id=art.id, upcoming_event=1) }}" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <input
+                    type="submit"
+                    onclick="return confirm('{{_('Are you sure?')}}');"
+                    class="btn ep_openBtn btn-sm btn-block"
+                    value="{{_('Upcoming')}}"
+                  />
+                </form>
+                {% else %}
+                <form class="inline" action="{{ url_for('cms.setupcoming_event_article', id=art.id, upcoming_event=0) }}" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <input
+                    type="submit"
+                    onclick="return confirm('{{_('Are you sure?')}}');"
+                    class="btn ep_closeBtn btn-sm btn-block"
+                    value="{{_('Not upcoming')}}"
+                  />
+                </form>
+                {% endif %} {% endif %}
+              </div>
+            </td>
+            <td>
+              <div style="text-align: right">
+                <a href="{{url_for('cms.view_article', id=art.id, preview=True)}}"><div class="btn btn-sm ep_darkBtn">{{_('Preview')}}</div></a>
+                <a href="{{url_for('cms.edit_article', id=art.id)}}"><div class="btn btn-sm ep_darkBtn">{{_('Edit')}}</div></a>
+                <form class="inline" action="{{ url_for('cms.delete_article', id=art.id) }}" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <input type="submit" onclick="return confirm('{{_('Are you sure?')}}');" class="btn btn-danger btn-sm" value="{{_('Delete')}}" />
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+        <div class="page-footer">{{ render_pagination(pagination) }}</div>
+        {% else %}
+        <div class="tip"><h5>{{_('No Item.')}}</h5></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

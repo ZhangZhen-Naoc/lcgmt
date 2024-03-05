@@ -1,0 +1,32 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/form.html' import render_form %} {% from 'bootstrap/nav.html' import render_nav_item %} {% from
+'bootstrap/form.html' import render_form_row %} 
+
+{% block title %}PV Observations Call{% endblock %} 
+{% from 'input.html' import ValueInputerUP, ValueInputer, TextInputer, Label %}
+{% block content %} 
+
+<table class="table table-bordered table-hover table-sm">
+    <tr>
+        <th>id</th>
+        <td>{{pv.id}}</td>
+    </tr>
+    <tr>
+        <th>name</th>
+        <td>{{pv.name}}</td>
+    </tr>
+    <tr>
+        <th>Submit Time</th>
+        <td>{{pv.submit_time.date()}}</td>
+    </tr>
+    <tr>
+        <th>STP</th>
+        <td>{{pv.stp}}</td>
+    </tr>
+    <tr>
+        <th>file</th>
+        <td><a href="{{url_for('.pv_file_download',id=pv.id)}}" target="_blank"> Download</a></td>
+    </tr>
+</table>
+
+    
+{%endblock%}

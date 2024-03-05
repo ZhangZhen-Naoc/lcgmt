@@ -1,0 +1,7 @@
+{{_('Hello')}} {{ user.name }},
+
+{{_('Please visit the link to Login:')}}
+
+    {{ url_for('user.login_byemail_check', email=user.email, token=token, _external=True) }}
+
+{{_('(Please do not reply to this notification, this inbox is not monitored.)')}}

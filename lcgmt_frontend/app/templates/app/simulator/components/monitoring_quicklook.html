@@ -1,0 +1,91 @@
+
+      
+        <table class="table simulation-result-quicklook">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Light Curve</th>
+                    <th>Detector Image <br>one CMOS chip, 9.38°x9.38°</th>
+                    <th>Spectrum</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Stacked -->
+                <tr>
+                    <th></th>
+                    {% for resource_type in result.resource_types%}
+                    <td>
+                        <p> 
+                            {% if resource_type== "lc"%}
+                                Total
+                            {%else%}
+                                Stacked
+                            {%endif%}
+                        </p>
+                        <img width="100%" id="{{resource_type.replace(" ","_")}}stacked_small" data-toggle="modal" data-target="#{{resource_type.replace(" ","_")}}stacked" src={{result.resource_url(resource_type)}}></td>
+                    <div class="modal  fade" id="{{resource_type.replace(" ","_")}}stacked" >
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- 大图 -->
+                                <div class="modal-body">
+                                    <img  id="{{resource_type.replace(" ","_")}}stacked_large" src={{result.resource_url(resource_type)}}>
+                                </div>
+                            </div>   
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                </tr>
+                
+                <tr>
+                    <th>Single Observation <strong id="orbnum"></strong></th>
+                    {% for resource_type in result.resource_types%}
+                    <td><img width="100%" data-toggle="modal" id={{resource_type.replace(" ","_")}}single_small data-target="#{{resource_type.replace(" ","_")}}single" src={{result.resource_url(resource_type,0)}}></td>
+                    <div class="modal  fade" id="{{resource_type.replace(" ","_")}}single" >
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- 大图 -->
+                                <div class="modal-body">
+                                    <img  id="{{resource_type.replace(" ","_")}}single_large" src={{result.resource_url(resource_type,0)}}>
+                                </div>
+                            </div>   
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                </tr>
+            </tbody>
+
+        </table>
+        <div class="form-group row">
+            <span class="badge badge-secondary" style="padding:10px; margin-left: 10px; font-size: 100%;">Select a single observation:</span>
+
+            
+            <input id="orbSelector" name="orbSelector" value=1 min=1 max={{result.orbit}} onchange="orbChanged()" class="form-control-range col-4" type="range">
+          </div>
+        
+    <script>
+        let single_urls = {}
+        {% for resource_type in result.resource_types%}
+            single_urls['{{resource_type}}'] = [""] //开头填充一个，使得有效数据下标从1开始
+            {% for orbnum in range(result.orbit|int)%}
+                single_urls['{{resource_type}}'].push('{{result.resource_url(resource_type,orbnum+1)}}')
+            {% endfor %}
+        {% endfor %}
+        single_urls['lc_stacked'] = [""]
+        {% for orbnum in range(result.orbit|int)%}
+            single_urls['lc_stacked'].push('{{result.resource_url("lc_stacked",orbnum+1)}}')
+        {% endfor %}
+        function orbChanged(){
+            orbnum = document.getElementById("orbSelector").value
+            {% for resource_type in result.resource_types%}
+                document.getElementById("{{resource_type.replace(" ","_")}}single_large").setAttribute("src",single_urls['{{resource_type}}'][orbnum])
+                document.getElementById("{{resource_type.replace(" ","_")}}single_small").setAttribute("src",single_urls['{{resource_type}}'][orbnum])
+            {% endfor %}
+            document.getElementById("lcstacked_small").setAttribute("src",single_urls['lc_stacked'][orbnum])
+            document.getElementById("lcstacked_large").setAttribute("src",single_urls['lc_stacked'][orbnum])
+            document.getElementById("orbnum").innerText = orbnum
+        }
+        document.getElementById("orbSelector").addEventListener("moved.zf.slider", orbChanged)
+        orbChanged() //加载时调用一次
+    </script>

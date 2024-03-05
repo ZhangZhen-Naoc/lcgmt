@@ -1,0 +1,56 @@
+{% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import render_breadcrumb_item %} {% extends
+'app/base.html' %} {% block content %}
+<div class="container-fluid" style="margin: 0px; padding: 10px 0px">
+  <nav aria-label="breadcrumb" style="margin-bottom: 20px">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li>
+      <li class="breadcrumb-item active">{{root_menu_name}}</li>
+      <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+    </ol>
+  </nav>
+  <div class="row" style="padding-right: 15px">
+    <div class="col-md-3">
+      <div>
+        <div class="ep_category_listTitle">{{root_menu_name}}</div>
+        <ul class="ep_category_list">
+          {% with menu_l0 = get_system_menu(root_menu_id) %} {% for m0 in menu_l0 %} {% with menu_l1 = get_system_menu(m0.id) %} {% if menu_l1 |
+          count>0 %} {% for m1 in menu_l1 %} {% if selected_menu_name == m1.title_en %}
+          <li class="ep_category_listSel">
+            <a href="{{m1.url}}">{{m1.title_en }}</a>
+          </li>
+          {% else %}
+          <li>
+            <a href="{{m1.url}}">{{m1.title_en}}</a>
+          </li>
+          {% endif %} {% endfor %} {% else %} {% if selected_menu_name == m0.title_en %}
+          <li class="ep_category_listSel">
+            <a href="{{m0.url}}">{{m0.title_en}}</a>
+          </li>
+          {% else %}
+          <li>
+            <a href="{{m0.url}}">{{m0.title_en}}</a>
+          </li>
+          {% endif %} {% endif %} {% endwith %} {% endfor %} {% endwith %}
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-9" style="padding: 0px; background-color: #eee">
+      {% if articles %}
+
+      <ul class="ep_category_articleList" style="margin: 20px; padding: 0px">
+        {% for article in articles %}
+        <li id="article-{{ article.id }}" class="list-group-item w100">
+          <a class="text-left" href="{{ url_for('cms.view_article', id=article.id) }}"> {{ article.title }}</a>
+
+          {#
+          <div class="text-right small">{{ article.created|date('%Y') }}-{{ article.created|date('%m') }}-{{ article.created|date('%d') }}</div>
+          #}
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="page-footer ep_category_articleListFooter">{{ render_pagination(pagination) }}</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

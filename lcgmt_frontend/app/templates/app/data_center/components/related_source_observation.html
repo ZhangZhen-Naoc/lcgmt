@@ -1,0 +1,356 @@
+<div class="card w-100" style="margin-top: 20px">
+<div class="card-header bg-light">
+    <div style="color: #004386; font-weight: bold; font-size: 16px"><span class="obs_num_sor_loc"></span> Source Detections  <button class="btn ep_openBtn btn-sm" style="float:right" id="download_so">Export CSV</button></div>
+</div>
+<div class="card-body">
+ 
+    <div id="result_tab" style="z-index: 50; width: 100%"></div>
+</div>
+</div>
+
+<script>
+  var result_table;
+
+  function digit3(num){
+    return Number.parseFloat(num.toFixed(3))
+  }
+  function digit0(num){
+    return Math.floor(num)
+  }
+
+
+  function gotoLocation(ra, dec) {
+    this.aladin.gotoRaDec(ra, dec);
+  }
+
+
+  function showObsDetailPage(obs_id, cmos_id) {
+    var baseUrl = "{{url_for('data_center.sy01_observation_detail', obs_id='obs_id_ph',cmos_id='cmos_id_ph')}}";
+    var targetUrl = baseUrl.replace("obs_id_ph", obs_id).replace("cmos_id_ph", cmos_id);
+    window.open(targetUrl, "_blank").focus();
+  }
+
+  var gotoIcon = function (cell, formatterParams, onRendered) {
+    return '<i class="fas fa-bullseye"></i>';
+  };
+
+  var imageIcon = function (cell, formatterParams, onRendered) {
+    return '<i class="fas fa-eye"></i>';
+  };
+
+  var downloadIcon = function (cell, formatterParams, onRendered) {
+    return '<i class="fas fa-download"></i>';
+  };
+
+  var detailIcon = function (cell, formatterParams, onRendered) {
+    return '<i class="fas fa-info-circle"></i>';
+  };
+
+  function clearSelectedRow() {
+    if (lastSelectedRow != undefined) {
+      lastSelectedRow.deselect();
+    }
+  }
+
+ 
+
+
+  function r2d(point) {
+    var deg = parseFloat(point) * (180 / Math.PI);
+    return deg;
+  }
+
+
+
+  $(".datetimepicker").datetimepicker({
+    allowInputToggle: true,
+    showClose: false,
+    showClear: false,
+    showTodayButton: false,
+    format: "YYYY-MM-DD HH:mm:ss",
+  });
+
+  $(document).ready(function () {
+    $("#aladin-lite-div").width($("#aladin-div").width());
+    $("#aladin-lite-div").height(550);
+  
+
+  let aladin;
+  var sourceObs = {{sourceObsJson|safe}};
+  A.init.then(() => {
+    aladin = A.aladin("#aladin-lite-div", {
+    //   survey: "http://127.0.0.1:5000/ep/static/hips/RASS/ov-gso_P_RASS/",
+    survey:"https://ep.bao.ac.cn/leia/static/hips/RASS/ov-gso_P_RASS/",
+
+      fov: 360,
+      fullScreen: false,
+      cooFrame: "galactic",
+      showReticle: true,
+      reticleSize: 64, // change reticle size
+      showSimbadPointerControl: true
+    });
+    aladin.setProjection("AIT");
+
+   
+
+    aladin.setBaseImageLayer(
+      aladin.createImageSurvey(
+        "RASS",
+        "ROSAT All Sky Survey (RASS) - 0.1-2.4 keV",
+        // 'http://127.0.0.1:5000/ep/static/hips/RASS/ov-gso_P_RASS/',
+
+        'https://ep.bao.ac.cn/leia/static/hips/RASS/ov-gso_P_RASS/',
+        "galactic",
+        3,
+        { imgFormat: "jpeg", colormap: "rainbow" }
+      )
+    );
+   
+
+    this.aladin = aladin;
+    let source_list = [];
+      let overlay = A.graphicOverlay({ color: "yellow", lineWidth: 2 });
+      aladin.addOverlay(overlay);
+
+      for (let source_index in sourceObs) {
+        let so = sourceObs[source_index];
+        let ra = so["ra"];
+        let dec = so["dec"];
+        let pos_err = so["pos_err"];
+        
+          overlay.add(A.circle(parseFloat(ra), parseFloat(dec), parseFloat(pos_err))); //误差半径1个角分
+          
+          
+      }
+      source_list.push(sourceObs[0]);
+      addSourceList2Aladin(aladin, source_list, "source location");
+
+  });
+  
+  var table = new Tabulator("#result_tab", {
+          data: sourceObs,
+          //data: res,
+          selectable: 1,
+          dataTree: true,
+          height: 300,
+          scrollToRowIfVisible: true,
+          layout: "fitDataFill",
+          columns: [
+          {
+            formatter: "rownum",
+            hozAlign: "center",
+          },
+            { title: "Name", field: "name", sorter: "string" },
+           
+            {
+              title: "",
+              formatter: detailIcon,
+              width: 50,
+              hozAlign: "center",
+              tooltip: "Show Detail",
+
+              cellClick: function (e, cell) {
+                showSourceObsDetailPage(cell.getRow().getData().src_id, cell.getRow().getData().wxt_id);
+              },
+            },
+            { title: "RA", field: "ra", sorter: "number",formatter:function(cell, formatterParams, onRendered){
+                return digit3(cell.getValue())
+              }
+            },
+            { title: "Dec", field: "dec", sorter: "number" ,formatter:function(cell, formatterParams, onRendered){
+                return digit3(cell.getValue())
+              }
+            },
+            { title: "Pos_err", field: "pos_err", sorter: "number" ,formatter:function(cell, formatterParams, onRendered){
+                return digit3(cell.getValue())
+              }
+            },
+            { title: "Exposure Time", field: "exp_time", sorter: "string" ,formatter:function(cell, formatterParams, onRendered){
+                return digit0(cell.getValue())
+              }
+            },
+            { title: "Obs Start Time", field: "obs_start",formatter:"datetime",
+                  formatterParams:{
+                    inputFormat:"iso",
+                    outputFormat:"yyyy-MM-dd HH:mm:ss",
+                    invalidPlaceholder:"(invalid date)",
+                    timezone:'utc'
+                  },
+           },
+           { title: "Flux", field: "flux", sorter: "number" },
+           { title: "Src Significance", field: "src_significance", sorter: "number" },
+
+            { title: "ID", field: "id", sorter: "number" },
+          ],
+        });
+        result_table = table;
+
+});
+
+$("#download_so").click(function(){
+  result_table.download("csv", "{{source.id}}_source_deteciton.csv", {delimiter:","}); 
+});
+
+  $("#datetimepicker").datetimepicker({
+    allowInputToggle: true,
+    showClose: false,
+    showClear: false,
+    showTodayButton: false,
+    format: "YYYY-MM-DD HH:mm:ss",
+  });
+
+  $(".thumb").click(function () {
+    var caption = $(this).find("figcaption");
+
+    $("#imageModalTitle").text(caption.text());
+    var imagesrc = $(this).attr("imgsrc");
+    $("#image-model").attr("src", imagesrc);
+
+    $("#image-modal-div").modal("show");
+  });
+
+  function addCatalogues() {
+    var hips1 = A.catalogHiPS("https://data.darts.isas.jaxa.jp/pub/HiPS/CHANDRA_Catalogue/", {
+      onClick: "showTable",
+      name: "Chandra Catalogue",
+      shape: drawFunction,
+      color: "purple",
+    });
+    var hips2 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_maxi_merged_hips.csv")}}', {
+      onClick: "showTable",
+      name: "MAXI Catalogue",
+      shape: drawFunction,
+      color: "cyan",
+
+    });
+    var hips3 = A.catalogHiPS("https://axel.cds.unistra.fr/HiPSCatService/I/355/gaiadr3", {
+      onClick: "showTable",
+      name: "Gaia DR3 Catalogue",
+      shape: "cross",
+      color: "blue",
+    });
+
+    var hips4 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_4xmm.csv")}}', {
+      onClick: "showTable",
+      name: "4XMMDR11 Catalogue",
+      shape: drawFunction,
+      color: "red",
+    });
+    var hips5 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_ep_ref_hips.csv")}}', {
+      onClick: "showTable",
+      name: "EP Reference Catalogue",
+      shape: drawFunction, //pos err not available
+      color: "yellow",
+    });
+
+    var hips6 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_swift.csv")}}', {
+      onClick: "showTable",
+      name: "SWIFT 2SXPS Catalogue",
+      shape: drawFunction,
+      color: "purple",
+    });
+
+    var hips8 = A.catalogHiPS('https://axel.cds.unistra.fr/HiPSCatService/Simbad/', {
+      onClick: "showTable",
+      name: "SIMBAD Database",
+      shape: "square",
+      color: "blue",
+    });
+
+    var hips7 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_2rxs-flux.csv")}}', {
+      onClick: "showTable",
+      name: "2RXS Catalogue",
+      shape: drawFunction,
+      color: "green",
+    });
+
+    var hips9 = A.catalogHiPS('https://axel.cds.unistra.fr/HiPSCatService/II/328/allwise', {
+      onClick: "showTable",
+      name: "AllWISE Catalog",
+      shape: "square",
+      color: "#03DAC5",
+    });
+
+    var hips10 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_des.csv")}}', {
+      onClick: "showTable",
+      name: "Dark Energy Survey Catalog",
+      shape: "square",
+      color: "brown",
+    });
+
+    //HiPSCat_des.csv
+
+    // this.aladin.addCatalog(hips1); //chandra
+    this.aladin.addCatalog(hips2); //maxi purple
+    hips2.hide();
+    // aladin.addCatalog(hips3); //gaia dr3
+    // this.aladin.addCatalog(hips4); //4xmmdr11
+
+    this.aladin.addCatalog(hips6); //2sxps purple
+    hips6.hide();
+    this.aladin.addCatalog(hips7); //2rxs green
+    hips7.hide();
+    this.aladin.addCatalog(hips8); //simbad green
+    hips8.hide();
+    this.aladin.addCatalog(hips9); //allwise  light green
+    hips9.hide();
+    this.aladin.addCatalog(hips10); //allwise  light green
+    hips10.hide();
+    this.aladin.addCatalog(hips5); //ep ref yellow
+  }
+
+  function showSourceObsDetailPage(src_id, wxt_detection_id){
+    var baseUrl = "{{url_for('data_center.source_candidate_detail', sourceId='source_id_ph',wxtdetectionId='wxt_detection_ph')}}";
+   
+    var targetUrl = baseUrl.replace("source_id_ph", src_id).replace("wxt_detection_ph",wxt_detection_id);
+    window.open(targetUrl, "_blank").focus();
+  }
+
+  function drawFunction(source, canvasCtx, viewParams) {
+      var fov = Math.max(viewParams["fov"][0], viewParams["fov"][1]);
+      if (fov < 5) {
+        return;
+      }
+      canvasCtx.beginPath();
+      canvasCtx.arc(source.x, source.y, source.data["size"] * 2, 0, 2 * Math.PI, false);
+      canvasCtx.closePath();
+      canvasCtx.strokeStyle = "#FFD700";
+      canvasCtx.lineWidth = 3;
+      (canvasCtx.globalAlpha = 0.7), canvasCtx.stroke();
+
+      // object name is displayed only if fov<10°
+      
+
+      canvasCtx.globalAlpha = 0.9;
+      canvasCtx.globalAlpha = 1;
+      var xShift = 20;
+      canvasCtx.font = "24px Arial";
+      canvasCtx.fillStyle = "#eee";
+      canvasCtx.fillText("{{source.simbad_name}}", source.x + xShift, source.y - 4);
+    }
+
+    //在天球上添加暂现源，payload是源信息，listname是图层名字，用于表示暂现源类型
+    function addSourceList2Aladin(aladin, payload, listname) {
+      var aladin = aladin;
+      var sourceList = [];
+      for (var target in payload) {
+        var source = this.A.source(parseFloat(payload[target].ra), parseFloat(payload[target].dec), {
+          size: 6.5,
+          source_name:  payload[target].simbad_name,
+          source_id: payload[target].classification,
+        });
+
+        sourceList.push(source);
+      }
+      cat = A.catalog({
+        name: listname,
+        // onClick: this.showObservationDetail,
+        shape: this.drawFunction,
+        // source
+      });
+      cat.addSources(sourceList);
+      aladin.addCatalog(this.cat);
+    }
+
+ 
+</script>

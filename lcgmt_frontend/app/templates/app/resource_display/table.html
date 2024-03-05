@@ -1,0 +1,90 @@
+{% extends 'app/resource-display-base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
+{% block title %}{{_('Data Resource')}}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="main-container">
+        <div class="row" style="margin: 0px;">
+            <div class="dataset-mainpart-left col-sm-8">
+                <div class="dataset-headline-titleLine">
+                    <div class="row" style="margin: 0px;">
+                        <div class="dataset-headline-title col-sm-8" id="title">{{resource.title_zh}}</div>
+
+                        <div class="dataset-headline-date col-sm-4 ml-auto" id="updated"> {%if resource.publicated %}
+                            {{resource.publicated.strftime('%Y-%m-%d %H:%M:%S')}}
+                            {%endif%}
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12" style="padding: 0px;">
+                        <div class="dataset-attribute-creater" id="authors">作者：{{author_names|join(', ') }}</div>
+                    </div>
+                </div>
+
+                <div class="dataset-headline-body">
+                    <div class="row" style="margin: 0px;">
+                        <div class="dataset-attribute-info col-sm-8" id="description">{{resource.description_zh}}</div>
+
+                        <div class="col-sm-4">
+                            <div class="dataset-attribute-doi" id="doi">DOI:{{resource.doi}}</div>
+
+                            <div id="referenceurl">
+                                <div class="dataset-attribute-website"><a href='{{resource.url}}'>主页</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dataset-main-card-titleLine">
+                    <div class="dataset-main-card-title"><span class="dataset-span">&diams;</span>数据简介<span
+                            class="dataset-span">&diams;</span></div>
+                </div>
+
+                <div class="dataset-main-card">
+                    <div class="row" style="margin: 0px;">
+                        <div class="col-sm-2">
+                            <div class="dataset-dataintro-name">VO标识符</div>
+                        </div>
+
+                        <div class="dataset-dataintro-info col-sm-9" id="ivo">
+                            {{resource.identifier}}
+                        </div>
+
+                        <div class="col-sm-2" id="titile-en-title">
+                            <div class="dataset-dataintro-name">英文名称</div>
+                        </div>
+
+                        <div class="dataset-dataintro-info col-sm-9" id="title_en">{{resource.title_en}}</div>
+                        <div class="dataset-table-div">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">列名</th>
+                                    <th scope="col">数据类型</th>
+                                    <th scope="col">单位</th>
+                                    <th scope="col">UCD</th>
+                                    <th scope="col">说明</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tabledata">
+                                {% for column in columns %}
+                                <tr>
+                                    <th scope="row">{{column.column_name}}</th>
+                                    <td>{{column.datatype}}</td>
+                                    <td>{%if column.unit%}{{column.unit}}{%endif%}</td>
+                                    <td>{%if column.ucd%}{{column.ucd}}{%endif%}</td>
+                                    <td>{%if column.description_zh%}{{column.description_zh}}{%endif%}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

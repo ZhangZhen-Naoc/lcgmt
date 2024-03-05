@@ -1,0 +1,222 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px;">
+    <ol class="breadcrumb">
+    {% block bread %}
+    {{ render_breadcrumb_item('main.index', _('Home')) }}
+    {{ render_breadcrumb_item('data_center.fxt_obs_list', _('FXT Observation Data Access')) }}
+    {% endblock %}
+    </ol>
+</nav>
+<div class="card w-100">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">{{_('FXT Observation Data')}}</div>
+    </div>
+    <div class="card-body ep_datasearch_card">
+        <form>
+          {{form.hidden_tag()}}
+          <div class="row ">
+       
+           
+             <div class="col-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"> {{form.obs_id.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+                </div>
+                {{form.obs_id(class="form-control",id="obs_id")}}
+              </div>
+            </div>
+            
+     
+            <div class="col-md-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"> {{form.start_datetime.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+                </div>
+    
+                {{form.start_datetime(class="form-control datetimepicker", id="start_datetime")}}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"> {{form.end_datetime.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+                </div>
+    
+                {{form.end_datetime(class="form-control datetimepicker",id="end_datetime")}}
+              </div>
+            </div>
+    
+      
+          </div>
+          <div class="col-md-12 text-center">{{form.submit(class="btn ep_openBtn", style="padding:7px 30px; margin-top:20px;")}}</div>
+    
+          <div id="spinner-div">
+            Loading...
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          
+        </form>
+      </div>
+
+
+      <div class="card w-100" style="margin-top: 20px">
+  
+        <div class="card-header bg-light ep-cardheader">
+          <div class="card-header-title">Data List <span id="items"></span>
+            <div style="float:right">
+  
+
+              <button class="btn ep_openBtn btn-sm" id="download_list"  >Export CSV</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+        <div id="result_tab" style="z-index: 50; width: 100%"></div>
+      </div>
+    </div>
+
+    {#  <div id="bd_table"></div>
+    <div id="ta_table" style="z-index: 50; width: 100%"></div>
+
+    <div class="tab-content" id="nav-tabContent" style="background-color: #ddd; margin: 0px 25px 20px 25px; padding-top: 10px;">
+        <div class="tab-pane fade show active" id="nav-source-list-tabpanel" role="tabpanel"
+        aria-labelledby="nav-source-list-tab">
+        <div class="table-responsive" >
+            {% block sources_table %}
+            {% endblock %}
+            
+        </div>
+        </div>
+    </div>
+    #}
+    
+</div>
+
+<script>
+
+$("form").submit(function (e) {
+      $("#spinner-div").show();
+
+      var obs_id = $("#obs_id").val();
+
+      var start_datetime = $("#start_datetime").val();
+      var end_datetime = $("#end_datetime").val();
+
+      $.ajax({
+        type: "POST",
+        url: "{{ url_for('data_center.fxt_obs_list_api') }}",
+        dataType: "json",
+        data: { obs_id: obs_id, start_datetime: start_datetime, end_datetime: end_datetime },
+        success: function (res) {
+          // console.log(res);
+          if (res['success'] == 'no result') {
+            res =[];
+          }
+          for (let item of res) {
+            item['selected'] = false
+          }
+          // currentRes = res;
+          $("#items").html("(Find "+res.length+" results.)");
+          var table = new Tabulator("#result_tab", {
+            data: res,
+            selectable: 1,
+            columns: [
+               // { title: "ID", field: "id" },
+               // { title: "Detection ID", field: "detection_id" },
+               // { title: "Source ID", field: "src_id" },
+               { title: "Obs ID", field: "obs_id", formatter: "link",formatterParams:{url:(item)=>{return item.getData()['obs_detail']},target:"_blank"}},
+               { title: "Module", field: "detnam" },
+               { title: "OBJ_RA", field: "obj_ra" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }}, 
+               { title: "OBJ_DEC", field: "obj_dec" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+               { title: "PNT_RA", field: "pnt_ra" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }}, 
+               { title: "PNT_DEC", field: "pnt_dec" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+               { title: "Obs Mode", field: "obs_mode" },
+               { title: "Name", field: "object_name" },
+               { title: "S_Time", field: "obs_start" },
+               { title: "Data Mode", field: "data_mode" },
+               { title: "Observer", field: "observer" },
+               { title: "Version", field: "version" },
+
+                { title: "Exposure Time", field: "exposure_time" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+            ]
+
+        });
+        result_table = table;
+        
+        $("#spinner-div").hide(); //Request is complete so hide spinner
+    },
+        error: function () {},
+        complete: function () {},
+      });
+      e.preventDefault();
+
+});
+
+        
+        // 获取表单元素和 submit 按钮元素
+    // var myForm = document.getElementById("obs_search_form");
+    // var submitBtn = myForm.querySelector('[type="submit"]');
+
+    // // 重写表单 submit 事件
+    // myForm.addEventListener("submit", function (event) {
+    //     event.preventDefault(); // 阻止表单默认提交行为
+    //     // 在这里编写表单提交前需要执行的代码
+
+    //     // 利用 AJAX 技术发送表单数据
+    //     $("#spinner-div").show();
+    //     $.ajax({
+    //         url:"{{url_for('.fxt_obs_list_api')}}",
+    //         data: { 
+    //             'start_datetime':myForm.start_datetime.value,
+    //             'end_datetime':myForm.end_datetime.value
+    //         },
+    //         "success": renderTable
+    //     });
+
+    //     return false; // 防止表单再次提交
+    // });
+ 
+
+    $(document).ready(function () {
+      var dateNow = new Date();
+      var dateStart = new Date();
+      dateStart.setDate(dateNow.getDate() - 1);
+      dateStart.setHours(0, 0, 0, 0);
+      var dateEnd = new Date();
+      dateEnd.setDate(dateNow.getDate() + 1);
+      dateEnd.setHours(0, 0, 0, 0);
+      $("#start_datetime").datetimepicker({
+        allowInputToggle: true,
+        showClose: false,
+        showClear: false,
+        showTodayButton: false,
+        useCurrent: false,
+        format: "YYYY-MM-DD HH:mm:ss",
+        defaultDate: dateStart,
+      });
+      $("#end_datetime").datetimepicker({
+        allowInputToggle: true,
+        showClose: false,
+        showClear: false,
+        showTodayButton: false,
+        useCurrent: false,
+        format: "YYYY-MM-DD HH:mm:ss",
+        defaultDate: dateEnd,
+      });
+
+    });
+ 
+    
+
+    
+
+</script>
+{% endblock %}

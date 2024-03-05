@@ -1,0 +1,39 @@
+<div class="modal-header">
+        <h4 class="modal-title">You can cross-match by  uploading a catalog with specific format:  </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h6>If you upladed a csv file, please make sure it: </h6>
+    </div>
+    <div class="card-body">
+        <ol>
+            <li>Is sperated by ","  </li>
+            <li>At least has 4 column: id,ra,dec,pos_err
+            <li>Unit: ra in degree, dec in degree, pos_err in arcsec</li>
+            <li>Has header</li>
+        </ol>
+        
+    </div>
+    <div class="card-footer"><a href="{{url_for('static',filename='resources/example.csv')}}">Download csv Example</a></div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h6>If you upladed a fits file, please make sure it: </h6>
+    </div>
+    <div class="card-body">
+        <ol>
+            <li>At least has 2 column: ra,dec.</li>
+            <li>If it has different column name, you can customize the column name</li>
+            <li>If it doesn't has pos_err column, you can customize the value. But pay attention: This will <strong>overwrite</strong> the pos_err_col</li>
+            <li>Unit: ra in degree, dec in degree, pos_err in arcsec</li>
+        </ol>
+        
+    </div>
+    <div class="card-footer"><a href="{{url_for('static',filename='resources/example.fits')}}">Download fits Example</a></div>
+</div>
+    
+
+

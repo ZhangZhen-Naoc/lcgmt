@@ -1,0 +1,254 @@
+{% extends 'app/sysadmin/index.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}{{_('View Review Result')}}{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#add-comment').on("click", function () {
+            $("#add-technical-review").modal('show');
+        });
+
+        $('#add-finial-comment').on("click", function () {
+            $("#add-overall-review").modal('show');
+        });
+
+    });
+
+
+
+
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<div class="card w-100">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Proposal Management</div>
+    </div>
+    <div class="card-body ep_datasearch_card" id='main-content'>
+        <div class="row justify-content-end">
+            <div class="col-md-2 " align="center">
+                {% if last_id !=-1%}
+                <a role="button" class="btn ep_openBtn " href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=last_id,card='peer') }}" > {{_('<- Previous Proposal')}}</a>
+                {%else%}
+                <button class="btn ep_openBtn"  disabled> {{_('<- Previous Proposal')}}</button>
+                {%endif%}
+            </div>
+            <div class="col-md-2" align="center">
+                {% if next_id !=-1%}
+                <a  role="button" class="btn ep_openBtn " href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=next_id,card='peer') }}" > {{_('Next Proposal ->')}}</a>
+                {%else%}
+                <button role="button" class="btn ep_openBtn"  disabled> {{_('Next Proposal ->')}}</button>
+                {%endif%}
+                </div>
+            
+            <div class="col-md-2" align="center">
+                <a role="button" class="btn ep_openBtn active" id="create-proposal" href="{{ url_for('proposal_admin.admin_proposal_list',season_id=proposal.proposal_season_id) }}">{{_('Proposal List')}}</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <h3>{{_('Title')}}: {{ proposal.proposal_title }}</h3>
+            </div>
+          
+        </div>
+        <hr>
+        <dl class="row">
+            <dt class="col-md-2">NO:</dt>
+            <dd class="col-md-4">{{ proposal.get_no() }}</dd>
+            <dt class="col-md-2">PI:</dt>
+            <dd class="col-md-4">{{ proposal.get_pi_name() }}/ {{ proposal.get_pi_email() }}</dd>
+            <dt class="col-md-2">Request:</dt>
+            <dd class="col-md-4">{{ proposal.total_time_request }} Seconds</dd>
+            <dt class="col-md-2">Category:</dt>
+            <dd class="col-md-4">{{ proposal.get_proposal_science_type() }}</dd>
+        </dl>
+
+
+        <br>
+
+
+        <ul class="nav nav-tabs ep-sourcelist-nav">
+            <li class="nav nav-tabs ">
+                <a class="nav-link "
+                    href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=proposal_id,card='technical') }}">
+                    <strong>{{_('Technical Review')}}</strong></a>
+            </li>
+            <li class="nav nav-tabs ">
+                <a class="nav-link "
+                    href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=proposal_id,card='peer') }}">
+                    <strong>{{_('Scientific Peer Reviewers')}}</strong></a>
+            </li>
+            <li class="nav nav-tabs">
+                <a class="nav-link active"
+                    href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=proposal_id,card='result') }}">
+                    <strong>{{_('Review Result')}}</strong></a>
+            </li>
+
+        </ul>
+
+
+        <div class="card">
+            <br>
+            <br>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12" align="center">
+                        <button type="button" class="btn btn-md btn-success active" id="add-comment">{{_('Add Technical
+                            Review Comment')}}</button>
+                        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-md btn-info active" id="add-finial-comment">{{_('Add
+                            Overall Review Comment')}}</button>
+                    </div>
+                </div>
+
+                <!--最终意见-->
+                {% if proposal.final_review_comment_finished %}
+                <br>
+                <i style="color:red"><strong>{{_('Overall Review Result')}}:</strong></i>
+                <table class="table table-bordered" style="text-align:center;vertical-align:middle;">
+                    <thead>
+                        <tr class="table-info">
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Overall Review
+                                Comment')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Operate')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:left;vertical-align:middle;">{{proposal.final_review_comment}}</td>
+                            <td><a role="button" class="btn btn-md btn-warning"
+                                    href="{{ url_for('proposal_admin.admin_delete_overall_review',proposal_id=proposal_id)}}">{{_('Delete')}}</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% endif %}
+
+
+                <!--技术同行评议-->
+                {% if technical_reviews | length >0%}
+                <br>
+                <i style="color:red"><strong>{{_('Technical Review Result')}}:</strong></i>
+                <table class="table table-bordered" style="text-align:center;vertical-align:middle;">
+                    <thead>
+                        <tr class="table-success">
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Feasibility')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Technical Review
+                                Comment')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Operate')}}</th>
+                        </tr>
+                    </thead>
+                    {% for ex in technical_reviews %}
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center;vertical-align:middle;"><strong>{{ex.review_result}}</strong>
+                            </td>
+                            <td style="text-align:left;vertical-align:middle;table-layout:fixed;">{{ex.content}}</td>
+                            <td><a role="button" class="btn btn-md btn-warning"
+                                    href="{{ url_for('proposal_admin.admin_delete_technical_review',proposal_id=ex.proposal_id,tid=ex.id)}}">{{_('Delete')}}</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+                {% endif %}
+
+
+                <!--科学同行评议-->
+                {% if res | length >0%}
+                <br>
+                <i style="color:red"><strong>{{_('Scientific Review Result')}}:</strong> &nbsp; &nbsp;( The score is
+                    between 0 and 10. 10 is the best.)</i>
+                <table class="table table-bordered" style="text-align:center;vertical-align:middle;">
+                    <thead>
+                        <tr class="table-info">
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Name')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Email')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('How familiar')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Score')}}</th>
+                            <th colspan='8' scope="col" style="text-align:center;vertical-align:middle;">{{_('Scientific
+                                Review Comment')}}</th>
+                        </tr>
+                    </thead>
+                    {% for ex in res %}
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center;vertical-align:middle;">{{ex.name}}</td>
+                            <td style="text-align:center;vertical-align:middle;">{{ex.email}}</td>
+                            <td style="text-align:center;vertical-align:middle;">{{ex.familiar}}</td>
+                            <td style="text-align:center;vertical-align:middle;"><strong>{{ex.score}}</strong></td>
+                            <td colspan='8' style="text-align:left;vertical-align:middle;table-layout:fixed;">
+                                {{ex.content}}</td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+                {% endif %}
+            </div>
+            <br>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal  for  add technical -->
+<div class="modal fade bd-example-modal-lg" id="add-technical-review" tabindex="-1" role="dialog"
+    aria-labelledby="technical-review-info" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="technical-review-info">{{_('Add Technical Review Comment')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <form id="form" method="POST"
+                action="{{ url_for('proposal_admin.admin_add_technical_review',proposal_id=proposal_id)}}">
+                {{ form.csrf_token() }}
+                <div class="modal-body">
+
+                    {{render_form(form)}}
+                    
+                </div>
+          
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal  for  add overall -->
+<div class="modal fade bd-example-modal-lg" id="add-overall-review" tabindex="-1" role="dialog"
+    aria-labelledby="overall-review-info" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="overall-review-info">{{_('Add Overall Review Comment')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <form id="form-overall" method="POST"
+                action="{{ url_for('proposal_admin.admin_add_overall_review',proposal_id=proposal_id)}}">
+                {{ form_overall.csrf_token() }}
+                <div class="modal-body">
+                    {{render_form(form_overall)}}
+                   
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endif %}
+{% endblock %}

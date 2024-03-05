@@ -1,0 +1,112 @@
+<!--该文件定义form中input常用组件-->
+<!--上下格式-->
+{% macro ValueInputerUP(name,unit, defaultValue=0.0,hint="",label_class="",tooltip="",max=None, input_class=None,type=None) %}
+<div class="form-group">
+  {{ Label(name,hint,label_class,tooltip=tooltip)}}
+  <div class="input-group mb-3">
+    <input
+    {% if type %}
+      type="{{type}}"
+      {%else%}
+      type="number"
+      {%endif%}
+      class="form-control {{ input_class }}"
+      name="{{ name }}"
+      id="{{ name }}"
+      placeholder="{{ name }}"
+      value="{{ defaultValue }}"
+      step="1e-20"
+      {%
+      if
+      max
+      %}
+      max="{{max}}"
+      {%endif
+      %}
+    />
+    {% if unit is not string %}
+    <span> </span>
+    <select style="margin-left: 5px;" class="form-control" name={{unit['name']}} id="{{unit['name']}}">
+      {% for value in unit['values'] %}
+      <option value="{{value}}">{{value}}</option>
+      {% endfor %}
+    </select>
+    {% elif unit and unit !=""%}
+    <div class="input-group-append">
+      <span class="input-group-text" id="{{ name }}-unit">{{ unit }}</span>
+    </div>
+    {%endif%}
+  </div>
+</div>
+{% endmacro %}
+
+<!--左右格式-->
+{% macro ValueInputer(name,unit, defaultValue=0.0,hint="",label_class="",tooltip="",max=None) %}
+<div class="form-group">
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ Label(name,hint,label_class,tooltip=tooltip)}}</span>
+    </div>
+    <input
+      type="number"
+      class="form-control"
+      name="{{ name }}"
+      id="{{ name }}"
+      placeholder="{{ name }}"
+      value="{{ defaultValue }}"
+      step="1e-20"
+      {%
+      if
+      max
+      %}
+      max="{{max}}"
+      {%endif
+      %}
+    />
+    {% if unit and unit !=""%}
+    <div class="input-group-append">
+      <span class="input-group-text" id="{{ name }}-unit">{{ unit }}</span>
+    </div>
+    {%endif%}
+  </div>
+</div>
+{% endmacro %} {% macro TextInputer(name, defaultValue="",hint="",label_class="",tooltip="", input_class=None, id=None) %}
+<div class="form-group">
+  {{ Label(name,hint,label_class,tooltip=tooltip)}}
+  <div class="input-group">
+    <input type="text" class="form-control {{ input_class }}" name="{{ id }}" id="{{ id }}" placeholder="{{ hint }}" value="{{ defaultValue }}" />
+  </div>
+</div>
+{% endmacro %} 
+
+{% macro StringInputer(name,id, defaultValue="",hint="",label_class="",tooltip="") %}
+<div class="form-group">
+  {{ Label(name,hint,label_class,tooltip=tooltip)}}
+  <div class="input-group">
+    <input type="text" class="form-control" name="{{ id }}" id="{{ id }}" placeholder="{{ name }}" value="{{ defaultValue }}" />
+  </div>
+</div>
+{% endmacro %} 
+{% macro Label(name, hint="",label_class="",tooltip="") %}
+<label class="{{ label_class }}" for="{{ name }}" {% if tooltip and tooltip !="" %} data-toggle="tooltip" title="{{tooltip}}" {% endif %}>
+  <span class="label-title"> {% if hint=="" %} {{ name.capitalize()}} {% else %} {{ hint }} {% endif %} </span>
+  {% if tooltip !=""%}
+  <span class="fa fa-question-circle label-help"></span>
+  {% endif %}
+</label>
+{% endmacro %} {% macro FileInputer(name,hint="",label_class="",tooltip="")%}
+<div class="form-group">
+  <label for="{{name}}" class="btn ep-manage-btn">{{hint}}</label>
+
+  <input hidden name="{{ name }}" id="{{ name }}" type="file" />
+</div>
+{% endmacro%} {% macro CheckBoxInputer(name,value,checked=False ,hint="",label_class="",tooltip="") %}
+<div class="form-group">
+  <div class="input-group mb-3">
+    <label for="{{value}}" class="form-check-label">
+      <input type="checkbox" class="form-check-input" name="{{ name }}" {%if checked%} checked {% endif %} value="{{ value }}" id="{{ value }}" />
+      {{value}}
+    </label>
+  </div>
+</div>
+{% endmacro %}

@@ -1,0 +1,35 @@
+<div >
+<table class="proposal_view table table-hover table-bordered table-striped" style="background-color: #fff;">
+    <thead class="table-secondary">
+        <tr align="center">
+            <th scope="col">Title</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Institute</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Country</th>
+            <th scope="col">User Group</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for coi in cois_s %}
+            <tr>
+                
+                <td style="word-wrap:break-word; word-break:break-all;">{{coi.title}}</td>
+                <td style="word-wrap:break-word; word-break:break-all;">{{coi.first_name}}</td>
+                <td style="word-wrap:break-word; word-break:break-all;">{{coi.last_name}}</td>
+                <td style="word-wrap:break-word; word-break:break-all;">{{coi.email}}</td>
+                <td style="word-wrap:break-word; word-break:break-all;">{{coi.institution}}</td>
+                <td style="word-wrap:break-word; word-break:break-all;">{{coi.phone}}</td>
+                <td style="word-wrap:break-word; word-break:break-all;">{{coi.country}}</td>
+                <td style="word-wrap:break-word; word-break:break-all;">{{coi.user_group}}</td>
+
+               
+            </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+</div>  

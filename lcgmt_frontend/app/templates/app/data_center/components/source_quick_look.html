@@ -1,0 +1,36 @@
+<div class="col-md-7">
+<div class="card w-100">
+    <div class="card-header bg-light">
+    <div style="color: #004386; font-weight: bold; font-size: 16px">Source QuickLook</div>
+    </div>
+    <iframe
+    src="{{url_for('data_center.get_quick_look_detection_pdf', obs_id=sourceInDetection.wxt_detection.obs_id,cmos_id=sourceInDetection.detnam,version=sourceInDetection.version)}}"
+    id="pdf-model"
+    type="application/pdf"
+    width="600px"
+    height="400px"
+    >
+    </iframe>
+    <div class="card-body align-self-end">
+    <a
+        type="button"
+        class="btn ep_openBtn"
+        href="{{url_for('data_center.show_image', obs_id=sourceInDetection.wxt_detection.obs_id,cmos_id=sourceInDetection.detnam)}}"
+        target="_blank"
+        >Show image in DS9</a
+    >
+    <a
+        type="button"
+        class="btn ep_openBtn"
+        href="{{url_for('data_center.download_lv1', obsid=sourceInDetection.wxt_detection.obs_id,cmosid=sourceInDetection.wxt_detection.detnam,version=sourceInDetection.wxt_detection.version)}}"
+        >Download level1 data</a
+    >
+    <a
+        type="button"
+        class="btn ep_openBtn"
+        href="{{url_for('data_center.download_lv2', obsid=sourceInDetection.wxt_detection.obs_id,cmosid=sourceInDetection.wxt_detection.detnam,version=sourceInDetection.wxt_detection.version)}}"
+        >Download Level2-3 Data</a
+    >
+    </div>
+</div>
+</div>

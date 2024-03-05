@@ -1,0 +1,7 @@
+{{_('Hello')}} {{ user.name }},
+
+{{_('Your comment is replied!')}}
+
+{{_('Your comment')}}:{{comment | safe}}
+
+{{_('Reponse')}}:{{response_content | safe}}

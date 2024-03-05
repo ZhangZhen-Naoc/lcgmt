@@ -1,0 +1,24 @@
+{% extends 'app/simulator/base.html' %} {% block bread %} {% from
+'bootstrap/nav.html' import render_breadcrumb_item %}
+
+<nav aria-label="breadcrumb" style="margin-bottom: 10px">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{
+    render_breadcrumb_item('simulator.index', _('Simulator')) }} {{
+    render_breadcrumb_item('simulator.simulate_result', _('Simulation Result'))
+    }}
+  </ol>
+</nav>
+{% endblock %} {%block simu_content%}
+<div class="row">
+  <div class="col">
+    <p>Task Running, Please wait</p>
+  </div>
+</div>
+<script>
+  function myrefresh() {
+    window.location.reload();
+  }
+  setTimeout(myrefresh, 5000);
+</script>
+{% endblock%}

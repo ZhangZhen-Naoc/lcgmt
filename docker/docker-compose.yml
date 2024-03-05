@@ -1,0 +1,41 @@
+services:
+    nadc-timescaledb:
+        build: nadc-timescaledb/
+        image: timescale-catalog
+        ports: 
+            - 5432:5432
+        environment:
+            - POSTGRES_PASSWORD=password
+    nadc-tdengine:
+        build: nadc-tdengine/
+        image: tdengine-catalog
+        ports:
+            - 6041:6041
+            
+    nadc-influxdb:
+        build: nadc-influxdb/
+        image: influxdb-catalog
+        ports:
+            - 8086:8086
+        environment:
+            - DOCKER_INFLUXDB_INIT_MODE=setup
+            - DOCKER_INFLUXDB_INIT_USERNAME=username
+            - DOCKER_INFLUXDB_INIT_PASSWORD=password
+            - DOCKER_INFLUXDB_INIT_ORG=nadc
+            - DOCKER_INFLUXDB_INIT_BUCKET=observation
+            - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=token
+
+    nadc-referencetable:
+        build: nadc-referencetable/
+        image: reference-catalog
+        ports: 
+            - 5433:5432
+        environment:
+            - POSTGRES_PASSWORD=password
+
+    nadc-relational:
+        build: nadc-relational
+        ports:
+            - 5434:5432
+        environment:
+            - POSTGRES_PASSWORD=password

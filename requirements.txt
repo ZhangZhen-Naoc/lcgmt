@@ -1,0 +1,9 @@
+psycopg2-binary
+requests
+pandas
+astropy
+flask
+
+pytest
+pytest-mock
+pytest-iterassert

@@ -1,0 +1,252 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/form.html' import render_form %} {% from 'bootstrap/nav.html' import render_nav_item %} {% from
+'bootstrap/form.html' import render_form_row %} {% from 'bootstrap/pagination.html' import render_pagination %} {% block title %}{{_('Proposal
+List')}}{% endblock %} {% block scripts %} {{ super() }}
+<script type="text/javascript">
+  $(document).ready(function () {
+    //$('#create-proposal').on("click",function(){
+    //   $("#add-proposal").modal('show');
+    //});
+
+    $(".submit_button").on("click", function () {
+      var proposal_id = $(this).attr("proposal_id");
+      $("#confirm").attr("proposal_id", proposal_id);
+      $("#submit-proposal").modal("show");
+    });
+
+    $("#confirm").on("click", function () {
+      var proposal_id = $(this).attr("proposal_id");
+      $.ajax({
+        type: "GET",
+        url: "{{ url_for('proposal_submit.user_proposal_submit_confirm') }}",
+        dataType: "json",
+        data: { proposal_id: proposal_id },
+        success: function (res) {
+          if (res.content_status == "not_ok") {
+            alert("Failed to submit. Please fill in science overview.");
+          }
+          if (res.science_case_upload_status == "not_ok") {
+            alert("Failed to submit. Please upload your science justificationification.");
+          }
+          if (res.source_list == "not_ok") {
+            alert("Failed to submit. Please add at least one observation.");
+          }
+          if (res.success == "ok") {
+            window.location.reload();
+            alert("Submit successfully.");
+          }
+          if (res.success == "not_ok") {
+            window.location.reload();
+          }
+        },
+        error: function () {},
+      });
+    });
+  });
+</script>
+{% endblock %} {% block content %} {% if current_user.is_authenticated %}
+
+<br />
+<div class="ep_index_title" style="margin: 20px; "> 
+  Proposal List  
+ {#
+  <span style="float:right;text-decoration: underline;font-size: large;">
+    You have submitted {{submitted_proposal_no}} proposals in this Cycle. 
+  </span>
+  #} 
+</span>
+
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12" align="right">
+   
+
+      <a
+        role="button"
+        class="btn ep_openBtn active"
+        id="create-proposal"
+        data-toggle="tooltip"
+        data-placement="top"
+        title="{{_('Click here to create a proposal.')}}"
+        href="{{url_for('proposal_submit.user_proposal_create_guide')}}"
+        >Back to EOPS</a
+      >
+
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <br />
+  <table class="table table-hover table-bordered table-striped" id="source_table" style="background-color: #fff">
+    <thead class="table-secondary">
+      <tr align="center">
+        <th scope="col">NO</th>
+        <th scope="col">Title</th>
+    
+        <th scope="col">Submit Time</th>
+        <th scope="col">Role</th>
+    
+        <th scope="col">Requested Time (sec)</th>
+        <th scope="col">Status</th>
+        <th scope="col">Peer Review</th>
+        <th scope="col">Allocated Time (sec)</th>
+        <th scope="col">is ToO</th>
+        <th scope="col">is Anticipated ToO</th>
+
+        <th scope="col">Operation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in proposals %}
+      <tr align="center">
+        <td style="text-align: center; vertical-align: middle">{{ u[0].get_no()}}</td>
+        <td style="text-align: center; vertical-align: middle">{{ u[0].proposal_title}}</td>
+    
+        <td style="text-align: center; vertical-align: middle">{{ u[0].submit_time }}</td>
+
+        <td style="text-align: center; vertical-align: middle">{% if u[1].role == "pi" %}
+          {{ u[1].role.upper() }}
+      {% else %}
+          {{ u[1].role }}
+      {% endif %}</td>
+        {#
+        <td style="text-align: center; vertical-align: middle">{{ u[0].expiration }}</td>
+        #}
+        <td style="text-align: center; vertical-align: middle">{{ u[0].total_time_request}}</td>
+        <td style="text-align: center; vertical-align: middle">{{ u[0].get_proposal_status() }}</td>
+        <td style="text-align: center; vertical-align: middle">
+          {% if u[0].scientific_review_finished and u[0].submit_status %}
+          <a href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=u[0].id,card='review') }}" class="btn btn-info" role="button"
+            >view
+          </a>
+          {% else %} ---- {% endif %}
+        </td>
+        <td style="text-align: center; vertical-align: middle">{{ u[0].get_assigned_time()}}</td>
+        <td style="text-align: center; vertical-align: middle">{{ u[0].is_too_proposal()}}</td>
+        <td style="text-align: center; vertical-align: middle">{{ u[0].is_anticipate_too_gp()}}</td>
+
+        <td style="text-align: center; vertical-align: middle">
+          <div class="btn-group">
+            {% if u[0].is_too_proposal() %}
+            <a
+              href="{{ url_for('proposal_submit.ep_too_proposal_submit',proposal_id=u[0].id,card='overview') }}"
+              class="btn btn-primary btn-sm"
+              title="Enter the proposal"
+              role="button"
+              >{#_('Enter')#}<i class="fas fa-info-circle"></i
+            ></a>
+            {% else %}
+            <a
+            href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=u[0].id,card='overview') }}"
+            class="btn btn-primary btn-sm"
+            title="Enter the proposal"
+            role="button"
+            >{#_('Enter')#}<i class="fas fa-info-circle"></i
+          ></a>
+            {% endif %}
+            
+            {% if u[0].get_proposal_status() == 'Draft' %}
+            <a
+              href="{{ url_for('proposal_submit.user_proposal_delete',proposal_id=u[0].id) }}"
+              class="btn btn-danger btn-sm"
+              role="button"
+              style="margin-left: 10px"
+              title="Delete the proposal"
+            >
+              {#{_('Delete')}#}<i class="fas fa-trash-alt"></i
+            ></a>
+            <a
+              class="btn btn-warning submit_button btn-sm"
+              role="button"
+              style="margin-left: 10px"
+              proposal_id="{{u[0].id}}"
+              title="Submit the proposal"
+              >{#submit#}<i class="fas fa-check-circle"></i
+            ></a>
+            {% else %}
+            <button class="btn btn-secondary btn-sm" disabled style="margin-left: 10px"><i class="fas fa-trash-alt"></i></button>
+            <a
+              href="{{ url_for('.admin_withdraw_proposal',proposal_id=u[0].id) }}"
+              class="btn btn-danger btn-sm"
+              title="Withdraw the proposal"
+              role="button"
+              style="margin-left: 10px"
+              >{#_('Enter')#}<i class="fas fa-undo"></i
+            ></a>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<br />
+<br />
+
+{{ render_pagination(pagination,endpoint=None,prev='Previous Page',next='Next Page',ellipses='…',align='center') }}
+
+<!-- Modal  for  add user -->
+<div class="modal fade bd-example-modal-lg" id="add-proposal" tabindex="-1" role="dialog" aria-labelledby="proposal" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="proposal">Create Proposal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <form class="my-2 my-lg-0" method="POST" action="{{ url_for('proposal_submit.user_proposal_create') }}">
+        {{ form.csrf_token() }}
+        <div class="modal-body">
+          <div class="container">
+            <div class="form-row"><strong>Season Name:</strong> {{ form.seasons(class="form-control") }}</div>
+            <br />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          {{ form.add_proposal(class="btn btn-primary", value='Create') }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM to submit -->
+<div class="modal fade bd-example-modal-lg" id="submit-proposal" tabindex="-1" role="dialog" aria-labelledby="pro" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pro">Confirm to submit this proposal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="form-row">
+            <strong>I have finished my proposal, and confirm to submit it.</strong>
+            <br />
+            <i style="color: red">(After submission, you can not modify your proposal again.)</i>
+          </div>
+          <br />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-warning" data-dismiss="modal" id="confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+<script>
+
+    {% include "app/proposal_submit/components/countdown.js" %}
+    $(function () {
+   $('[data-toggle="tooltip"]').tooltip();
+ });
+
+  $("a").tooltip();
+</script>
+{% endblock %}

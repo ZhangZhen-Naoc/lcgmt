@@ -1,0 +1,38 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Proposal Detail{% endblock %}
+
+{% block content %}
+
+<div class="ep_index_title" style="margin: 20px; ">
+    {% if proposal.get_proposal_status() == 'Draft' %}
+    Draft Proposal
+    {% else %}
+    Proposal NO: {{proposal.proposal_number}}
+    {% endif %}
+   
+    <a style="float:right;text-decoration: underline;font-size: large;" href="{{ url_for('proposal_submit.download_file',path='proposal_template',filename='Proposal_system_guidance_v1.6.pdf') }}">Proposal System Guidance</a>
+  </div>
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+        <div class="col-md-8 " align="right">
+            <a href="{{url_for('proposal_submit.user_get_pdf',proposal_id=proposal.id,filename=proposal.get_file_name())}}">
+                <button class="btn btn-md ep-infoButton align-self-end"><i class="fas fa-print"></i> Print pdf</button>
+            </a>
+            <a href="{{ url_for('proposal_submit.user_proposal_list') }}" role="button" class="btn btn-md ep-normalButton align-self-end">Proposal List</a>
+            <button type="button" class="btn btn-md ep-dangerButton active align-self-end"><strong><a style="color:#CC9999;">Status:</a> </strong>&nbsp;{{proposal.get_proposal_status()}}</button>
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 ">
+        
+    </div>
+        </div>
+</div>
+<br>
+
+{% include 'app/proposal_submit/proposal_info.html' %}
+<!-- CONFIRM to submit -->
+
+{%endblock %}

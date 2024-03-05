@@ -1,0 +1,23 @@
+{% extends 'app/simulator/result_base.html' %}
+{% block output %}
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Center</th>
+            <th>Midway</th>
+            <th>Corner</th>
+        </tr>
+    </thead>
+    {% for k,v in result.get_output_data().items() %}
+    <tr>
+        <th>{{k}}</th>
+        <td>{{v[0]}}</td>
+        <td>{{v[1]}}</td>
+        <td>{{v[2]}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock output %}
+
+{% block quicklook %}{% include "app/simulator/components/quicklook.html" %}{% endblock quicklook %}

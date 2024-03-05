@@ -1,0 +1,171 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% block title %}Proposal Submit{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+    $(document).ready(function () {
+    });
+
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<br>
+<div class="ep_index_title" style="margin: 20px; ">{% if proposal.get_proposal_status() == 'Draft' %}
+    Draft Proposal
+    {% else %}
+    Proposal NO: {{proposal.proposal_number}}
+    {% endif %} </div>
+<div class="container-fluid">
+    <div class="row justify-content-end">
+        <div class="col-md-8 " align="right">
+            <a href="{{ url_for('proposal_submit.user_proposal_list') }}" role="button"
+                class="btn btn-md ep-normalButton align-self-end">Proposal List</a>
+            <button type="button" class="btn btn-md ep-dangerButton active align-self-end"><strong><a
+                        style="color:#CC9999;">Status:</a> </strong>&nbsp;{{proposal.get_proposal_status()}}</button>
+            <a role="button" class="btn btn-md  ep-optimisticButton align-self-end"
+                href="{{ url_for('proposal_submit.user_get_pdf',proposal_id=proposal.id,filename=proposal.get_file_name()) }}">View
+                Proposal</a>
+            {% if proposal.get_proposal_status() == 'Draft' %}
+            <a role="button" class="btn btn-md  ep-normalButton submit_button" proposal_id="{{proposal_id}}">Submit
+                Proposal</a>
+            {% else %}
+            <a role="button" class="btn btn-md  ep-normalButton align-self-end">Proposal Submitted</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<br>
+
+<ul class="nav nav-tabs ep-sourcelist-nav">
+    <li class="nav nav-tabs">
+        {% if proposal.is_too_proposal() %}
+        <a class="nav-link" href="{{ url_for('proposal_submit.ep_too_proposal_submit',proposal_id=proposal_id,card='overview') }}">Proposal Overview</a>
+      {% else %}
+      <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='overview') }}">Proposal Overview</a>
+      {% endif %}
+    </li>
+
+
+    <li class="nav nav-tabs">
+        <a class="nav-link"
+            href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='sources')}}">Source
+            List</a>
+    </li>
+    <li class="nav nav-tabs">
+        <a class="nav-link "
+            href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='investigators') }}">Investigators</a>
+    </li>
+    <!--    <li class="nav-item">-->
+    <!--        <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='experts')}}">Non-preferred Reviewers</a>-->
+    <!--    </li>-->
+    {% if proposal.scientific_review_finished and proposal.submit_status %}
+    <li class="nav nav-tabs">
+        <a class="nav-link active"
+            href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='review')}}">Peer
+            Review</a>
+    </li>
+    {% endif %}
+</ul>
+
+<div class="card ep-proposalForm"
+    style="background-color: #eee; margin: 0px 25px 20px 25px; padding-top: 10px; border-radius: 0px; border:0px;">
+
+    <div class="card-body ep_datasearch_card" id='main-content'>
+        <h3>Peer Review Results</h3>
+<br>
+        <dl class="row alert alert-success">
+            <dt class="col-md-2">Proposal Title:</dt>
+            <dd class="col-md-6">{{ proposal.proposal_title }}</dd>
+            <dt class="col-md-2">Grade:</dt>
+            <dd class="col-md-2">{{ proposal.priority }}</dd>
+            <dt class="col-md-2">Request:</dt>
+            <dd class="col-md-2">{{ proposal.total_time_request }} Seconds</dd>
+            <dt class="col-md-2">Assigned:</dt>
+            <dd class="col-md-2">{{ proposal.total_time_assigned }} Seconds</dd>
+
+            {% if proposal.priority !='D'%}
+            <dt class="col-md-2">PID:</dt>
+            <dd class="col-md-2">{{ proposal.pid }}</dd>
+            {% endif %}
+        </dl>
+
+
+
+        {% if proposal.show_review_to_pi() %}
+        <!--        <i><strong>Overall Review Comment:</strong></i>-->
+        <table class="table table-bordered" style="text-align:center;vertical-align:middle;">
+            <thead>
+                <tr class="table-info">
+   6                <th scope="col" style="text-align:center;vertical-align:middle;">Overall Review Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align:center;vertical-align:middle;">{{proposal.final_review_comment}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        {% endif %}
+
+        {% if reviews | length >0 %}
+        <strong><i>Scientific Review:</i></strong> &nbsp; &nbsp;<i style="color:red">( The score is between 0 and 10. 10
+            is the best.)</i>
+        <table class="table table-bordered ">
+            <thead>
+                <tr class="table-primary">
+                    <th scope="col" style="text-align:center;vertical-align:middle;">Score</th>
+                    <th scope="col" style="text-align:center;vertical-align:middle;">Scientific Review Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for r in range(reviews | length ) %}
+                <tr>
+                    <td style="text-align:center;vertical-align:middle;">{{ reviews[r].score }}</td>
+                    <td style="text-align:left;vertical-align:middle;">{{ reviews[r].content }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        {% endif %}
+
+
+        {% if technical_reviews | length >0 %}
+        <strong><i>Technical Review:</i></strong>
+        <table class="table table-bordered ">
+            <thead>
+                <tr class="table-primary">
+                    <th scope="col" style="text-align:center;vertical-align:middle;">Feasibility</th>
+                    <th scope="col" style="text-align:center;vertical-align:middle;">Technical Review Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for r in range(technical_reviews | length ) %}
+                <tr>
+                    <td style="text-align:center;vertical-align:middle;">{{ technical_reviews[r].review_result }}</td>
+                    <td style="text-align:left;vertical-align:middle;">{{ technical_reviews[r].content }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+    </div>
+
+</div>
+</div>
+
+
+{% endif %}
+{% endblock %}

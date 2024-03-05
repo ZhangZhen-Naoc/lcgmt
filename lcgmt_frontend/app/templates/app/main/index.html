@@ -1,0 +1,315 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% block title %}{{ _('Home') }}{% endblock %} {% block
+content %}
+<!-- Jumbotron -->
+<div class="jumbotron p-0 ep-banner" style="margin: -10px -15px 25px -15px">
+  <!-- Card image -->
+  <div class="view overlay rounded-top">
+    <img src="{{url_for('static',filename='images/index-logos/epMainBanner.png')}}" class="img-fluid" alt="Sample image" />
+    <a href="#">
+      <div class="mask rgba-white-slight"></div>
+    </a>
+  </div>
+</div>
+<!-- Jumbotron -->
+
+<!-- News jumbotron -->
+<div class="text-center hoverable epIndexBlock" style="padding: 30px 30px 0px 30px; margin-bottom: 20px" id="ep-intro">
+  <!-- Grid row -->
+  <div class="row">
+    <!-- Grid column -->
+    <div class="col-md-8 text-md-left" style="padding: 10px 30px">
+      <h4 class="mb-4 ep_index_title">Overview</h4>
+      <p class="ep_index_text">
+        The Einstein Probe (EP) is a mission of the Chinese Academy of Sciences (CAS) dedicated to time-domain high-energy astrophysics. Its primary
+        goals are to discover high-energy transients and monitor variable objects. To achieve this, EP employs a very large instantaneous
+        field-of-view (3600 square degrees), along with moderate spatial resolution (FWHM ~5 arcmin) and energy resolution.
+      </p>
+      <div class="row">
+        <div class="col-md-7"></div>
+        <div class="col-md-5">
+          <a class="btn ep_index_BigButton" href="{{url_for('cms.view_article',id=39)}}" style="color: #222">Learn More </a>
+        </div>
+      </div>
+    </div>
+    <!-- Grid column -->
+    <!-- Grid column -->
+    <div class="col-md-4">
+      <!-- Featured image -->
+      <div class="view overlay" style="margin: 42px auto">
+        <img src="{{url_for('static',filename='images/index-logos/newsimulated.png')}}" class="img-fluid" alt="Simulation" />
+        <a>
+          <div class="mask rgba-white-slight"></div>
+        </a>
+      </div>
+    </div>
+    <!-- Grid column -->
+  </div>
+  <!-- Grid row -->
+</div>
+
+<hr />
+<div class="container index-announceBlock p-3 z-depth-1 tdic-feature">
+  <div class="row">
+    <div class="index-announceTitle col-md-2">Events</div>
+    <div class="col-md-8" style="padding: 0px">
+      <ul class="index-announceList">
+        {% for event in upcomingevent%}
+        <li>
+          <div class="row justify-content-between">
+            <div class="col-12 hidetext">
+              <a href="{{url_for('cms.view_article',id=event.id)}}">{{event.title}}</a>
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+   <a href="{{url_for('cms.view_category',id=28)}}">
+      <div class="ep_index_more" style="margin-left: 18px; background-color: #62739a">MORE</div>
+    </a>
+  </div>
+</div>
+<hr />
+<div class="container epIndexBlock p-5 z-depth-1 tdic-feature">
+  <!--Section: Content-->
+  <section class="dark-grey-text">
+    <!-- Section heading -->
+    <h2 class="tmb-4 ep_index_title">
+      News<a href="{{url_for('cms.view_category',id=1)}}"><div class="ep_index_more">MORE</div></a>
+    </h2>
+    <!-- Grid row -->
+
+    <div class="row" style="margin: 0px">
+      <div class="col-md-4" style="padding: 0px">
+        <div class="index-newsImageDiv">
+          <a href="{{url_for('cms.view_article',id=recommended[0].id)}}"> <img src="{{recommended[0].thumbnail_path}}" class="index-newsImage" /></a>
+          {#
+          <div class="index-newsImageTitle">{{recommended[0].title}}</div>
+          #}
+        </div>
+      </div>
+
+      <div class="col-md-8" style="padding: 0px 0px 0px 10px">
+        <ul class="index-newsList">
+          {% for recom in recommended %}
+          <li>
+            <div class="row justify-content-between">
+              <div class="col-9 hidetext">
+                <a href="{{url_for('cms.view_article',id=recom.id)}}">{{recom.title}}</a>
+              </div>
+              {% if recom.created is not none %}
+            <div class="col-2 index-newsList-time">[{{recom.created.strftime("%Y-%m-%d")}}]</div>
+            {% endif %}
+            </div>
+          </li>
+          {% endfor%}
+        </ul>
+      </div>
+      <!-- Grid column -->
+      {#
+      <div class="col-md-12">
+        <ul class="index-newsList">
+          {% for recom in recommended%}
+          <li>
+            <a href="{{url_for('cms.view_article',id=recom.id)}}">{{recom.title}}</a>
+            <div class="index-newsList-time">[{{recom.created.strftime("%Y-%m-%d")}}]</div>
+          </li>
+          {% endfor%}
+        </ul>
+      </div>
+      #}
+      <!-- Grid column -->
+    </div>
+    <!-- Grid row -->
+  </section>
+</div>
+<!-- container end -->
+<hr />
+<!-- News jumbotron -->
+<div class="hoverable p-5 epIndexBlock" id="ep-progress">
+  <h4 class="mb-4 ep_index_title">
+    Highlights
+    <a href="{{url_for('main.ep_progress')}}"><div class="ep_index_more">MORE</div></a>
+  </h4>
+  <!-- Grid row -->
+  <div class="row">
+    {% for toparticle in ontop %}
+    <!-- Grid column -->
+    <div class="col-xs-12 col-sm-6 col-md-3" style="padding: 5px">
+      <a href="{{url_for('cms.view_article',id=toparticle.id)}}">
+        <div class="ep_index_SmallCard">
+          <h2 class="ep_index_SmallTitle">{{toparticle.title}}</h2>
+          <div class="ep_index_SmallCardImgDiv">
+            <img src="{{toparticle.thumbnail_path}}" class="img-fluid ep_index_SmallCardImg" />
+          </div>
+        </div>
+      </a>
+    </div>
+
+    {% endfor %}
+  </div>
+  <!-- Grid row -->
+</div>
+<!-- container end -->
+
+<!-- News jumbotron -->
+
+{#
+<!-- News jumbotron -->
+<hr />
+<div class="container epIndexBlock p-5 z-depth-1 tdic-feature">
+  <!--Section: Content-->
+  <section class="dark-grey-text">
+    <!-- Section heading -->
+    <h2 class="tmb-4 ep_index_title">EP Einstein Probe Time Domain Astronomical Information Center</h2>
+    <!-- Section description -->
+    <p class="lead grey-text mx-auto mb-5" style="line-height: 30px; padding-left: 30px; margin: 20px">
+      TDIC is a platform for scientific users to collaborate with EP scientific data and information.
+    </p>
+
+    <!-- Grid row -->
+    <div class="row" style="margin-left: 20px">
+      <!-- Grid column -->
+      <div class="col-md-4 mb-md-0 mb-5">
+        <!-- Grid row -->
+        <div class="row ep_index_MediumCard">
+          <!-- Grid column -->
+          <div class="col-lg-2 col-md-3 col-2">
+            <i class="fas fa-database fa-2x"></i>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-lg-10 col-md-9 col-10">
+            <h4 class="font-weight-bold">Data Center</h4>
+            <p class="grey-text ep_index_MediumCard_text">
+              For distribution of EP observation data, X-Ray sources, data analysis software and calibration database .
+            </p>
+          </div>
+          <!-- Grid column -->
+          <a class="btn ep_index_button btn-raised" style="margin: auto" href="{{url_for('data_center.observation_data')}}">Learn more</a>
+        </div>
+        <!-- Grid row -->
+      </div>
+      <!-- Grid column -->
+
+      <!-- Grid column -->
+      <div class="col-md-4 mb-md-0 mb-5">
+        <!-- Grid row -->
+        <div class="row ep_index_MediumCard">
+          <!-- Grid column -->
+          <div class="col-lg-2 col-md-3 col-2">
+            <i class="fas fa-file-upload fa-2x"></i>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-lg-10 col-md-9 col-10">
+            <h4 class="font-weight-bold">Proposal</h4>
+            <p class="grey-text ep_index_MediumCard_text">Online observation proposal submission, review, feedback for scientific users.</p>
+          </div>
+          <!-- Grid column -->
+
+          <a class="btn ep_index_button btn-raised" style="margin: auto" href="{{url_for('proposal_submit.user_proposal_create_guide')}}"
+            >Learn more</a
+          >
+        </div>
+        <!-- Grid row -->
+      </div>
+      <!-- Grid column -->
+
+      <!-- Grid column -->
+      <div class="col-md-4 mb-md-0 mb-5">
+        <!-- Grid row -->
+        <div class="row ep_index_MediumCard">
+          <!-- Grid column -->
+          <div class="col-lg-2 col-md-3 col-2">
+            <i class="fas fa-crosshairs fa-2x"></i>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-lg-10 col-md-9 col-10">
+            <h4 class="font-weight-bold">Cross-Matching</h4>
+            <p class="grey-text ep_index_MediumCard_text">
+              Providing Multi-wavelength Cross-Matching service, for supporting transient identification.
+            </p>
+          </div>
+          <!-- Grid column -->
+
+          <a class="btn ep_index_button btn-raised" style="margin: auto" href="{{url_for('mwr.index')}}">Learn more</a>
+        </div>
+        <!-- Grid row -->
+      </div>
+      <!-- Grid column -->
+    </div>
+    <!-- Grid row -->
+  </section>
+  <!--Section: Content-->
+</div>
+
+<!-- News jumbotron -->#}
+<hr />
+<div class="text-center hoverable p-4 epIndexBlock" id="ep-intro">
+  <!-- Grid row -->
+  <div class="row">
+    <!-- Grid column -->
+    <!-- <div class="col-md-4 offset-md-1 mx-3 my-3"> -->
+
+    <!-- Featured image -->
+    <!-- <div class="view overlay">
+        <img src="{{url_for('static',filename='images/index-logos/ep-model.png')}}" class="img-fluid" alt="Sample image for first version of blog listing">
+        <a>
+          <div class="mask rgba-white-slight"></div>
+        </a>
+      </div> -->
+
+    <!-- </div> -->
+    <!-- Grid column -->
+
+    <!-- Grid column -->
+    <div class="col-md-12 text-md-left ml-3 mt-3" style="padding: 30px">
+      <h4 class="mb-4 ep_index_title"><em>&nbsp;</em>EP Consortium</h4>
+
+      <!-- <p class="font-weight-normal">The Einstein Probe (EP) is a mission of the Chinese Academy of Sciences (CAS) dedicated to time-domain high-energy astrophysics. Its primary goals are to discover high-energy transients and monitor variable objects. To achieve this, EP employs a very large instantaneous field-of-view (3600 square degrees), along with moderate spatial resolution (FWHM ~5 arcmin) and energy resolution.</p> -->
+      <div class="row" style="margin-top: 30px">
+        <div class="col-md-2" style="margin-left: 30px">
+          <div class="view overlay">
+            <a href="http://english.cas.cn/" target="_blank">
+              <img src="{{url_for('static',filename='images/index-logos/cas.png')}}" class="img-fluid" alt="CAS"
+            /></a>
+          </div>
+        </div>
+        <div class="col-md-2" style="margin-left: 10px">
+          <div class="view overlay">
+            <a href="http://www.esa.int/ESA" target="_blank">
+              <img src="{{url_for('static',filename='images/index-logos/esa.png')}}" class="img-fluid" style="margin-top: 40px" alt="ESA"
+            /></a>
+          </div>
+        </div>
+        <div class="col-md-2" style="margin-left: 10px">
+          <div class="view overlay">
+            <a href="http://www.mpe.mpg.de/index" target="_blank">
+              <img src="{{url_for('static',filename='images/index-logos/mpe.png')}}" class="img-fluid" style="margin-top: 12px" alt="MPE"
+            /></a>
+          </div>
+        </div>
+        <div class="col-md-2" style="margin-left: 10px">
+          <div class="view overlay">
+            <a href="https://cnes.fr/en" target="_blank">
+              <img
+                src="{{url_for('static',filename='images/index-logos/cnes.png')}}"
+                class="img-fluid"
+                style="margin-top: 30px; width: 70%"
+                alt="cnes"
+            /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Grid column -->
+  </div>
+  <!-- Grid row -->
+</div>
+<!-- News jumbotron -->
+{% endblock %}

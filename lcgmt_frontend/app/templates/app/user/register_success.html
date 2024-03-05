@@ -1,0 +1,15 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{% block title %}{{_('Register Success')}}{% endblock %}
+{% block content %}
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card mb-3 w-100 bg-light">
+                    <div class="card-header"><h4>{{_('Register Success! A confirmation letter has been sent to your email address, please check you inbox.')}} &nbsp; <a href="{{url_for('user.login')}}">{{_('Click to Login')}}</a></h4></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

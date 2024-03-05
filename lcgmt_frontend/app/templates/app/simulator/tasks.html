@@ -1,0 +1,78 @@
+{% extends 'app/simulator/base.html' %}
+
+
+{% block title %}{{ _('Simulation Result List') }}{% endblock %}
+
+{% block bread %}
+    {% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+    <nav aria-label="breadcrumb" style="margin-bottom: 10px;">
+        <ol class="breadcrumb">
+            {{ render_breadcrumb_item('main.index', _('Home')) }}
+            {{ render_breadcrumb_item('simulator.index', _('Simulator')) }}
+            {{ render_breadcrumb_item('simulator.simulate_tasks', _('Task List')) }}
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block simu_content %}
+<div class="table-responsive" >
+    <h3> Simulation Result List</h3>
+    <table class="table table-striped table-hover">
+        <thead class="thead-light">
+            <tr >
+                <th>Submit Time</th>
+                
+                <th>Description</th>
+                <th>Status</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for task in tasks%}
+            <tr>
+                <td>{{task.submit_time.strftime("%Y-%m-7d %H:%M:%S")}}</td>
+                
+                <td id="task{{task.id}}description">{{task.description}}</td>
+                <td id="task{{task.id}}status">{{task.status}}</td>
+                <td><a id="task{{task.id}}link" href="{{url_for('simulator.simulate_result',id=task.id)}}">
+                    {% if task.status=="SUCCESS"%}
+                        Result
+                        
+                    {% elif task.status=="FAILURE"%}
+                        Reasons for Failure
+                    {%else%}
+                        Task Running, Please Wait
+                        
+                    {%endif%}
+                </a>
+                {% if task.status=="PENDING"%}
+                    <script>
+                var infoDict = {
+                    "SUCCESS":"Result",
+                    "FAILURE":"Reasons for Failure",
+                    "PENDING":"Task Running, Please Wait"
+                }
+                function refreshTask{{task.id}}(){
+                    $.getJSON("{{url_for('simulator.result_status',id=task.id)}}",function (result){
+                                    $("#task{{task.id}}link").html(infoDict[result.status])
+                                    $("#task{{task.id}}status").html(result.status)
+                                    $("#task{{task.id}}description").html(result.description)
+                                    if (result.status=="PENDING"){
+                                        console.log("task pending....")
+                                        setTimeout("refreshTask{{task.id}}()",3000)
+                                    }
+                                 })
+                    
+                }
+                            refreshTask{{task.id}}()
+                        </script>
+                {%endif%}
+            </td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+
+{%endblock%}

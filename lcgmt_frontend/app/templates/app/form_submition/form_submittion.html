@@ -1,0 +1,461 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}{{_('submit metadata')}}{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    $(function(){
+        $('#observationBand').select2({
+            // theme: 'bootstrap',
+        });
+        $('#ObservationDeviceAndPlan').select2({
+            // theme: 'bootstrap',
+        });
+        $('#subSubject').select2({
+            // theme: 'bootstrap',
+        });
+        $('#dataProductionMode').select2({
+            // theme: 'bootstrap',
+        });
+        $('#dataType').select2({
+            // theme: 'bootstrap',
+        });
+        $('#dataLevel').select2({
+            // theme: 'bootstrap',
+        });
+        $('#productionAge').select2({
+            // theme: 'bootstrap',
+        });
+        $('#User').select2({
+            // theme: 'bootstrap',
+        });
+        $('#dataCategory').select2({
+            // theme: 'bootstrap',
+        });
+
+
+        $("form").submit(function(){
+					data = $('form').serializeArray();
+					json_data = serializeToJSON(data, 1);
+					console.log('json_data', json_data);
+					url_path = "{{ url_for('form_submition.save_form') }}";
+					// console.log(url_path)
+	            	$.ajax({
+		                type: "POST",
+		                contentType:"application/json",
+		                dataType: "json",
+		                url: url_path,
+		                data: json_data,
+		                success: function (result) {
+		                			console.log(result);
+		                    		// if (result.status == 200) {
+		                    		//     window.location.href="{{ url_for('form_submition.save_form') }}";
+		                        	// 	console.log("SUCCESS");
+		                    		// }
+                                   	if (result.success == "ok") {
+		                    		    window.location.href="{{ url_for('form_submition.test') }}";
+		                        		console.log("SUCCESS");
+		                    		}
+		                		},
+		                error: function(e) {
+		                    console.log(e);
+		                }
+
+	            	});
+				return false;
+				});
+			});
+
+			function serializeToJSON(obj, num) {
+			    // var jsonStr = "[{";
+			    var jsonStr = "{data：{";
+			    $(obj).each(function (index, item) {
+			        jsonStr += "'" + item.name + "':'" + item.value + "'";
+			        if (index % num == (num - 1)) {
+			            if ((index + 1) == obj.length)
+			                // jsonStr += "}]";
+			            	jsonStr += "}}";
+			            else
+			                jsonStr += "},{";
+			        } else {
+			            jsonStr += ",";
+			        }
+			    });
+			    return JSON.stringify(jsonStr);
+			}
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+<div class="container">
+    <div class="container">
+        <h3 class="text-center m-4">元数据提交</h3>
+    </div>
+    <form class="form-horizontal" id="metadata" method="post">
+        {{form.csrf_token()}}
+        <div class="card mb-1">
+            <h5 class="card-header">基本信息</h5>
+            <div class="card-body">
+                <div class="container">
+                    <div class="row form-group">
+                        <i class="icon-book"></i>
+                        {{form.title_zh.label(class="control-label col-lg-2 ", for="title")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.title_zh(class="form-control",id="title",required="required",type="text",placeholder='e.g. LAMOST DR1 光谱星表')}}
+                            <small class="help-inline">请填写数据资源名称</small>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        {{form.title_en.label(class="control-label col-lg-2 ", for="title_en")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.title_en(class="form-control",id='title_en',required="required",type="text",placeholder='e.g. LAMOST DR1 general catalog')}}
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        {{form.shortname.label(class="control-label col-lg-2" )}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.shortname(class="form-control",type="text")}}
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        {{form.description_zh.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.description_zh(class="form-control", rows = "3" ,placeholder="请填写数据资源的中文描述",required="required")}}
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        {{form.description_en.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.description_en(class="form-control", rows = "3" ,placeholder="Please provide description of data resource in English",required="required")}}
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        {{form.create_date.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.create_date(type="date", class="form-control", value="", required="required" ,title="")}}
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        {{form.update_date.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.update_date(type="date", class="form-control", value="", required="required" ,title="")}}
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        {{form.publicate_date.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.publicate_date(type="date", class="form-control" ,value="",title="")}}
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        {{form.authors_zh.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-5">
+                            <label class="control-label" >姓名<5label>
+                            {{form.authors_zh(class="form-control " ,type="text",required="required")}}
+                            <small class="help-inline">可填写个人或团队名称</small>
+                        </div>
+                        <div class="col-lg-5">
+                            {{form.affiliation_zh.label(class="control-label")}}
+                            {{form.affiliation_zh(class="form-control ", type="text",required="required")}}
+                        </div>
+                        <div class="col-lg-5 offset-lg-2">
+                            {{form.Email.label(class="control-label")}}
+                            {{form.Email(class="form-control ",type="text",required="required")}}
+                        </div>
+                        <div class="col-lg-5">
+                            {{form.address_zh.label(class="control-label")}}
+                            {{form.address_zh(class="form-control " ,type="text",required="required")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.authors_en.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-5">
+                            <label class="control-label" >Name</label>
+                            {{form.authors_en(class="form-control ", type="text",required="required")}}
+                        </div>
+                        <div class="col-lg-5">
+                            {{form.affiliation_en.label(class="control-label")}}
+                            {{form.affiliation_en(class="form-control " ,type="text",required="required")}}
+                        </div>
+                        <div class="col-lg-10 offset-lg-2">
+                            {{form.address_en.label(class="control-label")}}
+                            {{form.address_en( class="form-control " ,type="text",required="required")}}
+                        </div>
+                     </div>
+
+                     <div class="row form-group">
+                        {{form.contributor_zh.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-5">
+                            <label class="control-label" >姓名</label>
+                            {{form.contributor_zh(class="form-control " ,type="text")}}
+                        </div>
+                        <div class="col-lg-5">
+                            {{form.cb_affiliation_zh.label(class="control-label")}}
+                            {{form.cb_affiliation_zh(class="form-control ", type="text")}}
+                        </div>
+                        <div class="col-lg-5 offset-lg-2">
+                            {{form.cb_email.label(class="control-label")}}
+                            {{form.cb_email(class="form-control ",type="text")}}
+                        </div>
+                        <div class="col-lg-5">
+                            {{form.cb_address_zh.label(class="control-label")}}
+                            {{form.cb_address_zh(class="form-control " ,type="text")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.contributor_en.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-5">
+                            <label class="control-label" >Name</label>
+                            {{form.contributor_en(class="form-control ", type="text")}}
+                        </div>
+                        <div class="col-lg-5">
+                            {{form.cb_affiliation_en.label(class="control-label")}}
+                            {{form.cb_affiliation_en(class="form-control " ,type="text")}}
+                        </div>
+                        <div class="col-lg-10 offset-lg-2">
+                            {{form.cb_address_en.label(class="control-label")}}
+                            {{form.cb_address_en( class="form-control " ,type="text")}}
+                        </div>
+                    </div>
+
+                     <div class="row form-group">
+                        {{form.contact_zh.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-5">
+                            <label class="control-label" >姓名</label>
+                            {{form.contact_zh(class="form-control " ,type="text")}}
+                        </div>
+                        <div class="col-lg-5">
+                            {{form.ct_affiliation_zh.label(class="control-label")}}
+                            {{form.ct_affiliation_zh(class="form-control ", type="text")}}
+                         </div>
+                         <div class="col-lg-5 offset-lg-2">
+                            {{form.ct_telephone.label(class="control-label")}}
+                            {{form.ct_telephone(class="form-control " ,type="text")}}
+                        </div>
+                        <div class="col-lg-5 ">
+                            {{form.ct_email.label(class="control-label")}}
+                            {{form.ct_email(class="form-control ",type="text")}}
+                        </div>
+                         <div class="col-lg-10 offset-lg-2">
+                            {{form.ct_address_zh.label(class="control-label")}}
+                            {{form.ct_address_zh(class="form-control " ,type="text")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.contact_en.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-5">
+                            <label class="control-label" >Name</label>
+                            {{form.contact_en(class="form-control ", type="text")}}
+                        </div>
+                        <div class="col-lg-5">
+                            {{form.ct_affiliation_en.label(class="control-label")}}
+                            {{form.ct_affiliation_en(class="form-control " ,type="text")}}
+                        </div>
+                        <div class="col-lg-10 offset-lg-2">
+                            {{form.ct_address_en.label(class="control-label")}}
+                            {{form.ct_address_en( class="form-control " ,type="text")}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="card mb-1">
+            <h5 class="card-header">主题词和分类标签</h5>
+            <div class="card-body">
+                <div class="container">
+                    <div class="row form-group">
+                        {{form.keywords_zh.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.keywords_zh(type="text", class="form-control", value="", required="required" ,title="")}}
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        {{form.keywords_en.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.keywords_en(type="text", class="form-control", value="", required="required" ,title="")}}
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        {{form.type.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.type(type="text", class="form-control", value="", required="required" ,title="")}}
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="control-label col-lg-2" >分类标签</label>
+                        <div class="input-group col-lg-10 col-md-10 mb-1">
+                            <div class="input-group-prepend">
+                                {{form.observationBand.label(class="input-group-text")}}
+                            </div>
+                            {{form.observationBand(class="form-control",required="required",id="observationBand")}}
+                        </div>
+                        <div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+                            <div class="input-group-prepend">
+                                {{form.ObservationDeviceAndPlan.label(class="input-group-text")}}
+                            </div>
+                            {{form.ObservationDeviceAndPlan(class="form-control",id="ObservationDeviceAndPlan")}}
+                        </div>
+                        <div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+                            <div class="input-group-prepend">
+                                {{form.subSubject.label(class="input-group-text")}}
+                            </div>
+                            {{form.subSubject(class="form-control",required="required",id="subSubject")}}
+                        </div>
+                        <div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+                            <div class="input-group-prepend">
+                                {{form.dataProductionMode.label(class="input-group-text")}}
+                            </div>
+                            {{form.dataProductionMode(class="form-control",required="required",id="dataProductionMode")}}
+                        </div>
+                        <div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+                            <div class="input-group-prepend">
+                                {{form.dataType.label(class="input-group-text")}}
+                            </div>
+                            {{form.dataType(class="form-control",required="required",id="dataType")}}
+                        </div>
+                        <div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+                            <div class="input-group-prepend">
+                                {{form.dataLevel.label(class="input-group-text")}}
+                            </div>
+                            {{form.dataLevel(class="form-control",required="required",id="dataLevel")}}
+                        </div>
+                        <div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+                            <div class="input-group-prepend">
+                                {{form.productionAge.label(class="input-group-text")}}
+                            </div>
+                            {{form.productionAge(class="form-control",required="required",id="productionAge")}}
+                        </div>
+                        <div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+                            <div class="input-group-prepend">
+                                {{form.User.label(class="input-group-text")}}
+                            </div>
+                            {{form.User(class="form-control",id="User")}}
+                        </div>
+                        <div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+                            <div class="input-group-prepend">
+                                {{form.dataCategory.label(class="input-group-text")}}
+                            </div>
+                            {{form.dataCategory(class="form-control",required="required",id="dataCategory")}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-1">
+            <h5 class="card-header">共享和使用</h5>
+            <div class="card-body">
+                <div class="container">
+                    <div class="row form-group">
+                        {{form.sharing_way.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.sharing_way(class="form-control",required="required")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.sharing_scope.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.sharing_scope(class="form-control",required="required")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.application_flow.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.application_flow(class="form-control")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.file_number.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.file_number(class="form-control",required="required")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.file_size.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.file_size(class="form-control",required="required")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.catalog_number.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.catalog_number(class="form-control")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.catalog_size.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.catalog_size(class="form-control")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.usage_instruction.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.usage_instruction(class="form-control")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.datasource_bibcode.label(class="control-label col-lg-2")}}
+                        <div class="input-group col-lg-10 col-md-10">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" >Bibcode</button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" data-target="">Bibcode</a>
+                                </div>
+                            </div>
+                            {{form.datasource_bibcode(class="form-control")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.accessLink.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.accessLink(class="form-control")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.acknowledge_zh.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.acknowledge_zh(class="form-control")}}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {{form.acknowledge_en.label(class="control-label col-lg-2")}}
+                        <div class="col-lg-10 col-md-10">
+                            {{form.acknowledge_en(class="form-control")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{form.submit(class="btn btn-lg btn-block btn-outline-primary align-center")}}
+        </div>
+
+    </form>
+
+</div>
+{% endif %}
+{% endblock %}

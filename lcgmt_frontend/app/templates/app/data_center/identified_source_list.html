@@ -1,0 +1,613 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %} {% block content %}
+
+<nav aria-label="breadcrumb" style="margin-bottom: 10px">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{ render_breadcrumb_item('data_center.identified_source_list', title) }}
+ 
+  </ol>
+</nav>
+  {#
+<div class="card w-100">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">{{title}}{{_('Search (LEIA)')}}</div>
+  </div>
+  <div class="card-body ep_datasearch_card">
+ <form action="{{url_for('data_center.observation_data')}}" method="POST">
+      {{form.hidden_tag()}}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.object_name.label(class="bmd-label-floating ep_objsearch_label")}}</span>
+            </div>
+            {{form.object_name(class="form-control",id="object_name")}}
+            <div class="input-group-append">
+              <button class="btn btn-secondary" type="button" id="resolve">Name Resolver</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.ra.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+            {{form.ra(class="form-control",id="ra", placeholder="in Degrees")}}
+            <div class="input-group-append">
+              <span class="input-group-text">degrees</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.dec.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+            {{form.dec(class="form-control",id="dec", placeholder="in Degrees")}}
+            <div class="input-group-append">
+              <span class="input-group-text">degrees</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.radius.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+            {{form.radius(class="form-control",id="radius", placeholder="in Degrees")}}
+          </div>
+        </div>
+      <div class="col-md-12 text-center">{{form.submit(class="btn ep_openBtn", style="padding:7px 30px; margin-top:20px;")}}</div>
+
+      <div id="spinner-div">
+        Loading...
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </form> 
+  </div>
+  #}
+  <div class="card w-100" style="margin-top: 20px">
+    <div class="card-header bg-light ep-cardheader">
+      <div class="card-header-title">Source Skymap</div>
+    </div>
+    <div class="card-body" id="aladin-div">
+      <div id="aladin-lite-div">
+        <div id="search-current-position">
+          <i class="fas fa-bullseye" style="font-size: 2.5em"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card w-100" style="margin-top: 20px">
+  <div class="card-header bg-light ep-cardheader">
+      <div class="card-header-title">{{title}} <button class="btn ep_openBtn btn-sm" style="float:right" id="download_sl">Export CSV</button></div>
+    </div>
+    <div class="card-body">
+      <div id="result_tab" style="z-index: 50; width: 100%"></div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="image-modal-div" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imageModalTitle"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="model-body">
+          <img id="image-model" src="" class="rounded mx-auto d-block img-fluid" alt="Responsive image" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Tag 组件相关代码-->
+  <script src="{{url_for('static',filename='js/tag-with-delete.js')}}"></script>
+  <script>
+
+    function tagEditor(cell, onRendered, success, cancel, editorParams){
+      var all_tags = []
+      $('.js-example-basic-multiple').blur() // 旧的blur
+      const selectEl = document.createElement('select'); 
+      $.get("{{url_for('.tags')}}",(data)=>{
+        all_tags = data['tags']
+        all_tags.forEach(value=>{
+          option = createTag(value,cell.getValue().indexOf(value)!=-1)
+          
+          selectEl.appendChild(option)
+        })
+        $('.js-example-basic-multiple').select2('open')
+      })
+      // Add appropriate attributes to `select` element 
+      selectEl.classList.add('js-example-basic-multiple');
+      selectEl.setAttribute('name', 'states[]');
+      selectEl.setAttribute('multiple', true);
+      selectEl.style.width="80%"
+
+      //cell.getValue().forEach(value=>{
+      
+      
+      
+      onRendered(function(){
+         $('.js-example-basic-multiple').select2({
+          tags: true, //允许用户输入新的
+         }).on('change.select2',function(e){
+          success($(this).select2('data').map((x)=>x.text))
+          
+         }).on('select2:close',function(e){
+          success($(this).select2('data').map((x)=>x.text))
+          console.log(e)
+         })
+         
+      });
+      return selectEl
+    };
+
+  </script>
+  <!--表格相关script-->
+  <script>
+    var result_table;
+    function digit3(num) {
+      return Number.parseFloat(num.toFixed(3));
+    }
+    function digit0(num) {
+      return Math.floor(num);
+    }
+            /**
+     * 科学计数法格式化函数
+     * @param cell - 单元格对象
+     * @param formatterParams - 格式化参数
+     * @param onRendered - 单元格渲染完成回调函数
+     * @returns {string}
+     */
+     function scientificFormatter(cell, formatterParams, onRendered) {
+      // 获取原始数据值
+      var value = cell.getValue();
+      var formattedValue = "";
+      // 使用 toExponential 方法将小数转换为科学计数法
+      if (value === null || value === undefined){
+        return null
+      }
+      if (formatterParams.precision) {
+          formattedValue = value.toExponential(formatterParams.precision);
+      }
+      else {
+          formattedValue = value.toExponential();
+      }
+  
+      // 返回处理后的值
+      return formattedValue;
+  }
+    var type_values = {
+        "":"All",
+        known_source:"Known Source",
+        transient: "Transient",
+        burst: "Burst",
+    }
+    var type_edit_values = {}
+    Object.assign(type_edit_values,type_values)
+    type_edit_values['']="Empty"
+
+    var aladin;
+    var sources = {{sources|safe}};
+    for (source of sources){
+      source['peak_flux'] =null;
+    }
+    $(document).ready(function () {
+      $("#aladin-lite-div").width($("#with-aladin").width());
+      $("#aladin-lite-div").height(550);
+      
+      var table = new Tabulator("#result_tab", {
+        data: sources,
+        //data: res,
+        selectable: 1,
+        dataTree: true,
+        height: 550,
+        scrollToRowIfVisible: true,
+        layout: "fitDataFill",
+        columns: [
+          {
+            formatter: "rownum",
+            hozAlign: "center",
+          },
+          {
+            title: "Common Name",
+            field: "simbad_name",
+            sorter: "string",
+            editor:"input",
+            headerFilter: "input" 
+          },
+          
+          {
+            title: "RA",
+            field: "ra",
+            sorter: "number",
+            editor:"number",
+            formatter: function (cell, formatterParams, onRendered) {
+              return digit3(cell.getValue());
+            },
+          },
+          {
+            title: "Dec",
+            field: "dec",
+            sorter: "number",
+            editor:"number",
+            formatter: function (cell, formatterParams, onRendered) {
+              return digit3(cell.getValue());
+            },
+          },
+          {
+            title: "",
+            formatter: gotoIcon,
+            width: 50,
+            hozAlign: "center",
+            tooltip: "Go to Obs Location",
+
+            cellClick: function (e, cell) {
+              gotoLocation(cell.getRow().getData().ra, cell.getRow().getData().dec);
+            },
+          },
+          {
+            title: "",
+            formatter: detailIcon,
+            width: 50,
+            hozAlign: "center",
+            tooltip: "Show Detail",
+
+            cellClick: function (e, cell) {
+                showSrcDetailPage(cell.getRow().getData().id);
+            },
+          },
+          {
+            title: "Src Type",
+            field: "src_type",
+            sorter: "string",
+            editor:"list",
+            editorParams:{
+                values:type_edit_values, clearable:true
+            }, 
+            headerFilter:true, 
+            headerFilterParams:{
+                values:type_values, 
+                clearable:true
+            }
+          },
+          {
+            title: "Tags",
+            field: "tags",
+            editor:tagEditor,
+            width: 300,
+          },
+          {
+            title: "Classification",
+            field: "classification",
+            sorter: "string",
+            editor:"input",
+            headerFilter: "input" 
+          },
+          {
+            title: "Peak_Flux",
+            field: "peak_flux",
+            sorter: "number",
+
+            formatter: scientificFormatter,formatterParams: { precision: 3 },
+            
+
+            // formatter: function (cell, formatterParams, onRendered) {
+            //   return digit0(cell.getValue());
+            // },
+          },
+          {
+            title: "R_Flux",
+            field: "ref_flux",
+            sorter: "number",
+            editor:"number"
+
+            // formatter: function (cell, formatterParams, onRendered) {
+            //   return digit0(cell.getValue());
+            // },
+          },
+          {
+            title: "Last Observed Flux",
+            field: "flux",
+            sorter: "number",
+
+            formatter: function (cell, formatterParams, onRendered) {
+              return cell.getValue().toExponential(3);
+            },
+          },
+          {
+            title: "Ra(HMS)",
+            field: "ra_hms",
+            sorter: "string",
+            // editor:"number",
+            
+          },
+          {
+            title: "Dec(DMS)",
+            field: "dec_dms",
+            sorter: "string",
+            // editor:"number",
+            
+          },
+          {
+            title: "Gal l",
+            field: "gal_l",
+            sorter: "number",
+            editor:"number",
+            formatter: function (cell, formatterParams, onRendered) {
+              return digit3(cell.getValue());
+            },
+          },
+          {
+            title: "Gal b",
+            field: "gal_b",
+            sorter: "number",
+            editor:"number",
+            formatter: function (cell, formatterParams, onRendered) {
+              return digit3(cell.getValue());
+            },
+          },
+          {
+            title: "",
+            formatter: (cell, formatterParams, onRendered)=>{
+              var href = `simbad.cds.unistra.fr/simbad/sim-id?Ident=${encodeURIComponent(cell.getRow().getData().simbad_name)}&NbIdent=1&Radius=2&Radius.unit=arcmin&submit=submit+id`;
+              return `<a target="_blank" href='https://${href}'>Simbad</a>`
+            },
+
+            hozAlign: "center",
+            tooltip: "Simbad",
+          },
+          {
+            title: "",
+            formatter: (cell, formatterParams, onRendered)=>{
+              return `<a target="_blank" href='https://ned.ipac.caltech.edu/byname?objname=${encodeURIComponent(cell.getRow().getData().simbad_name)}&hconst=67.8&omegam=0.308&omegav=0.692&wmap=4&corr_z=1'>NED</a>`
+            },
+            hozAlign: "center",
+            tooltip: "NED",
+
+          },
+          // {
+          //  title: "Comments",
+          //  field: "comments",
+          //  sorter: "string",
+          //  headerFilter: "input" 
+          // },
+
+          { title: "ID", field: "id", sorter: "number" },
+        ],
+      });
+      
+      table.on("cellEdited", function(cell){
+          data = cell.getData()
+          src_id = data.id
+          ra = data.ra
+          dec = data.dec
+          pos_err = data.pos_err
+         
+          src_type = data['src_type']
+          tags = data['tags']
+          simbad_name =  data['simbad_name']
+          classification = data['classification']
+        
+          ref_flux = data['ref_flux']
+
+          console.log(src_id)
+          $.ajax({
+              url:'{{url_for(".ta_source_update")}}',
+              type:"POST",
+              data:{
+                  src_id,
+                  ra,
+                  dec,
+                  pos_err,
+                  "type": src_type,
+                  tags:tags,
+                  classification,
+                  simbad_name,
+                 // comments,
+                  ref_flux
+              },
+              success:function(result){
+                  
+              },
+              error: function(xhr,status,error){
+                  
+              }
+          })
+      });
+      
+      // Table构建完成后，tag字段做成select2
+      table.on("tableBuilt", function(){
+        $('.js-example-basic-multiple').select2().on('change',(e)=>{
+          console.log(e)
+        });
+      });
+      result_table = table;
+      // 动态加载长耗时操作
+      for (let data_item of sources){
+        console.log(data_item)
+        $.ajax({
+            url:'{{url_for("lc.statistics",src_id="SRC_ID")}}'.replace("SRC_ID",data_item.id),
+            success:function(resp){
+                console.log(resp)
+                peak_flux = resp['peak_flux']
+                
+
+                table.updateData([{
+                    id:data_item.id,
+                    "peak_flux":peak_flux,
+                }])
+            },
+            error:function(XMLHttpRequest,textStatus,errorThrown){
+              console.log('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+              $("#loading").empty();
+           }
+        })
+      }
+      
+    }) 
+    
+  </script>
+  <!--Aladin相关代码-->
+  <script>
+   
+    $(document).ready(function () {
+    A.init.then(() => {
+      aladin = A.aladin("#aladin-lite-div", {
+        survey: "CDS/P/DSS2/color",
+        fov: 360,
+        fullScreen: false,
+        cooFrame: "galactic",
+        showReticle: true,
+        reticleSize: 64, // change reticle size
+        showSimbadPointerControl: true
+      });
+      aladin.setProjection("AIT");
+      aladin.setBaseImageLayer(
+        aladin.createImageSurvey(
+          "RASS",
+          "ROSAT All Sky Survey (RASS) - 0.1-2.4 keV",
+          "https://ep.bao.ac.cn/leia/static/hips/RASS/ov-gso_P_RASS/",
+         // "https://cade.irap.omp.eu/documents/Ancillary/4Aladin/RASS/",
+          "galactic",
+          3,
+          { imgFormat: "jpeg", colormap: "rainbow" }
+        )
+      );
+      
+      var leia_skymap = aladin.createImageSurvey("LEIA Flux", "LEIA flux image 0.5-1keV ",
+      "https://nadc.china-vo.org/leia/hips/leia_flux_hips_50_100/",
+        "equatorial", 3, { imgFormat: 'fits',colormap:'rainbow' })
+      leia_skymap.setColormap('rainbow' , {stretch: 'Log', reversed: false});
+      aladin.setOverlayImageLayer(leia_skymap,'LEIA');
+
+      this.aladin = aladin;
+      let overlay = A.graphicOverlay({ color: "yellow", lineWidth: 1 });
+      aladin.addOverlay(overlay);
+      let overlay1 = A.graphicOverlay({ color: "green", lineWidth: 1 });
+      aladin.addOverlay(overlay1);
+      let overlay2 = A.graphicOverlay({ color: "red", lineWidth: 1 });
+      aladin.addOverlay(overlay2);
+      let known_source_list = [];
+      let transient_list = [];
+      let burst_list = [];
+      
+      for (let source_index in sources) {
+        let source = sources[source_index];
+        let ra = source["ra"];
+        let dec = source["dec"];
+        let pos_err = source["pos_err"];
+        if (source["src_type"] == "known_source") {
+          //overlay.add(A.circle(parseFloat(ra), parseFloat(dec), parseFloat(pos_err))); //误差半径1个角分
+          known_source_list.push(source);
+        } else if (source["src_type"] == "transient"){
+          //overlay1.add(A.circle(parseFloat(ra), parseFloat(dec), parseFloat(pos_err),));
+          transient_list.push(source);
+        }
+        else if (source["src_type"] == "burst")
+        {
+          //overlay2.add(A.circle(parseFloat(ra), parseFloat(dec), parseFloat(pos_err),));
+          burst_list.push(source);
+        }
+      }
+   
+    addSourceList2Aladin(aladin, known_source_list, "Known Sources");
+    addSourceList2Aladin(aladin, transient_list, "Transients");
+    addSourceList2Aladin(aladin, burst_list, "Bursts");
+    });
+
+   });
+
+  $("#download_sl").click(function(){
+  result_table.download("csv", "identified_source_list.csv", {delimiter:","}); 
+ });
+ 
+  function gotoLocation(ra, dec) {
+      aladin.gotoRaDec(ra, dec);
+    }
+
+  function showSrcDetailPage(src_id) {
+    var baseUrl = "{{url_for('data_center.identified_source_detail', sourceId='source_id_ph')}}";
+    var targetUrl = baseUrl.replace("source_id_ph", src_id);
+    window.open(targetUrl, "_blank").focus();
+  }
+
+    var gotoIcon = function (cell, formatterParams, onRendered) {
+      return '<i class="fas fa-bullseye"></i>';
+    };
+    var detailIcon = function (cell, formatterParams, onRendered) {
+      return '<i class="fas fa-info-circle"></i>';
+    };
+    
+
+    function drawFunction(source, canvasCtx, viewParams) {
+      var fov = Math.max(viewParams["fov"][0], viewParams["fov"][1]);
+
+      canvasCtx.beginPath();
+      canvasCtx.arc(source.x, source.y, source.data["size"] * 1, 0, 2 * Math.PI, false);
+      canvasCtx.closePath();
+      canvasCtx.strokeStyle = "#FFD700";
+      canvasCtx.lineWidth = 3;
+      (canvasCtx.globalAlpha = 0.7), canvasCtx.stroke();
+
+      // object name is displayed only if fov<10°
+      if (fov > 50) {
+        return;
+      }
+
+      canvasCtx.globalAlpha = 0.9;
+      canvasCtx.globalAlpha = 1;
+      var xShift = 20;
+      canvasCtx.font = "15px Arial";
+      canvasCtx.fillStyle = "#eee";
+      canvasCtx.fillText(source.data["source_name"], source.x + xShift, source.y - 4);
+    }
+
+    //在天球上添加暂现源，payload是源信息，listname是图层名字，用于表示暂现源类型
+    function addSourceList2Aladin(aladin, payload, listname) {
+      var aladin = aladin;
+      var sourceList = [];
+      for (var target in payload) {
+        var source = this.A.source(parseFloat(payload[target].ra), parseFloat(payload[target].dec), {
+          size: 6.5,
+          source_name:  payload[target].simbad_name,
+          source_id: payload[target].classification,
+        });
+
+        sourceList.push(source);
+      }
+      cat = A.catalog({
+        name: listname,
+        // onClick: this.showObservationDetail,
+        shape: this.drawFunction,
+        // source
+      });
+      cat.addSources(sourceList);
+      aladin.addCatalog(this.cat);
+    }
+  </script>
+
+  {% include "app/data_center/components/resolve.html" %} {% endblock %}
+</div>
+
+<style>
+  .badge {
+    .close {
+      padding-right: $badge-padding-x;
+      padding-left: $badge-padding-x;
+      margin-right: -$badge-padding-x;
+      font-size: inherit;
+      color: inherit;
+      text-shadow: none;
+      }
+  }
+
+</style>

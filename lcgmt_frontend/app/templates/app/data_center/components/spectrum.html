@@ -1,0 +1,320 @@
+
+
+
+{% block styles %}
+
+
+
+<style type="text/css">
+    .highcharts-figure,
+    .highcharts-data-table table {
+        min-width: 310px;
+        max-width: 800px;
+        margin: 1em auto;
+    }
+
+    .highcharts-data-table table {
+        font-family: Verdana, sans-serif;
+        border-collapse: collapse;
+        border: 1px solid #EBEBEB;
+        margin: 10px auto;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .highcharts-data-table caption {
+        padding: 1em 0;
+        font-size: 1.2em;
+        color: #555;
+    }
+
+    .highcharts-data-table th {
+        font-weight: 600;
+        padding: 0.5em;
+    }
+
+    .highcharts-data-table td,
+    .highcharts-data-table th,
+    .highcharts-data-table caption {
+        padding: 0.5em;
+    }
+
+    .highcharts-data-table thead tr,
+    .highcharts-data-table tr:nth-child(even) {
+        background: #f8f8f8;
+    }
+
+    .highcharts-data-table tr:hover {
+        background: #f1f7ff;
+    }
+</style>
+{% endblock%}
+
+{% block scripts %}
+
+<script type="text/javascript" src="{{ url_for('static',filename="")}}" "https://cdn.staticfile.org/echarts/5.2.0/echarts.min.js"></script>
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='highcharts/dumbbell.js', v='2') }}"></script>
+
+
+{% endblock %}
+
+
+{% block content %}
+<div class="card w-100" id="spectrum-container">
+    <div class="card-header bg-light">
+        <div class="row">
+            <div class="col-md-8">
+                <h5>Spectrum Fits of <span class="badge badge-success">{{source.source_name}}</span>
+                </h5>
+            </div>
+
+            <div class="col-md-4">
+                <select class="custom-select" id="models">
+                    <option value="pl" selected>Powerlow</option>
+                    <option value="bb">BB</option>
+
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <figure class="highcharts-figure">
+                    <div id="spectrumchart" style="height: 600px"></div>
+                </figure>
+            </div>
+
+        </div>
+    </div>
+    {% include "app/data_center/components/model.html" %}
+</div>
+
+    <script>
+        var spectrum = JSON.parse('{{spectrum_json|tojson}}');
+        var chartDom = document.getElementById('spectrumchart');
+        var myChart = echarts.init(chartDom);
+        var option;
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        // Prime Costs and Prices for ACME Fashion\nCollection "Spring-Summer, 2016"
+        // Data from https://playground.anychart.com/gallery/7.12.0/Error_Charts/Marker_Chart
+        var dimensions = [
+            'Energy', 'Flux', 'Energy min', 'Energy max', 'Flux min', 'Flux max', 'Model'
+        ];
+        var pldata = []
+        for (i in spectrum.plplot.data) {
+            pldata.push([
+                spectrum.plplot.energy[i],
+                spectrum.plplot.data[i],
+                spectrum.plplot.energy[i] - spectrum.plplot.enerr[i],
+                spectrum.plplot.energy[i] + spectrum.plplot.enerr[i],
+                spectrum.plplot.data[i] - spectrum.plplot.error[i],
+                spectrum.plplot.data[i] + spectrum.plplot.error[i],
+                spectrum.plplot.model[i]
+
+            ])
+        }
+        var bbdata = []
+        for (i in spectrum.bbplot.data) {
+            bbdata.push([
+                spectrum.bbplot.energy[i],
+                spectrum.bbplot.data[i],
+                spectrum.bbplot.energy[i] - spectrum.bbplot.enerr[i],
+                spectrum.bbplot.energy[i] + spectrum.bbplot.enerr[i],
+                spectrum.bbplot.data[i] - spectrum.bbplot.error[i],
+                spectrum.bbplot.data[i] + spectrum.plplot.error[i],
+                spectrum.bbplot.model[i]
+
+
+            ])
+        }
+        generate_model_table()
+        function renderItem(params, api) {
+            var children = [];
+            var coordDims = ['x', 'y'];
+
+            for (var baseDimIdx = 0; baseDimIdx < 2; baseDimIdx++) {
+                var otherDimIdx = 1 - baseDimIdx;
+                var encode = params.encode;
+                var baseValue = api.value(encode[coordDims[baseDimIdx]][0]);
+                var param = [];
+                param[baseDimIdx] = baseValue;
+                param[otherDimIdx] = api.value(encode[coordDims[otherDimIdx]][1]);
+                var highPoint = api.coord(param);
+                param[otherDimIdx] = api.value(encode[coordDims[otherDimIdx]][2]);
+                var lowPoint = api.coord(param);
+                var halfWidth = 5;
+
+                var style = api.style({
+                    stroke: api.visual('color'),
+                    fill: null
+                });
+
+                children.push({
+                    type: 'line',
+                    transition: ['shape'],
+                    shape: makeShape(
+                        baseDimIdx,
+                        highPoint[baseDimIdx] - halfWidth, highPoint[otherDimIdx],
+                        highPoint[baseDimIdx] + halfWidth, highPoint[otherDimIdx]
+                    ),
+                    style: style
+                }, {
+                    type: 'line',
+                    transition: ['shape'],
+                    shape: makeShape(
+                        baseDimIdx,
+                        highPoint[baseDimIdx], highPoint[otherDimIdx],
+                        lowPoint[baseDimIdx], lowPoint[otherDimIdx]
+                    ),
+                    style: style
+                }, {
+                    type: 'line',
+                    transition: ['shape'],
+                    shape: makeShape(
+                        baseDimIdx,
+                        lowPoint[baseDimIdx] - halfWidth, lowPoint[otherDimIdx],
+                        lowPoint[baseDimIdx] + halfWidth, lowPoint[otherDimIdx]
+                    ),
+                    style: style
+                });
+            }
+
+            function makeShape(baseDimIdx, base1, value1, base2, value2) {
+                var shape = {};
+                shape[coordDims[baseDimIdx] + '1'] = base1;
+                shape[coordDims[1 - baseDimIdx] + '1'] = value1;
+                shape[coordDims[baseDimIdx] + '2'] = base2;
+                shape[coordDims[1 - baseDimIdx] + '2'] = value2;
+                return shape;
+            }
+
+            return {
+                type: 'group',
+                children: children
+            };
+        }
+
+        function createModelTr(k,v){
+            var tdK = document.createElement("td")
+            tdK.innerHTML = k
+            var tdV = document.createElement("td")
+            tdV.innerHTML = v
+            var tr = document.createElement("tr")
+        4   tr.appendChild(tdK)
+            tr.appendChild(tdV)
+            return tr;
+        }
+        function generate_model_table(){
+            pl_table = document.getElementById("model-table-pl")
+            bb_table =  document.getElementById("model-table-bb")
+            
+            
+            for(var k in spectrum.plfit){
+                v = spectrum.plfit[k]
+                pl_table.appendChild(createModelTr(k,v))
+            }
+            for(var k in spectrum.bbfit){
+                v = spectrum.bbfit[k]
+                bb_table.appendChild(createModelTr(k,v))
+          3 }
+            
+            
+                
+            
+        }
+        option = {
+            tooltip: {
+            },
+            legend: {
+                data: ['bar', 'error']
+            },
+            dataZoom: [{
+                type: 'slider'
+            }, {
+                type: 'inside'
+            }],
+            grid: {
+                bottom: 80
+            },
+            xAxis: {},
+            yAxis: {},
+            series: [
+                // 第一个，中心画点
+                {
+                    type: 'scatter',
+                    name: 'Spectrum',
+                    data: pldata,
+                    dimensions: dimensions,
+                    encode: {
+                        x: 0,
+                        y: 1,
+                        tooltip: [2, 1, 3, 4, 5, 6],
+                        itemName: 0
+                    },
+                    itemStyle: {
+                        color: '#77bef7'
+                    }
+                },
+                // 第二个，画出误差十字
+                {
+                    type: 'custom',
+                    name: 'Error',
+                    renderItem: renderItem,
+                    dimensions: dimensions,
+                    encode: {
+                        x: [0, 2, 3],
+                        y: [1, 4, 5],
+                        tooltip: [2, 1, 3, 4, 5, 6],
+                        itemName: 0
+                    },
+                    data: pldata,
+                    z: 100
+                },
+                // 第三个，画出模型拟合
+                {
+                    type: 'line',
+                    name: 'Model',
+                    renderItem: renderItem,
+                    dimensions: dimensions,
+                    encode: {
+                        x: [0],
+                        y: [6],
+                        tooltip: [0, 6],
+                        itemName: 0
+                    },
+                    data: pldata,
+                    z: 100
+                }
+            ]
+        };
+        function setModel() {
+            modelType = this.options[this.selectedIndex].value
+            if (modelType == "pl") {
+                data = pldata
+                $("#model-table-pl").show()
+                $("#model-table-bb").hide()
+            } else if (modelType == "bb") {
+                data = bbdata
+                $("#model-table-pl").hide()
+                $("#model-table-bb").show()
+            }
+
+            //对各类图像分别更新
+            for (serie of option.series) {
+                serie.data = data
+            }
+            
+            option && myChart.setOption(option);
+
+        }
+        document.getElementById("models").onchange = setModel
+        option && myChart.setOption(option);
+
+    </script>
+    {% endblock %}

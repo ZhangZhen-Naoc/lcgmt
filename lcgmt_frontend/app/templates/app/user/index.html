@@ -1,0 +1,132 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}{{ user.name }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        {{ render_breadcrumb_item('main.index', _('Home')) }}
+        {{ render_breadcrumb_item('user.index', _('My Home')) }}
+    </ol>
+</nav>
+<div class="container-fluid main-csstbp-container" style="padding: 0px;">
+    <div class="user-header user-profile dashboard-card">
+        <div class="user-profile-content">
+
+            <div class="row user-profile-simple-card">
+
+                <div class="col-md-2">
+                        <div class="user-profile-pic">
+                            <img class="user-profile-pic-img"
+                                 src="{{ url_for('main.get_avatar', filename=user.avatar_l) }}">
+                        </div>
+                </div><!--end avatar-->
+                <div class="col-md-10" style="margin: 15px 0px; padding: 15px 10px; background-color: #ddd; border-radius: 10px; color: #3D4553;">
+                    <a href="{{ url_for('.edit_profile') }}"><div class="btn btn-secondary btn-sm" style="float: right; margin: 20px;" >{{_('Edit profile')}}</div></a> <div class="user-profile-info">
+                        <div style="font-size: 18px; font-weight: bold;">
+                        {{user.name}} </div>
+                        <ul class="user-profile-contact" style="list-style-type: none; margin: 0px; padding: 0px;">
+                            <!-- <li>
+                                <img src="{{ url_for('static', filename='/images/dashboard/phoneIcon.png') }}">{{user.phone}}
+                            </li> -->
+                            <li >
+                                <img src="{{ url_for('static', filename='/images/dashboard/emailIcon.png') }}">{{user.email}}
+                            </li>
+                            {#{% if None!=scientific_cateories %}
+                            <li>
+                                <img class="user-profile-contact-img" src="{{ url_for('static', filename='/images/dashboard/otherUserImg.png')}}">{{_('Review Category')}}:
+                                [ {{ ','.join(scientific_cateories)}} ]
+                              
+                                <a href="{{ url_for('user.edit_scientific_categories') }}">{{_('Edit')}}</a>
+                               
+                            </li>
+                            {% endif %}#}
+                        </ul>
+                    </div>
+                    
+
+                
+                    <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Affiliation:</span> {{user.affiliation}}</div>
+
+                    <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Position:</span> {{user.position}}</div>
+         
+                    <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Research Topics:</span> {{user.research_field}}</div>
+                    <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Personal Website:</span> <a href="{{user.website}}"> {{user.website}}</a></div>
+                    <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Research Statement:</span> <p>{{user.research_statement}}</p></div>
+                    <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">Publications:</span> <p>{{user.publication|safe}}</p></div>
+
+                    <div class="user-profile-info" ><span style="font-size: 16px; font-weight: bold;">User Group:</span> {{user.user_group}}</div>
+
+                    
+                </div>
+
+            </div><!--end row-->
+        </div><!--end profile-->
+    </div>
+
+    <div class="col-md-12 col-lg-6 col-xl-6">
+        <ul class="list-group user-profile-contact">
+          
+            
+        </ul>
+    </div><!--end more profile-->
+
+  
+
+    <div class="row dashboard-card">
+        {% if current_user.can('PROPOSAL_REVIEW') %}
+        <div class="col-md-12 col-lg-6 col-xl-6">
+            <div class="card user-profile-project">
+                <h5 class="card-header">{{_('Review Proposals')}} <a class="badge badge-success" href="{{ url_for('proposal_review.review_proposal_list')}}">{{_('Enter')}}</a></h5>
+                <div class="card-body user-profile-project-card-body">
+                    {% for proposal in altaydc10 %}
+                    <p class="card-text"><strong><i>{{_('PI')}}:</i></strong> {{proposal.get_pi_name()}} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<strong><i5{{_('Proposal Title')}}:</i></strong> {{proposal.proposal_title }}</p>
+                    {% endfor %}
+                </div>
+    
+            </div>
+        </div>
+        {% endif %}
+    {#
+        {% if current_user.can('PROPOSAL_SUBMIT') %}
+        <div class="col-md-12 col-lg-6 col-xl-6">
+            <div class="card user-profile-project">
+                <h5 class="card-header">{{_('Submit Proposals')}} <a class="badge badge-success" href="{{ url_for('proposal_submit.user_proposal_list')}}">{{_('Enter')}}</a></h5>
+    
+            </div>
+        </div>
+        {% endif %}
+
+        #}
+
+        <!-- <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">My Proposals</div>
+                <div class="card-body">
+                    <a href="#"><div class="btn ep_openBtn ">Proposal List</div></a>
+                    <a href="#"><div class="btn ep_openBtn ">New Proposal</div></a>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">My Tasks</div>
+                <div class="card-body">
+                    <a href="{{url_for('mwr.tasks')}}"><div class="btn ep_openBtn ">MWR Task List</div></a>
+                    <a href="{{url_for('simulator.simulate_tasks')}}"><div class="btn ep_openBtn ">Simulation Task List</div></a>
+                </div>
+            </div>
+        </div>
+
+     
+
+       
+
+    </div><!--end row-->
+
+</div>
+
+{% endblock %}

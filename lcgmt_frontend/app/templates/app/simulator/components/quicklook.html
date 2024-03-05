@@ -1,0 +1,38 @@
+
+        <table class="table simulation-result-quicklook">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Center</th>
+                    <th>Midway</th>
+                    <th>Corner</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key,urls in result.quick_look.items() %}
+                <tr>
+                    <th width="150px">
+                        {% if key == 'Detector Image one CMOS chip, 9.38°x9.38°'%}
+                        Detector Image <br> One CMOS Chip   <br>9.38°x9.38°
+                        {% else %}
+                        {{key}}
+                        {%endif%}
+                    </th>
+                    {% for url in urls %}
+                        <td><img width="100%" data-toggle="modal" data-target="#{{key.replace(" ","_")}}{{loop.index}}" src={{url}}></td>
+                        <div class="modal  fade" id="{{key.replace(" ","_")}}{{loop.index}}" >
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <!-- 大图 -->
+                                    <div class="modal-body">
+                                        <img   src={{url}}>
+                                    </div>
+                                </div>   
+                            </div>
+                        </div>
+                    {% endfor %}
+                </tr>
+                {%endfor %}
+            </tbody>
+
+        </table>

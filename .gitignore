@@ -1,0 +1,16 @@
+tmp/
+__pycache__
+cache
+Pipfile.lock
+.vscode
+.env
+
+engine_config.py
+config.py
+
+data-mounted
+init-env.sh
+
+zz/
+
+nohup.out

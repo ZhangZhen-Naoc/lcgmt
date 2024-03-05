@@ -1,0 +1,8 @@
+# 非必要不动Pipfile
+pytest-cov
+flask-docs
+pytest-iterassert
+pytest-timeout
+pytest-sugar
+pytest-mock
+pytest-timer

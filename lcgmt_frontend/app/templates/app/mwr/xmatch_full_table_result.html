@@ -1,0 +1,20 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Multi-Wavelength Data Search & Cross-Matching Result') }}{% endblock %}
+{% block content %}
+
+<div>
+    <p>主表：{{cat0}}</p>
+    <p>副表：{{",".join(results.keys())}}</p>
+    <div>
+        {% for result in results %}
+            <p> {{result}}</p>
+            <p>
+                {{results[result] }}
+            </p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

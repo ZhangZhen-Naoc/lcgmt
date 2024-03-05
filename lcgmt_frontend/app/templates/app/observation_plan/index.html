@@ -1,0 +1,611 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock 6} {% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{ render_breadcrumb_item('observation_plan.index', _('Observation Plan')) }}
+  </ol>
+</nav>
+
+<div class="card w-100">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">{{_('Observation Plan Search')}}</div>
+  </div>
+  <div class="card-body ep_datasearch_card">
+    <form>
+      {{form.hidden_tag()}}
+      <div class="row">
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="inpqt-group-prepend">
+              <span class="input-group-text"> {{form.ra.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+            {{form.ra(class="form-control",id="ra",  type="number",step="any", placeholder="in Degrees")}}
+            <div class="input-group-append">
+              <span class="input-group-text">degrees</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.dec.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+            {{form.dec(class="form-control",id="dec",type="number", step="any", placeholder="in Degrees")}}
+            <div class="input-group-append">
+              <span class="input-group-text">degrees</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.radius.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+            {{form.radius(class="form-control",id="radius",  type="number", step="any", placeholder="in Degrees")}}
+            <div class="input-group-append">
+              <span class="input-group-text">degrees</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> {{form.obs_id.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+
+            {{form.obs_id(class="form-control", value="", id="obs_id", placeholder="Optional")}}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="starttime"> {{form.start_time.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+
+            {{form.start_time(class="form-control datetimepicker", value="2023-01-01 00:00:00", placeholder=" yyyy-mm-dd hh:mm:ss", id="start_time")}}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="endtime"> {{form.end_time.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+            </div>
+
+            {{form.end_time(class="form-control datetimepicker",value="2023-01-07 00:00:00",placeholder=" yyyy-mm-dd hh:mm:ss",id="end_time")}}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 text-center">
+        <button class="btn ep_openBtn" style="padding: 7px 30px; margin-top: 20px" id="obs_plan_search" type="submit">Query</button>
+      </div>
+    </form>
+
+    <div id="spinner-div">
+      Loading...
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card w-100" style="margin-top: 20px">
+  
+  <div class="card-body" id="aladin-div">
+    <div id="aladin-lite-div">
+
+    </div>
+    
+  </div>
+  
+</div>
+<div class="card w-100" style="margin-top: 20px">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">Search Results <button class="btn ep_openBtn btn-sm" style="float:right" id="download_sl">Export CSV</button></div>
+  </div>
+  <div class="card-body">
+    <p id="items"></p>
+    <div id="result_tab" style="z-index: 50; width: 100%"></div>
+</div>
+</div>
+
+<script>
+  var result_table;
+  var lastSelectedRow; //表中当前选中行
+      var lastSelectedFov; //图层中选中的fov
+      var currentRes;
+      var objClicked;
+  // var lastSelectedRow; //表中当前选中行
+  // var lastSelectedOverlay; //图层中选中的overylay
+  $("form").submit(function (e) {
+    $("#spinner-div").show();
+    var ra = $("#ra").val();
+    var dec = $("#dec").val();
+    var obs_id = $("#obs_id").val();
+    var radius = $("#radius").val();
+    var start_time = $("#start_time").val();
+    var end_time = $("#end_time").val();
+    aladin.removeLayers();
+    // addCatalogues();
+    addErrorCircle(ra, dec, radius);
+    $.ajax({
+      type: "GET",
+      url: "{{ url_for('observation_plan.search_plan') }}",
+      dataType: "json",
+      data: { obs_id: obs_id, ra: ra, dec: dec, radius: radius, start_time: start_time, end_time: end_time },
+      success: function (res) {
+        $("#items").html("Find "+res.length+" results.");
+        addFov(res);
+        var table = new Tabulator("#result_tab", {
+          data: res,
+          selectable: 1,
+          height: 500,
+          scrollToRowIfVisible: true,
+          layout: "fitDataFill",
+          columns: [
+            { title: "ID", field: "id", sorter: "number" },
+
+            { title: "Workplan ID", field: "workplan_id", sorter: "number" },
+            { title: "Obs ID", field: "obs_id" },
+            {
+              title: "Obs Target",
+              field:"obs_target",
+              width: 100,
+              hozAlign: "center",
+              // formatter: function (cell, formatterParams, onRendered) {
+              //     return digit3(cell.getValue());
+              //   }
+
+              // ajaxLoaderURL: function(e,cell){
+              //   var id=cell.getRow().getData().db_object_id
+              //   return "{{ url_for('observation_plan.get_proposal_source_by_plan',db_object_id=id)}}"}, // API 请求的 URL
+            },
+            // { title: "Proposal Sources", field: "obs_id", formatter: "buttonTick" },
+            { title: "Obs Type", field: "obs_type", sorter: "string" },
+            { title: "Obt ID", field: "obt_id", sorter: "string" },
+            { title: "Source RA", field: "obs_source_ra", sorter: "number",formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                }, },
+            { title: "Source Dec", field: "obs_source_dec", sorter: "number",formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                }, },
+            { title: "Request Obs Duration", field: "requst_obs_duration", sorter: "number" },
+            { title: "WXT CMOS", field: "wxt_cmos", sorter: "number" },
+            { title: "WXT CMOS X", field: "wxt_cmos_x", sorter: "number" },
+            { title: "WXT CMOS Y", field: "wxt_cmos_y", sorter: "number" },
+            { title: "Time Constraints", field: "time_constraints",formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                } },
+            { title: "Obs Start Time", field: "obs_start_time",formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                }, },
+            { title: "Obs End Time", field: "obs_end_time",formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                }, },
+            { title: "Pointing Duration", field: "pointing_duration", sorter: "number",formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                }, },
+            { title: "Payload Pointing RA", field: "payload_pointing_ra", sorter: "number",formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                }, },
+            { title: "Payload Pointing Dec", field: "payload_pointing_dec", sorter: "number",formatter: function (cell, formatterParams, onRendered) {
+                  return digit3(cell.getValue());
+                }, },
+          ],
+
+          rowFormatter: function(row) {
+              var cell = row.getCell("obs_target");
+              var cellValue = cell.getValue();
+              var id=cell.getRow().getData().db_object_id
+              var apiEndpoint =   "{{ url_for('observation_plan.get_proposal_source_by_plan')}}";
+              apiEndpoint+="?db_object_id="+id
+
+              fetch(apiEndpoint, {
+                  method: 'GET', // Or 'GET' depending on your API
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+              })
+              .then(response => response.json())
+              .then(data => {
+                  cell.setValue(data.name);
+              })
+              .catch(error => {
+                  console.error("API Request Error:", error);
+              });
+          },
+        });
+        result_table = table;
+
+        // result_table.on("rowSelected", function (row) {
+        //   clearSelectedRow();
+        //   lastSelectedRow = row;
+
+        //   if (lastSelectedOverlay != undefined) {
+        //     lastSelectedOverlay.lineWidth = 1; //未选中线宽为1
+        //   }
+        //   // console.log(row._row.data);
+        //   // aladin.gotoRaDec(row.getData().payload_pointing_ra, row.getData().payload_pointing_dec);
+
+        //   var overlay = aladin.layerByName("fov" + row._row.data.id);
+        //   lastSelectedOverlay = overlay;
+        //   overlay.lineWidth = 5; //选中线宽为5
+        //   overlay.reportChange();
+        // });
+
+        result_table.on("rowSelected", function (row) {
+              if (lastSelectedRow != undefined && lastSelectedRow._row.data.id == row._row.data.id) {
+                return;
+              }
+              clearSelectedRow();
+              lastSelectedRow = row;
+
+              if (objClicked != undefined) {
+                objClicked.deselect();
+
+              }
+
+              aladin.gotoRaDec(row.getData().pnt_ra, row.getData().pnt_dec);
+              // console.log(row.getData());
+              var footprint = aladin.layerByName("Obs Plan").overlays.filter((footprint) => {
+                return footprint.name == row.getData().id;
+              })[0];
+              footprint.select();
+              // console.log(footprint);
+              objClicked = footprint;
+
+            });
+      },
+      error: function () {},
+      complete: function () {
+        $("#spinner-div").hide(); //Request is complete so hide spinner
+      },
+    });
+
+    e.preventDefault();
+  });
+
+  $("#download_sl").click(function(){
+
+    var tableData = result_table.getData();
+
+    // 将时间字段转换为UTC时间
+    var utcTableData = tableData.map(item => {
+        if (item.time_constraints) {
+            const localDate = new Date(item.time_constraints);
+            item.time_constraints = localDate.toISOString();
+        }
+        if (item.obs_start_time) {
+            const localDate = new Date(item.obs_start_time);
+            item.obs_start_time = localDate.toISOString();
+        }
+        if (item.obs_end_time) {
+            const localDate = new Date(item.obs_end_time);
+            item.obs_end_time = localDate.toISOString();
+        }
+  
+        return item;
+    });
+  result_table.setData(utcTableData);
+
+  result_table.download("csv", "observation_plan.csv", {delimiter:","}); 
+ });
+
+  function getSourceCovered(db_object_id) {
+    $.ajax({
+      type: "GET",
+      url: "{{ url_for('observation_plan.get_proposal_source_by_plan') }}",
+      dataType: "json",
+      data: { db_object_id: db_object_id },
+      success: function (res) {
+        if (aladin != undefined) {
+          var payload = [];
+          for (var index in res) {
+            var s = { ra: res[index].ra, dec: res[index].dec, source_name: res[index].source_name };
+            payload.push(s);
+          }
+          let layer = aladin.layerByName("Proposed Source Covered");
+          if (layer != undefined) {
+            aladin.removeLayer(layer);
+          }
+
+          // addSource(payload, "Proposed Source Covered");
+          // aladin.gotoRaDec(payload[0].ra, payload[0].dec);
+        }
+      },
+      error: function () {},
+    });
+  }
+
+  var printIcon = function (cell, formatterParams, onRendered) {
+    //plain text value
+    return '<i class="fas fa-search-location"></i>';
+  };
+
+  function clearSelectedRow() {
+    if (lastSelectedRow != undefined) {
+      lastSelectedRow.deselect();
+    }
+  }
+
+  function addErrorCircle(ra, dec, radius) {
+    if (ra != "" && dec != "" && radius != "") {
+      var overlay = A.graphicOverlay({ name: "search error circle", color: "#ee2345", lineWidth: 1 });
+      aladin.addOverlay(overlay);
+      var circle = A.circle(Number(ra), Number(dec), Number(radius));
+      overlay.add(circle);
+    }
+  }
+
+  function addFov(res) {
+    var overlay;
+    overlay = A.graphicOverlay({
+          name: "Obs Plan",
+          color: "#CD33FF",
+          lineWidth: 1,
+        });
+      aladin.addOverlay(overlay);
+    for (var index in res) {
+      fovSTCS1 = this.getPlanFovPolySTCS(
+            res[index].fov1,
+            res[index].fov2,
+            res[index].fov3,
+            res[index].fov4
+          );
+      // var payload = [];
+      // var fovSTCS1 = getFovPolySTCS(res[index].fov1);
+      // var fovSTCS2 = getFovPolySTCS(res[index].fov2);
+      // var fovSTCS3 = getFovPolySTCS(res[index].fov3);
+      // var fovSTCS4 = getFovPolySTCS(res[index].fov4);
+      // payload.push(fovSTCS1);
+      // payload.push(fovSTCS2);
+      // payload.push(fovSTCS3);
+      // payload.push(fovSTCS4);
+      // var stcs = payload.join("\r\n");
+      // console.log(stcs);
+      var footprints = A.footprintsFromSTCS(fovSTCS1);
+
+      overlay.addFootprints(footprints);
+
+      footprints[0].setName(res[index].id);
+    }
+  }
+
+  function jointFovPoints(fov) {
+    var p1 = fov.point1;
+    var p2 = fov.point2;
+    var p3 = fov.point3;
+    var p4 = fov.point4;
+
+    var fovPoints = [];
+    fovPoints.push(p1);
+    fovPoints.push(p2);
+    fovPoints.push(p3);
+    fovPoints.push(p4);
+
+    return fovPoints;
+  }
+
+  function getPlanFovPolySTCS(fov1, fov2, fov3, fov4) {
+      if (fov1 == null || fov2 == null || fov3 == null || fov4 == null) {
+        return "-1";
+      }
+      
+      var payload = [];
+      var fovSTCS1 = getFovPolySTCS(fov1);
+      var fovSTCS2 = getFovPolySTCS(fov2);
+      var fovSTCS3 = getFovPolySTCS(fov3);
+      var fovSTCS4 = getFovPolySTCS(fov4);
+      payload.push(fovSTCS1);
+      payload.push(fovSTCS2);
+      payload.push(fovSTCS3);
+      payload.push(fovSTCS4);
+      var stcs = payload.join("\r\n");
+
+      return `Polygon icrs ${stcs}`;
+    }
+
+    function getFovPolySTCS(fov) {
+        return `${fov.point1[0]} ${fov.point1[1]} ${fov.point2[0]} ${fov.point2[1]} ${fov.point3[0]} ${fov.point3[1]} ${fov.point4[0]} ${fov.point4[1]}`;
+      }
+
+  $(".datetimepicker").datetimepicker({
+    allowInputToggle: true,
+    showClose: false,
+    showClear: false,
+    showTodayButton: false,
+    format: "YYYY-MM-DD HH:mm:ss",
+  });
+
+  $(document).ready(function () {
+    $("#aladin-lite-div").width($("#aladin-div").width());
+    $("#aladin-lite-div").height(700);
+  });
+
+  let aladin;
+
+  A.init.then(() => {
+    aladin = A.aladin("#aladin-lite-div", {
+      survey: "CDS/P/DSS2/color",
+
+      fov: 360,
+      fullScreen: false,
+      cooFrame: "galactic",
+      showReticle: true,
+      reticleSize: 64, // change reticle size
+    });
+    aladin.setBaseImageLayer(aladin.createImageSurvey("RASS", "ROSAT All Sky Survey (RASS) - 0.1-2.4 keV", 'https://ep.bao.ac.cn/leia/static/hips/RASS/ov-gso_P_RASS/', "galactic", 3, { imgFormat: 'jpeg',colormap:'rainbow' })); 
+
+    aladin.setOverlayImageLayer(aladin.createImageSurvey("LEIA All Sky", "SY01 counts image 0.5-4keV ", 'https://ep.bao.ac.cn/leia/hips/leia_allsky_hips/', "equatorial", 3, { imgFormat: 'png',colormap:'rainbow' }),'LEIA-ALL-SKY');
+    aladin.setProjection("AIT");
+
+    var objClicked;
+
+    aladin.on("objectClicked", function (object) {
+      var msg;
+      if (object) {
+        objClicked = object;
+        object.select();
+        if (object.overlay.name.includes("Obs Plan")) {
+          if (lastSelectedRow != undefined && lastSelectedRow._row.data.id != object.name) {
+            lastSelectedRow.deselect();
+          }
+          //通过name（id）找到对应的行
+          var row = result_table.getRows().filter((row) => {
+            return row.getData().id == object.name;
+          });
+
+          row[0].select();
+          // console.log(row[0]);
+          row[0].scrollTo();
+          lastSelectedRow = row[0];
+        }
+      } else {
+        // objClicked.deselect();
+      }
+    });
+    // addCatalogues();
+    this.aladin = aladin;
+  });
+
+  $("#datetimepicker").datetimepicker({
+    allowInputToggle: true,
+    showClose: false,
+    showClear: false,
+    showTodayButton: false,
+    format: "YYYY-MM-DD HH:mm:ss",
+  });
+
+  $(".thumb").click(function () {
+    var caption = $(this).find("figcaption");
+
+    $("#imageModalTitle").text(caption.text());
+    var imagesrc = $(this).attr("imgsrc");
+    $("#image-model").attr("src", imagesrc);
+
+    $("#image-modal-div").modal("show");
+  });
+
+  function addCatalogues() {
+    var hips1 = A.catalogHiPS("https://data.darts.isas.jaxa.jp/pub/HiPS/CHANDRA_Catalogue/", {
+      onClick: "showPopup",
+      name: "Chandra Catalogue",
+      shape: "triangle",
+      color: "purple",
+    });
+    var hips2 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_maxi_merged_hips.csv")}}', {
+      onClick: "showPopup",
+      name: "MAXI Catalogue",
+      shape: "circle",
+      color: "red",
+    });
+    var hips3 = A.catalogHiPS("https://axel.cds.unistra.fr/HiPSCatService/I/355/gaiadr3", {
+      onClick: "showPopup",
+      name: "Gaia DR3 Catalogue",
+      shape: "cross",
+      color: "blue",
+    });
+
+    var hips4 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_4xmm.csv")}}', {
+      onClick: "showPopup",
+      name: "4XMMDR11 Catalogue",
+      shape: drawFunction,
+      color: "red",
+    });
+    var hips5 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_ep_ref_hips.csv")}}', {
+      onClick: "showPopup",
+      name: "EP Reference Catalogue",
+      shape: "circle",
+      color: "green",
+    });
+
+    var hips6 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_swift.csv")}}', {
+      onClick: "showPopup",
+      name: "SWIFT 2SXPS Catalogue",
+      shape: "circle",
+      color: "yellow",
+    });
+
+    var hips7 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_2rxs.csv")}}', {
+      onClick: "showPopup",
+      name: "2RXS Catalogue",
+      shape: "triangle",
+      color: "green",
+    });
+
+    aladin.addCatalog(hips1);
+    aladin.addCatalog(hips2);
+    aladin.addCatalog(hips3);
+    aladin.addCatalog(hips4);
+    aladin.addCatalog(hips5);
+    aladin.addCatalog(hips6);
+    aladin.addCatalog(hips7);
+  }
+
+  function drawFunction(source, canvasCtx, viewParams, color = "red") {
+    var radiusDegrees = 1;
+    if (source.data["pos_err"] != undefined) {
+      radiusDegrees = parseFloat(source.data["pos_err"]) / 3600.0;
+    }
+
+    var ra = parseFloat(source.data["ra"]);
+    var dec = parseFloat(source.data["dec"]) + (ra > 0 ? -radiusDegrees : radiusDegrees);
+    // console.log("dec", dec);
+
+    var circlePtXyView = aladin.webglAPI.worldToScreen(ra, dec);
+    // console.log("circlePtXyView", circlePtXyView);
+
+    if (!circlePtXyView) {
+      // the circle border goes out of the projection
+      // we do not draw it
+      return;
+    }
+
+    var dx = circlePtXyView[0] - source.x;
+    var dy = circlePtXyView[1] - source.y;
+    var radiusInPix = Math.sqrt(dx * dx + dy * dy);
+    // console.log("radiusInPix", radiusInPix);
+    // console.log("source", source);
+    canvasCtx.beginPath();
+    canvasCtx.arc(source.x, source.y, radiusInPix, 0, 2 * Math.PI, false);
+    canvasCtx.closePath();
+    // console.log(color);
+    // canvasCtx.strokeStyle = "#FFD700";
+    canvasCtx.strokeStyle = color;
+
+    canvasCtx.lineWidth = 2;
+    (canvasCtx.globalAlpha = 1), canvasCtx.stroke();
+    var fov = Math.max(viewParams["fov"][0], viewParams["fov"][1]);
+
+    // object name is displayed only if fov<10°
+    //   if (fov > 10) {
+    //     return;
+    //   }
+
+    // canvasCtx.globalAlpha = 0.9;
+    // canvasCtx.globalAlpha = 1;
+    // var xShift = 20;
+    // canvasCtx.font = "15px Arial";
+    // canvasCtx.fillStyle = "#eee";
+    // canvasCtx.fillText(source.data["source_name"], source.x + xShift, source.y - 4);
+    // object type is displayed only if fov<2°
+    // if (fov > 2) {
+    //   return;
+    // }
+  }
+  // aladin.addCatalog(hips8);
+</script>
+
+{% endblock %}

@@ -1,0 +1,134 @@
+<div class="card-body ep_datasearch_card">
+  <div id="spinner-div">
+    Loading...
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <form method="POST" id="src_search_form">
+    {{form.hidden_tag()}}
+    <div class="row">
+      {#
+      <div class="col-md-6">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"> {{form.object_name.label(class="bmd-label-floating ep_objsearch_label")}}</span>
+          </div>
+          {{form.object_name(class="form-control",id="object_name")}}
+          <div class="input-group-append">
+            <button class="btn btn-secondary" type="button" id="resolve">Name Resolver</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"> {{form.obs_id.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+          </div>
+          {{form.obs_id(class="form-control",id="obs_id")}}
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"> {{form.ra.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+          </div>
+          {{form.ra(class="form-control",id="ra", placeholder="in Degrees")}}
+          <div class="input-group-append">
+            <span class="input-group-text">degrees</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"> {{form.dec.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+          </div>
+          {{form.dec(class="form-control",id="dec", placeholder="in Degrees")}}
+          <div class="input-group-append">
+            <span class="input-group-text">degrees</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"> {{form.radius.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+          </div>
+          {{form.radius(class="form-control",id="radius", placeholder="in Degrees")}}
+          
+          <div class="input-group-append">
+            <span class="input-group-text">degrees</span>
+          </div>
+        </div>
+      </div>
+#}
+      <div class="col-md-6">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"> {{form.start_datetime.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+          </div>
+
+          {{form.start_datetime(class="form-control datetimepicker", id="start_datetime")}}
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"> {{form.end_datetime.label(class="bmd-label-floating ep_objsearch_label")}} </span>
+          </div>
+
+          {{form.end_datetime(class="form-control datetimepicker",id="end_datetime")}}
+        </div>
+      </div>
+
+      <!-- <div class="row"> -->
+    </div>
+    <div class="col-md-12 text-center">{{form.submit(class="btn ep_openBtn", style="padding:7px 30px; margin-top:20px;")}}</div>
+
+    <!-- <div  id="spinner-div" class="text-center">
+                <div class="spinner-border " style="width: 3rem; height: 3rem; margin:auto auto" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div> -->
+
+    <div id="spinner-div">
+      Loading...
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  $(document).ready(function () {
+    var dateNow = new Date();
+    var dateStart = new Date();
+    dateStart.setDate(dateNow.getDate() - 1);
+    dateStart.setHours(0, 0, 0, 0);
+    var dateEnd = new Date();
+    dateEnd.setDate(dateNow.getDate() + 1);
+    dateEnd.setHours(0, 0, 0, 0);
+    $("#start_datetime").datetimepicker({
+      allowInputToggle: true,
+      showClose: false,
+      showClear: false,
+      showTodayButton: false,
+      useCurrent: false,
+      format: "YYYY-MM-DD HH:mm:ss",
+      defaultDate: dateStart,
+    });
+    $("#end_datetime").datetimepicker({
+      allowInputToggle: true,
+      showClose: false,
+      showClear: false,
+      showTodayButton9 false,
+      useCurrent: false,
+      format: "YYYY-MM-DD HH:mm:ss",
+      defaultDate: dateEnd,
+    });
+  });
+</script>
+
+{% include "app/data_center/components/resolve.html" %}

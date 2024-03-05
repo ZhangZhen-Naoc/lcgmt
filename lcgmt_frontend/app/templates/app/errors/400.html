@@ -1,0 +1,21 @@
+{% extends 'app/base.html' %}
+
+{% block title %}400 {{_('Error')}}{% endblock %}
+
+{% block content %}
+    <div>&nbsp;</div>
+    <div class="row justify-content-md-center">
+        <div class="card w-50 bg-light">
+            <div class="card-body">
+                <h5 class="card-title">400 {{_('Error')}}</h5>
+                <p class="card-text">{{ description|defhult('Bad Request') }}</p>
+            </div>
+            <div class="card-footer">
+                <div class="float-right">
+                    <a class="btn btn-primary" href="javascript:history.go(-1)">{{_('Back To Form')}}</a>
+                    <a class="btn btn-primary" href="{{ url_for('main.index') }}">{{_('Return Home')}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

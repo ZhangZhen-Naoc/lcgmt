@@ -1,0 +1,61 @@
+{% extends 'app/base.html' %} {% block title %}{{ article.title if article else _('Article not found!') }}{% endblock %} {% block content %}
+<div class="container-fluid" style="margin: 0px; padding: 10px 0px">
+  <nav aria-label="breadcrumb" style="margin-bottom: 20px">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li>
+      <li class="breadcrumb-item active">{{root_menu_name}}</li>
+      {% if article.category.name != root_menu_name %}
+      <li class="breadcrumb-item"><a href="{{ url_for('cms.view_category', id=article.category_id) }}">{{article.category.name}}</a></li>
+      {% endif %}
+      <li class="breadcrumb-item active" aria-current="page">{{ article.title }}</li>
+    </ol>
+  </nav>
+  <div class="row" style="padding-right: 15px">
+    <div class="col-md-3">
+      <div>
+        <div class="ep_category_listTitle">{{root_menu_name}}</div>
+        <ul class="ep_category_list">
+          {% with menu_l0 = get_system_menu(root_menu_id) %} {% for m0 in menu_l0 %} {% with menu_l1 = get_system_menu(m0.id) %} {% if menu_l1 |
+          count>0 %} {% for m1 in menu_l1 %} {% if selected_menu_name == m1.title_en %}
+          <li class="ep_category_listSel">
+            <a href="{{m1.url}}">{{m1.title_en}}</a>
+          </li>
+          {% else %}
+          <li>
+            <a href="{{m1.url}}">{{m1.title_en}}</a>
+          </li>
+          {% endif %} {% endfor %} {% else %} {% if selected_menu_name == m0.title_en %}
+          <li class="ep_category_listSel">
+            <a href="{{m0.url}}">{{m0.title_en}}</a>
+          </li>
+          {% else %}
+          <li>
+            <a href="{{m0.url}}">{{m0.title_en}}</a>
+          </li>
+          {% endif %} {% endif %} {% endwith %} {% endfor %} {% endwith %}
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-9" style="padding: 0px; background-color: #eee">
+      {% if article %}
+      <div id="article_body" style="margin: 20px; background-color: #fff; padding: 20px">
+        <h3 class="ep_article_title">{{ article.title }}</h3>
+
+        <div style="line-height: 30px">{{ article.content | safe }}</div>
+      </div>
+      <div class="card-footer bg-transparent" style="text-align: right; line-height: 48px">
+        {% if (article.editor.id==current_user.id and current_user.can('CMS_EDIT')) or current_user.can('CMS_ADMIN') %}
+        <a href="{{url_for('cms.edit_article', id=article.id)}}"><span class="oi oi-document"></span> {{_('Edit')}}</a>
+        {% endif %}
+      </div>
+      {% else %}
+      <div class="card">
+        <div class="card-body" style="padding: 10px 50px">
+          <h3 class="card-title">{{ _('Article not found!') }}</h3>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

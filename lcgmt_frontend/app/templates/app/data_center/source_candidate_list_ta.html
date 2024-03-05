@@ -1,0 +1,275 @@
+{% extends 'app/data_center/source_candidate_list.html' %}
+
+{% block bread %}
+    {{ render_breadcrumb_item('main.index', _('Home')) }}
+    {{ render_breadcrumb_item('data_center.source_candidate_list_ta_get', _('TA Quick Tool')) }}
+{% endblock %}
+{%block sources_table%}
+
+<div id="ta_table" style="z-index: 50; width: 100%"></div>
+<p>  Identification  Records </p>
+{% include 'app/data_center/components/ta_record.html' %}
+
+<!--第一个表格：源列表相关代码-->
+<script>
+    
+
+    function reportOnline()
+    {
+        
+        $.post('{{url_for('.ta_enter')}}',data={"channel":"telemetry"})
+        setTimeout("reportOnline()", 1000*10) // 10s报告一次在线
+    }
+    reportOnline()
+
+
+    data = []
+    {% for row in sources %}
+    {% set row_id = row.source.id|string+'_'+row.wxt_detection.id|string %}
+    data.push({
+        "id":"{{row.id}}",
+        "src_name":"{{row.name}}",
+        "version": "{{row.wxt_detection.version}}",
+        "obs_time":"{{row.wxt_detection.observation.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}",
+        "ra":{{"%.3f"%row.ra}},
+        "dec":{{"%.3f"%row.dec}},
+        "pos_err":{{"%.3f"%(row.pos_err*60)}},
+        "flux":{{"%.2e"%row.flux}},
+        {% if row.id in comments %}
+        "type":"{{comments[row.id]['type']}}",
+        "classification":"{{comments[row.id]['classification']}}",
+        "simbad_name":"{{comments[row.id]['simbad_name']}}",
+        "comments":`{{comments[row.id]['comments']}}`,
+        "ep_name":"{{comments[row.id]['ep_name']}}",
+        "wxt_name":"{{comments[row.id]['wxt_name']}}",
+        "comments":`{{comments[row.id]['comments']}}`,
+        {% else %}
+        "type":'',
+        "classification":'',
+        "simbad_name":'',
+        "ep_name":'',
+        "wxt_name":'',
+        "comments":'',
+        {% endif %}
+        "ai_classification":"{{row.ai_classification}}",
+        "ai_prob":"{{row.ai_prob}}",
+        "url": `{{url_for('.source_candidate_detail',sourceId=row.source_id,wxtdetectionId=row.wxt_detection_id)}}`,
+        "known_flux":{% if row.ref_flux != row.ref_flux %}null{% else %}{{"%.2e"%row.ref_flux if row.ref_flux else 'null'}}{% endif %},
+        "records": "{{url_for('.ta_records',src_id=row.id)}}",
+        // reference 表记录
+        {% if infoList[row_id]['ep_ref_ra'] %}
+            "r_ra": {{"%.3f"%(infoList[row_id]['ep_ref_ra'])}},
+            "r_dec": {{"%.3f"%(infoList[row_id]['ep_ref_dec'])}},
+            "r_sep":{{"%.2f"%(infoList[row_id]['ep_ref_sep'])}},
+        {% else %}
+            "r_ra": null,
+            "r_dec": null,
+            "r_sep":null,
+        {% endif %}
+
+        //历史统计相关记录
+        "ratio_flux":null,
+        "frac_flux":null,
+
+
+    })
+    {% endfor %}
+
+
+    var table = new Tabulator("#ta_table", {
+        // data: mergeSameObsId(res),
+        data,
+        selectable: 1,
+        dataTree: true,
+        index:"id",
+        //   height: 520,
+        pagination: "local",
+        paginationSize: 15,
+        //   groupBy: "email",
+        //   paginationSizeSelector: [3, 6, 8, 10],
+        //   movableColumns: true,
+        paginationCounter: "rows",
+        layout: "fitDataFill",
+        initialSort: [{ column: "obs_time", dir: "desc" }],
+        columns: [
+        {
+              formatter: "rownum",
+              hozAlign: "center",
+            },
+        {
+            title: "Source ID", field: "src_name", sorter:"string",
+            formatter: "link",
+            formatterParams:{
+                
+                url: (cell)=>{
+                    return cell.getData()['url']
+                },
+                target:"_blank",
+            },
+            
+        },
+        {title: "Version", field: "version", sorter:"string"},
+        {title: "Obs Time (UT)", field: "obs_time", sorter:"string"},
+        {title: "RA(J2000)", field: "ra", sorter:"number"},
+        {title: "Dec(J2000)", field: "dec", sorter:"number"},
+        {title: "Pos_E", field: "pos_err", sorter:"number"},
+        {title: "Esti_Flux", field: "flux", sorter:"number"},
+        {title: "Ref Flux", field: "known_flux", sorter:"number", headerFilter: "number",editor:"number"},
+        {
+                title: "",
+                formatter: submitIdentificationIcon,
+                width: 50,
+                hozAlign: "center",
+                tooltip: "Submit Identification",
+
+                cellClick: function (e, cell) {
+                  submitIdentification(cell.getRow().getData());
+                },
+                download: false,
+        },
+        {
+            title: "Type", 
+            field: "type", 
+            sorter:"string", 
+            editor:"list",
+            editorParams:{
+                values:type_values, clearable:true
+            }, 
+            headerFilter:true, 
+            headerFilterParams:{
+                values:type_values, 
+                clearable:true
+            }
+        },
+        {title: "Classification", field: "classification", sorter:"string", headerFilter: "input",editor:"input"},
+        {title: "Common Name", field: "simbad_name", sorter:"string", headerFilter: "input",editor:"input"},
+        {title: "Comments", field: "comments", sorter:"string", headerFilter: "input",editor:"textarea",formatter:"textarea"},
+        {title: "WXT Name", field: "wxt_name", sorter:"string", headerFilter: "input",editor:"input"},
+        {title: "EP Name", field: "ep_name", sorter:"string", headerFilter: "input",editor:"input"},
+      
+        {title: "Ref RA(J2000)", field: "r_ra", sorter:"number"},
+        {title: "Ref Dec(J2000)", field: "r_dec", sorter:"number"},
+        {title: "Sep", field: "r_sep", sorter:"number"},
+        {title: "Ratio_Flux",field:"ratio_flux",sorter:"number"},
+        {title: "Frac_Flux",field:"frac_flux",sorter:"number"},
+        {title: "AI_Classification", field: "ai_classification", sorter:"string", headerFilter: "input"},
+        {title: "AI_Prob", field: "ai_prob"},
+        
+        ],
+        
+    });
+
+    function submitIdentificationIcon(cell, formatterParams, onRendered)
+    {
+      return '<i class="fas fa-save"></i>';
+    }
+
+    function submitIdentification(data)
+    {
+      $("#spinner-div").show();
+        src_id = data.id 
+        src_type = data['type']
+        simbad_name =  data['simbad_name']
+        classification = data['classification']
+        comments = data['comments']
+        ref_flux = data['known_flux']
+        wxt_name = data['wxt_name']
+        ep_name = data['ep_name']
+        fxt_name = data['fxt_name']
+  
+        // 如果填入了known_source/burst，必须有simbad_name
+        if ((src_type=="known_source" || src_type=="burst") && !simbad_name){
+            $("#spinner-div").hide();
+            alert("A Common name is necessary for a known source.")
+                
+            return
+        }
+
+        $.ajax({
+            url:'{{url_for(".ta_update")}}',
+            type:"POST",
+            data:{
+                src_id,
+                "type": src_type,
+                classification,
+                simbad_name,
+                comments,
+                ref_flux,
+                wxt_name,
+                fxt_name,
+                ep_name,
+                instrument:"wxt"
+            },
+            success:function(result){
+                alert("Submit Identificaiton Success.")
+                $("#spinner-div").hide();
+            },
+            error: function(xhr,status,error){
+                
+            }
+        });
+    }
+
+    // table.on("cellEdited", function(cell){
+    //     data = cell.getData()
+    //     src_id = data.id
+    //     src_type = data['type']
+    //     simbad_name =  data['simbad_name']
+    //     classification = data['classification']
+    //     comments = data['comments']
+    //     ref_flux = data['known_flux']
+
+    //     console.log(src_id)
+    //     // 如果填入了known_source/burst，必须有simbad_name
+    //     if ((src_type=="known_source" || src_type=="burst") && !simbad_name){
+    //         return
+    //     }
+    //     $.ajax({
+    //         url:'{{url_for(".ta_update")}}',
+    //         type:"POST",
+    //         data:{
+    //             src_id,
+    //             "type": src_type,
+    //             classification,
+    //             simbad_name,
+    //             comments,
+    //             ref_flux
+    //         },
+    //         success:function(result){
+                
+    //         },
+    //         error: function(xhr,status,error){
+                
+    //         }
+    //     })
+    // });
+    table.on("rowSelected", function(row) {
+            showRecords(row.getData().records);
+    })
+
+    // 动态加载长耗时操作
+    for (data_item of data){
+        $.ajax({
+            url:'{{url_for(".wxt_so_detail_api",so_id="SO_ID")}}'.replace("SO_ID",data_item.id),
+            success:(resp)=>{
+                ratio_flux = resp['ratio_flux']
+                frac_flux = resp['frac_flux']
+                if (typeof ratio_flux === 'number') {
+                    ratio_flux = ratio_flux.toFixed(3);
+                }
+                if (typeof ratio_flux === 'number') {
+                    ratio_flux = (ratio_flux*100).toFixed(3);
+                }
+                table.updateData([{
+                    id:resp.id,
+                    "ratio_flux":ratio_flux,
+                    "frac_flux":frac_flux,
+                }])
+            }
+        })
+    }
+</script>
+
+<!--第二个表格：证认记录相关代码（已迁移到ta_record.html）-->
+
+{% endblock%}

@@ -1,0 +1,149 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Dashboard') }}{% endblock %}
+
+{% block navbar %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        {{ render_breadcrumb_item('main.index', _('Home')) }}
+        {{ render_breadcrumb_item('sysadmin.index', _('Dashboard')) }}
+    </ol>
+</nav>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card border-secondary mb-3">
+            <div class="card-header"><span class="oi oi-people"></span> {{ _('Users Management') }}</div>
+            <div class="card-body">
+                {% if current_user.can('USER_ADMIN') %}
+                <p class="card-text">
+                    <label>{{ _('Total') }}: <a href="{{ url_for('.manage_user') }}">{{ statistics['user_count']|default('0') }}</a></label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <label>{{ _('Unverified User register') }}: <a href="{{ url_for('.manage_user', filter='unverified') }}">{{ statistics['unverified_user_count']|default('0') }}</a></label>
+                </p>
+                <a class="btn btn-outline-primary" href="{{ url_for('.manage_user', filter='verified') }}">{{ _('Approved User') }}</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('.manage_user', filter='unverified') }}">{{ _('View Unverified User') }}</a>
+                {% else %}
+                <a class="btn btn-outline-secondary" href="#">{{ _('Approved User') }}</a>
+                <a class="btn btn-outline-secondary" href="#">{{ _('View Unverified User') }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-secondary mb-3">
+            <div class="card-header"><span class="oi oi-info"></span> {{ _('Content Management') }}</div>
+            <div class="card-body">
+                {% if current_user.can('CMS_ADMIN') or current_user.can('CMS_EDIT') %}
+                <a class="btn btn-outline-primary" href="{{ url_for('cms.index') }}">{{ _('Content Management') }}</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('cms.list_carousel') }}">{{ _('Carousel Management') }}</a>
+                {% else %}
+                <a class="btn btn-outline-secondary" href="#">{{ _('Content Management') }}</a>
+                <a class="btn btn-outline-primary" href="#">{{ _('Carousel Management') }}</a>
+                {% endif %}
+
+                {% if current_user.can('CMS_ADMIN') %}
+                <a class="btn btn-outline-primary" href="{{ url_for('cms.list_category') }}">{{ _('Manage Category') }}</a>
+                {% else %}
+                <a class="btn btn-outline-secondary" href="#">{{ _('Manage Category') }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if False %}
+    <div class="col-md-6">
+        <div class="card border-secondary mb-3">
+            <div class="card-header"><span class="oi oi-inbox"></span> {{ _('Comments') }}</div>
+            <div class="card-body">
+                <p class="card-text">
+                    {% if current_user.can('COMMENT_RESPONSE') or current_user.can('COMMENT_ADMIN') %}
+                    <label>{{ _('Total') }}: <a href="{{ url_for('comment.comments', filter='all') }}">{{ statistics['comment_count']|default('0') }}</a></label>
+                    {% endif %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    {% if current_user.can('COMMENT_RESPONSE') %}
+                    <label>{{ _('Unresponsed') }}: <a href="{{ url_for('comment.comments', filter='unresponsed') }}">{{ statistics['comment_unresponsed_count']|default('0') }}</a></label>
+                    {% endif %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    {% if current_user.can('COMMENT_ADMIN') %}
+                    <label>{{ _('Responsed(not verified)') }}: <a href="{{ url_for('comment.comments', filter='responsed_but_not_verified') }}">{{ statistics['get_responsed_but_not_published_count']|default('0') }}</a></label>
+                    {% endif %}
+                </p>
+                {% if current_user.can('COMMENT_RESPONSE') or current_user.can('COMMENT_ADMIN') %}
+                <a class="btn btn-outline-primary" href="{{ url_for('comment.comments', filter='all') }}">{{ _('All') }}</a>
+                {% else %}
+                <a class="btn btn-outline-secondary" href="{{ url_for('comment.comments', filter='all') }}">{{ _('All') }}</a>
+                {% endif %}
+                {% if current_user.can('COMMENT_RESPONSE') %}
+                <a class="btn btn-outline-primary" href="{{ url_for('comment.comments', filter='unresponsed') }}">{{ _('Unresponsed') }}</a>
+                {% else %}
+                <a class="btn btn-outline-secondary" href="#">{{ _('Unresponsed') }}</a>
+                {% endif %}
+                {% if current_user.can('COMMENT_ADMIN') %}
+                <a class="btn btn-outline-primary" href="{{ url_for('comment.comments', filter='responsed_but_not_verified') }}">{{ _('Responsed(not verified)') }}</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('comment.comments', filter='responsed_and_released') }}">{{ _('Responsed(released)') }}</a>
+                {% else %}
+                <a class="btn btn-outline-secondary" href="#">{{ _('Responsed(not verified)') }}</a>
+                <a class="btn btn-outline-secondary" href="#">{{ _('Responsed(released)') }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if current_user.can('SYSTEM_ADMIN') %}
+    <div class="col-md-6">
+        <div class="card border-secondary mb-3">
+            <div class="card-header"><span class="oi oi-monitor"></span> {{ _('Operation Logs') }}</div>
+            <div class="card-body">
+                <a class="btn btn-outline-primary" href="{{ url_for('operation_log.index', module='all') }}">{{ _('All') }}</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('operation_log.index', module='cms') }}">{{ _('Content Management') }}</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('operation_log.index', module='user') }}">{{ _('User') }}</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('operation_log.index', module='sysadmin') }}">{{ _('User Management') }}</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-secondary mb-3">
+            <div class="card-header"><span class="oi oi-menu"></span> {{ _('DataTable Management') }}</div>
+            <div class="card-body">
+                <a class="btn btn-outline-primary" href="{{ url_for('systemmenu_table.index_view') }}">{{ _('System Menu') }}</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('friendlink_table.index_view') }}">{{ _('Friend Links') }}</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('permission_table.index_view') }}">{{ _('Permission') }}</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('role_table.index_view') }}">{{ _('Role') }}</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if current_user.can('MANAGE_PROPOSAL') %}
+    <div class="col-md-6">
+        <div class="card border-secondary mb-3">
+            <div class="card-header"><span class="oi oi-project"></span> {{ _('Proposal Management') }}</div>
+            <div class="card-body">
+                <p class="card-text">
+                    <label>{{ _('Season') }}:{{ statistics['season_count']|default('0') }}</label>
+                    &nbsp;&nbsp;&nbsp;
+                    <label>{{ _('Proposal') }}: {{ statistics['proposal_count']|default('0') }}</label>
+                    &nbsp;&nbsp;&nbsp;
+                </p>
+                {% if current_user.can('VIEW_PROPOSAL') %}
+                <a class="btn btn-outline-primary" href="{{ url_for('proposal_admin.admin_season_list') }}">
+
+                    {{ _('Manage Proposals') }}</a>
+                    <a class="btn btn-outline-primary" href="{{ url_for('proposal_admin.admin_too_proposal_list',season='EP ToO Season') }}">{{ _('Manage ToO Proposals') }}</a>
+                {% else %}
+                <a class="btn btn-outline-secondary" href="#">{{ _('Manage Proposals') }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+   
+</div>
+{% endblock %}

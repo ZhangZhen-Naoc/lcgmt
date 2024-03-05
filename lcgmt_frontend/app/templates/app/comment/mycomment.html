@@ -1,0 +1,89 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form,render_field %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}{{_('My Comments')}}{% endblock %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='tn/style.css') }}?1">
+{% endblock styles %}
+
+{% block content %}
+<div class="container-fluid main-mmdcs-container">
+    <div class="row">
+        <div class="col-md-12 mmdcs-user-title">{{_('My Comments')}}</div>
+        <div class="col-md-12 col-lg-2 col-xl-2">
+            <div class="dashboard-card mmdcs-user-left-col">
+                <a href="{{ url_for('.mycomment', filter='all') }}"
+                   class="btn btn-outline-secondary mmdcs-user-left-col-list {% if request.args.get('filter') == 'all' %}active{% endif %}">
+                    <div>{{_('All')}}</div>
+                </a>
+                <a href="{{ url_for('.mycomment', filter='unresponsed') }}"
+                   class="btn btn-outline-secondary mmdcs-user-left-col-list {% if request.args.get('filter') == 'unresponsed' %}active{% endif %}">
+                    <div>{{_('Unresponsed')}}</div>
+                </a>
+                <a href="{{ url_for('.mycomment', filter='responsed') }}"
+                   class="btn btn-outline-secondary mmdcs-user-lefs-col-list {% if request.args.get('filter') == 'responsed' %}active{% endif %}">
+                    <div>{{_('Responsed')}}</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-lg-10 col-xl-10">
+            <div class="card dashboard-card">
+                <div class="card-body">
+                    <form id="commentForm" action="" method="post" class="form" role="form">{{ form.csrf_token }}
+                        <div class="form-group">
+                            {{ render_field(form.ref_link)}}
+                            {{ form.comment.label}}
+                            <textarea class="form-control ckeditor" id="comment" name="comment" required=""></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input id="tncode" name="tncode" required type="hidden" value="">
+                            <div class="tncode btn btn-primary mmdcs-login-button"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% if comments %}
+            <div class="card-body">{{ comments.count() }} {{_('Comments')}}</div>
+            {% for com in comments %}
+            <div class="card dashboard-card">
+                <div class="card-header mmdcs-message-header">
+			<img class="card-message-from-img" src={{url_for("static",filename="/images/dashboard/otherUserImg.png")}} alt="...">
+                    {% if com.ref_link %}
+                    {{_('Reference Link')}}:<a href="{{com.ref_link|safe}}">{{com.ref_link|safe}}</a>
+                    {% endif %}
+                    <div class="mmdcs-message-time">{{ moment(com.submitted_time,local=True).fromNow(refresh=True) }}</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text mmdcs-message-text">
+                    <blockquote>{{ com.comment|safe }}</blockquote>
+                    </p>
+                    {% if com.comment_response|length > 0 and com.comment_response[-1].check_status=='Approval'%}
+                    <div class="form-control">{{_('Response:')}}<br/>{{com.comment_response[-1].response_content | safe}}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="text-right page-footer">
+                {{ render_pagination(pagination) }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='admin/ckeditor/ckeditor.js') }}"></script>
+<script src="{{ url_for('static', filename='tn/code_'+get_locale()+'.js') }}?2"></script>
+<script>
+$TN.onsuccess(function(){
+    $("#tncode").val(this._mark_offset);
+    $("#commentForm").submit();
+});
+CKEDITOR.config.language = '{{get_locale()}}'.replace('zh_Hans_CN','zh-cn');
+</script>
+{% endblock %}

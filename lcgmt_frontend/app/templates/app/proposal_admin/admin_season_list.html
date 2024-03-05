@@ -1,0 +1,403 @@
+{% extends 'app/sysadmin/index.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}{{_('Proposal Season')}}{% endblock %}
+{% block scripts %}
+{{ super() }}
+<style>
+
+.datetimepicker{z-index:1151 !important;}
+
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+
+$('#create-season').on("click",function(){
+   $("#add-proposal-season").modal('show');
+});
+
+$('.modify_season_value').on("click",function(){
+   var season = $(this).attr('season');
+   var expiration= $(this).attr('expiration');
+   var review_deadline= $(this).attr('review_deadline');
+   var project_expiration = $(this).attr('project_expiration');
+   var open_date = $(this).attr('open_date');
+   var season_id= $(this).attr('season_id');
+   $('#my_modify_season').attr('action',"{{url_for('proposal_admin.admin_modify_season')}}?season_id="+season_id);
+   $('#my_modify_season #season').val(season);
+   $('#my_modify_season #open_date').val(open_date);
+   $('#my_modify_season #expiration').val(expiration);
+   $('#my_modify_season #review_deadline').val(review_deadline);
+   $('#my_modify_season #project_expiration').val(project_expiration);
+   $("#modify-proposal-season").modal('show');
+});
+
+
+$('.expert_weight').on("click",function(){
+     var season = $(this).attr('season');
+     var season_id= $(this).attr('season_id');
+     var inner_expert_weight= $(this).attr('inner_expert_weight');
+     var outer_expert_weight= $(this).attr('outer_expert_weight');
+     $('#my_modify_weight').attr('action',"{{url_for('proposal_admin.admin_modify_weight')}}?season_id="+season_id);
+     $('#my_modify_weight #season_name').html(season);
+     $('#my_modify_weight #inner_expert_weight').val(inner_expert_weight);
+     $('#my_modify_weight #outer_expert_weight').val(outer_expert_weight);
+     $("#modify-weight").modal('show');
+});
+
+
+$('.delete_season').on("click",function(){
+    var season = $(this).attr('season');
+    var season_id = $(this).attr('season_id');
+    $('#delete_href').attr('href',"{{url_for('proposal_admin.admin_season_delete')}}?season_id="+season_id);
+    $('#delete_season_name').html(season);
+    $("#delete-season").modal('show');
+});
+
+
+$('.open_peer_review').on("click",function(){
+    var open_to_pi_technical_review_comment = $(this).attr('technical');
+    var open_to_pi_scientific_review_comment = $(this).attr('science');
+    var open_to_pi_final_review_comment = $(this).attr('summary');
+
+    if(open_to_pi_technical_review_comment == 'True')  { $('#open_to_pi_technical_review_comment').val('YES');}  else {$('#open_to_pi_technical_review_comment').val('NO');}
+    if(open_to_pi_scientific_review_comment == 'True') {$('#open_to_pi_scientific_review_comment').val('YES');}  else {$('#open_to_pi_scientific_review_comment').val('NO');}
+    if(open_to_pi_final_review_comment == 'True')      {$('#open_to_pi_final_review_comment').val('YES');}  else {$('#open_to_pi_final_review_comment').val('NO');}
+
+    var season = $(this).attr('season');
+    var season_id = $(this).attr('season_id');
+    $('#open_season_name').html(season);
+
+    $('#my_open_season').attr('action',"{{url_for('proposal_admin.admin_open_review')}}?season_id="+season_id);
+
+    $("#open-season").modal('show');
+});
+
+
+$('.ann').on("click",function(){
+    var season = $(this).attr('season');
+    var season_id = $(this).attr('season_id');
+    var curent_link = $(this).attr('curent_link');
+    var p_link = $(this).attr('parameter_link');
+    var h_link = $(this).attr('help_link');
+    $('#my_modify_link').attr('action',"{{url_for('proposal_admin.admin_season_update_link')}}?season_id="+season_id);
+    $('#season_name_value').html(season);
+    $('#ulink').val(curent_link);
+    $('#plink').val(p_link);
+    $('#hlink').val(h_link);
+    $("#modify-link").modal('show');
+});
+
+
+});
+
+
+
+
+
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12" align="right">
+            <button type="button" class="btn ep_openBtn active" id="create-season">{{_('Create An Observation Season')}}</button>  
+           
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <br>
+
+  
+    <table class="table table-hover table-bordered table-striped" id="source_table" style="background-color: #fff;">
+        <thead class="table-secondary">
+            <tr align="center">
+            <th scope="col">{{_('ID')}}</th>
+            <th scope="col">{{_('Name')}}</th>
+            <th scope="col">{{_('Total')}}(S/A)</th>
+            <th scope="col">{{_('Proposal')}}</th>
+            <th scope="col">{{_('Review')}}</th>
+            <th scope="col">{{_('Project ')}}</th>
+            <th scope="col">{{_('Tech')}} & {{_('Sci')}} & {{_('Overall')}}</th>
+            <th scope="col">{{_('Operation')}}</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for u in range(proposal_number | length )%}
+        <tr>
+            <td style="text-align:center;vertical-align:middle;">{{ seasons[u].id }}</td>
+            <td style="text-align:center;vertical-align:middle;">{{ seasons[u].season }}</td>
+            <td style="text-align:center;vertical-align:middle;">{{ proposal_number[u] }}/{{ total_number[u] }}</td>
+            <td style="text-align:center;vertical-align:middle;">
+                {{ seasons[u].open_date }}
+                <br>
+                {{ seasons[u].expiration }}
+            </td>
+            <td style="text-align:center;vertical-align:middle;">{{ seasons[u].review_deadline }}</td>
+            <td style="text-align:center;vertical-align:middle;">{{ seasons[u].project_expiration }}</td>
+            <td style="text-align:center;vertical-align:middle;">
+                {% if seasons[u].open_to_pi_technical_review_comment %}
+                <a class="btn btn-success active" role="button">
+                    Y
+                </a>
+                {% else %}
+                <a class="btn btn-secondary active" role="button">
+                    N
+                </a>
+                {% endif %}
+
+                {% if seasons[u].open_to_pi_scientific_review_comment %}
+                <a class="btn btn-success active" role="button">
+                    Y
+                </a>
+                {% else %}
+                <a class="btn btn-secondary active" role="button">
+                    N
+                </a>
+                {% endif %}
+
+                {% if seasons[u].open_to_pi_final_review_comment %}
+                <a class="btn btn-success active" role="button">
+                    Y
+                </a>
+                {% else %}
+                <a class="btn btn-secondary active" role="button">
+                    N
+                </a>
+                {% endif %}
+            </td>
+            <td style="text-align:center;vertical-align:middle;">
+                <div class="btn-group">
+                    {% if seasons[u].season=='EP ToO Season'%}
+                    <a href="{{ url_for('proposal_admin.admin_too_proposal_list',season='EP ToO Season') }}" class="btn btn-primary " title="Enter the Season" role="button">
+                        {#_('Enter')#}<i class="fas fa-info-circle"></i>
+                    </a>
+                    {% else %}
+                <a href="{{ url_for('proposal_admin.admin_proposal_list',season_id=seasons[u].id) }}" class="btn btn-primary " title="Enter the Season" role="button">
+                    {#_('Enter')#}<i class="fas fa-info-circle"></i>
+                </a>
+                {% endif %}
+                <a class="btn btn-warning modify_season_value" title="Modify the Season"  role="button" open_date="{{seasons[u].open_date}}" season="{{ seasons[u].season }}" expiration="{{ seasons[u].expiration }}" review_deadline="{{ seasons[u].review_deadline }}" season_id="{{ seasons[u].id }}" project_expiration="{{seasons[u].project_expiration}}">
+                    {#_('Modify')#}<i class="fas fa-edit"></i>
+                </a>
+                <a class="btn btn-danger delete_season" title="Delete the Season" role="button" season="{{ seasons[u].season }}" season_id="{{ seasons[u].id }}">
+                    {#{_('Delete')}#}<i class="fas fa-trash-alt"></i>
+                </a>
+                {#
+                <a class="btn btn-info expert_weight" role="button" season_id="{{ seasons[u].id }}" season="{{ seasons[u].season }}" inner_expert_weight="{{seasons[u].inner_expert_weight}}" outer_expert_weight="{{seasons[u].outer_expert_weight}}">
+                    {{_('Weight')}}
+                </a>
+                <a class="btn btn-success open_peer_review" role="button" season="{{ seasons[u].season }}" season_id="{{ seasons[u].id }}" science="{{seasons[u].open_to_pi_scientific_review_comment}}" technical="{{seasons[u].open_to_pi_technical_review_comment}}" summary="{{seasons[u].open_to_pi_final_review_comment}}">
+                    {{_('Open')}}
+                </a>
+                #}
+                <a class="btn btn-info ann" role="button" season="{{ seasons[u].season }}" title="Set Announcement Links" season_id="{{ seasons[u].id }}" curent_link="{{ seasons[u].announcement_link }}" help_link="{{ seasons[u].help_link }}" parameter_link="{{ seasons[u].parameter_link }}">
+                    {#_('Link')#}<i class="fas fa-link"></i>
+                </a>
+            </div>
+            </td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+<br>
+<br>
+
+{{ render_pagination(pagination,endpoint=None,prev=_('Previous Page'),next=_('Next Page'),ellipses='…',align='center') }}
+
+<!-- Modal  for weight -->
+<div class="modal fade bd-example-modal-lg" id="modify-link" tabindex="-1" role="dialog" aria-labelledby="proposal-link-modify" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="proposal-link-modify">{{_('Modify Link')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0" method="POST" id="my_modify_link">
+                {{ form_link.csrf_token() }}
+                
+                <div class="modal-body">
+                    {{render_form(form_link)}}
+                    
+                </div>
+               {#
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{_('Close')}}</button>
+                    {{ form_link.save(class="btn btn-primary", value=_('Modify')) }}
+                </div>
+                #}
+            </form>
+        </div>
+  7 </div>
+</div>
+
+<!-- Modal  for  add season -->
+<div class="modal fade bd-example-modal-lg" id="add-proposal-season" tabindex="-1" role="dialog" aria-labelledby="proposal-season" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="proposal-season">{{_('Create An Observation Season')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0" method="POST" action="{{ url_for('proposal_admin.admin_create_season') }}">
+                
+                {{ fotm.csrf_token() }}
+                <div class="modal-body">
+                 
+                    {{render_form(form)}}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal  for  add modify season -->
+<div class="modal fade bd-example-modal-lg" id="modify-proposal-season" tabindex="-1" role="dialog" aria-labelledby="proposal-season-modify" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="proposal-season-modify">{{_('Modify Observation Season')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0" method="POST" id="my_modify_season">
+                {{ form.csrf_token() }}
+                <div class="modal-body">
+                    {{render_form(form)}}
+                    
+                </div>
+               
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal  for weight -->
+<div class="modal fade bd-example-modal-lg" id="modify-weight" tabindex="-1" role="dialog" aria-labelledby="proposal-weight-modify" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="proposal-weight-modify">{{_('Modify Weight')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0" method="POST" id="my_modify_weight">
+                {{ form_weight.csrf_token() }}
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-row"><strong>{{_('Season Name')}}<a style="color:red">*</a>:</strong>&nbsp;&nbsp;&nbsp;&nbsp; <a id="season_name"></a></div>
+                        <br>
+                        <div class="form-row"><strong>{{_('Weight for Inner Experts')}}<a style="color:red">*</a>:</strong> {{ form_weight.inner_expert_weight(class="form-control",required="") }}</div>
+                        <br>
+                        <div class="form-row"><strong>{{_('Weight for Outer Experts')}}<a style="color:red">*</a>:</strong> {{ form_weight.outer_expert_weight(class="form-control",required="") }}</div>
+                        <br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{_('Close')}}</button>
+                    {{ form_weight.modify_weight(class="btn btn-primary", value=_('Modify')) }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal  for delete -->
+<div class="modal fade bd-example-modal-lg" id="delete-season" tabindex="-1" role="dialog" aria-labelledby="proposal-season-delete" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="proposal-season-delete">{{_('Delete Season')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0" method="POST" id="my_delete_season">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-row"><strong>{{_('Delete Season')}}<a style="color:red">*</a>:</strong>&nbsp;&nbsp;&nbsp;&nbsp; <a id="delete_season_name"></a></div>
+                        <br>
+                        <div class="form-row"><strong><a style="color:red">{{_('After deletion, the data is Not recoverable. Please be careful.')}}</a></strong></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{_('Close')}}</button>
+                    <a class="btn btn-danger" role="button" id="delete_href">
+                        {{_('Confirm to Delete')}}
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal  for open -->
+<div class="modal fade bd-example-modal-lg" id="open-season" tabindex="-1" role="dialog" aria-labelledby="proposal-season-open" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="proposal-season-open">{{_('Open Peer Review')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0" method="POST" id="my_open_season">
+                {{ form_open.csrf_token() }}
+                <div class="modal-body">
+                    {{render_form(form_open)}}
+                    <div class="container">
+                        <div class="form-row"><strong>{{_('Season Name')}}:</strong>&nbsp;&nbsp;&nbsp;&nbsp; <a id="open_season_name"></a></div>
+                        <br>
+                        <div class="form-row"><strong>{{_('Technical Review Comment')}}:</strong> {{ form_open.open_to_pi_technical_review_comment(class="form-control",required="") }}</div>
+                        <br>
+                        <div class="form-row"><strong>{{_('Scientific Review Comment')}}:</strong> {{ form_open.open_to_pi_scientific_review_comment(class="form-control",required="") }}</div>
+                        <br>
+                        <div class="form-row"><strong>{{_('Overall Review Comment')}}:</strong> {{ form_open.open_to_pi_final_review_comment(class="form-control",required="") }}</div>
+                        <br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{_('Close')}}</button>
+                    {{ form_open.open_review(class="btn btn-primary", value=_('Confirm')) }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endif %}
+
+<script>    
+    $('a').tooltip();
+
+    $('.modal').on('shown.bs.modal', function () {
+        $('#datetimepicker').datetimepicker({
+            "allowInputToggle": true,
+            "showClose": false,
+            "showClear": false,
+            "showTodayButton": false,
+            "format": "YYYY-MM-DD HH:mm:ss",
+        });
+});
+
+$('.datetimepicker').datetimepicker({
+            "allowInputToggle": true,
+            "showClose": false,
+            "showClear": false,
+            "showTodayButton": false,
+            "format": "YYYY-MM-DD HH:mm:ss",
+        });
+
+    </script>
+{% endblock %}
+

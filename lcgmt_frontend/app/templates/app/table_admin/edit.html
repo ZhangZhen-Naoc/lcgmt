@@ -1,0 +1,44 @@
+{% extends 'admin/model/edit.html' %}
+{% block title %}
+{{super()}} - MMDCS
+{% endblock title %}
+{% block head %}
+{{super()}}
+    <link rel="stylesheet" href="{{ url_for('static', filename='open-iconic/font/css/open-iconic-bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+{% endblock head %}
+{% block main_menu %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('sysadmin.index') }}">
+                <h4>{{_('Dashboard')}}</h4>
+            </a>
+        </div>
+    </nav>
+{{super()}}
+{% endblock main_menu %}
+{% block brand%}
+{% endblock brand %}
+{% block body %}
+{{super()}}
+{% endblock body %}
+{% block tail %}
+<footer class="mmdcsFooter">
+    <div class="container">
+    <div>
+        <div class="row" style="margin-top: 30px;">
+            <div class="col-sm-4">© 2020 MMDCS & NADC</div>
+            <div class="col-sm-8" style="text-align: right;">{{_('National Astronomical Data Center')}}</div>
+        </div>
+    </div>
+    </div>
+</footer>
+{% endblock tail %}

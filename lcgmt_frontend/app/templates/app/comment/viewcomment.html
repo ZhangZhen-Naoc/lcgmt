@@ -1,0 +1,46 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{_('My Comments')}}{% endblock %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='tn/style.css') }}?1">
+{% endblock styles %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        {{ render_breadcrumb_item('main.index', _('Home')) }}
+        {{ render_breadcrumb_item('comment.mycomment', _('My Comments')) }}
+        {{ render_breadcrumb_item('comment.viewcomment', _('View Comment')) }}
+    </ol>
+</nav>
+<div class="container-fluid main-mmdcs-container">
+    <div class="row">
+        <div class="col-md-12 col-lg-10 col-xl-10">
+            {% if None!=comment %}
+            {% set com = comment %}
+            <div class="card dashboard-card">
+                <div class="card-header mmdcs-message-header">
+			<img class="card-message-from-img" src={{url_for("static",filename="/images/dashboard/otherUserImg.png")}} alt="...">
+                    {% if com.ref_link %}
+                    {{_('Reference Link')}}:<a href="{{com.ref_link|safe}}">{{com.ref_link|safe}}</a>
+                    {% endif %}
+                    <div class="mmdcs-message-time">{{ moment(com.submitted_time,local=True).fromNow(refresh=True) }}</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text mmdcs-message-text">
+                    <blockquote>{{ com.comment|safe }}</blockquote>
+                    </p>
+                    {% if com.comment_response|length > 0 and com.comment_response[-1].check_status=='Approval'%}
+                    <div class="form-control">{{_('Response:')}}<br/>{{com.comment_response[-1].response_content|safe}}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

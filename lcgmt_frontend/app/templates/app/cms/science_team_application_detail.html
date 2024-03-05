@@ -1,0 +1,218 @@
+{% extends 'app/base.html' %} {% block title %}EP Science Team Application{% endblock %} {% block content %}
+<div class="container-fluid" style="margin: 0px; padding: 0px; font-family: 微软雅黑, Arial, Helvetica, sans-serif">
+  <div class="card w-100" style="border: 0px">
+    <div class="card-body ep-newsView">
+      <div id="article_body" class="ep_article">
+        <h3 class="ep_article_title">EP科学领域工作组中方正式成员申请详情</h3>
+
+        <div class="articleContent">
+          <div class="form-group">
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="">姓名</label>
+              <div class9"input-group col-sm-10"><input class="form-control title_input" value="{{sta.name}}" disabled /></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="">职称</label>
+              <div class="input-group col-sm-10"><input class="form-control title_input" value="{{sta.title}}" disabled /></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="">单位</label>
+              <div class="input-group col-sm-10"><input class="form-control title_input" value="{{sta.institute}}" disabled /></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label">Email</label>
+              <div class="input-group col-sm-10"><input class="form-control title_input" value="{{sta.email}}" disabled /></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label">您的研究类型：</label>
+
+              <div class="input-group col-sm-10"><input class="form-control title_input" value="{{sta.reseach_type}}" disabled /></div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"
+                  >观测研究：
+                  <small id="fet_intro_help" class="form-text text-muted">您所用主要设备的观测波段 （可多选）</small>
+                </label>
+
+                <div class="input-group col-sm-10">
+                  <input class="form-control title_input" value="{{sta.observation_research}}" disabled />
+                </div>
+              </div>
+            </div>
+
+            <br />
+            <h3>申请加入的领域工作组：</h3>
+            <br />
+            {%if sta.agntde==true%}
+            <div class="form-group ep-checkbox-line">
+              <label for="" style="margin-right: 0px; width: 90%">STP1. 活动星系核和潮汐瓦解事件（AGN & TDE）</label>
+            </div>
+            <div class="row mb-12 ep_surveyCard" id="collapse_agntde" style="margin-bottom: 20px">
+              <div class="card-header">提供与所选领域相关的代表性论文，每个领域不超过 3 篇</div>
+              <div class="card card-body">
+                <p>论文标题,发表期刊,发表年份,作者排名,是否通讯作者</p>
+                {% set angtde_paper = sta.agntde_paper.split('\n') %} {% for paper in angtde_paper %}{% if paper|length >10 %}
+                <p>{{paper}}</p>
+                {%endif%} {%endfor%}
+              </div>
+            </div>
+            {%endif%} {%if sta.fet==true%}
+            <div class="form-group ep-checkbox-line">
+              <label for="" style="margin-right: 0px; width: 90%">
+                STP2. 快速河外暂现源（Fast Extragalactic Transients）
+                <span
+                  class="fa fa-question-circle label-help"
+                  data-toggle="tooltip"
+                  ,
+                  data-placement="top"
+                  title="包括伽马射线暴、超新星激波暴等各类河外短时标暂现源。"
+                ></span
+              ></label>
+            </div>
+            <div class="row mb-12 ep_surveyCard" id="collapse_fet" style="margin-bottom: 20px">
+              <div class="card-header">提供与所选领域相关的代表性论文，每个领域不超过 3 篇</div>
+              <div class="card card-body">
+                <p>论文标题,发表期刊,发表年份,作者排名,是否通讯作者</p>
+                {% set fet_paper = sta.fet_paper.split('\n') %} {% for paper in fet_paper %} {% if paper|length >10 %}
+                <p>{{paper}}</p>
+                {%endif%} {%endfor%}
+              </div>
+            </div>
+            {%endif%} {%if sta.mma==true%}
+            <div class="form-group ep-checkbox-line">
+              <label for="" style="margin-right: 0px; width: 90%"
+                >STP3. 多信使天文（Multi-messenger Astronomy）
+                <span
+                  class="fa fa-question-circle label-help"
+                  data-toggle="tooltip"
+                  ,
+                  data-placement="top"
+                  title="对引力波、中微子等多信使事件的协同观测。本方向的EP科学观测由EP科学中心统一组织，不接受机遇观测申请。"
+                ></span
+              ></label>
+            </div>
+            <div class="row mb-12 ep_surveyCard" id="collapse_mma" style="margin-bottom: 20px">
+              <div class="card-header">提供与所选领域相关的代表性论文，每个领域不超过 3 篇</div>
+              <div class="card card-body">
+                <p>论文标题,发表期刊,发表年份,作者排名,是否通讯作者</p>
+                {% set mma_paper = sta.mma_paper.split('\n') %} {% for paper in mma_paper %} {% if paper|length >10 %}
+                <p>{{paper}}</p>
+                {%endif%} {%endfor%}
+              </div>
+            </div>
+            {%endif%} {%if sta.cso==true%}
+            <div class="form-group ep-checkbox-linl">
+              <label for="" style="margin-right: 0px; width: 90%"
+                >STP4. 恒星级致密天体（Compact Stellar Objects）
+                <span
+                  class="fa fa-question-circle label-help"
+                  data-toggle="tooltip"
+                  ,
+                  data-placement="top"
+                  title="银河系内和近邻星系里的黑洞、白矮星、中子星及其双星系统、极亮X射线源等。"
+                ></span
+              ></label>
+            </div>
+            <div class="row mb-12 ep_surveyCard" id="collapse_cso" style="margin-bottom: 20px">
+              <div class="card-header">提供与所选领域相关的代表性论文，每个领域不超过 3 篇</div>
+              <div class="card card-body">
+                <p>论文标题,发表期刊,发表年份,作者排名,是否通讯作者</p>
+                {% set cso_paper = sta.cso_paper.split('\n') %} {% for paper in cso_paper %} {% if paper|length >10 %}
+                <p>{{paper}}</p>
+                {%endif%} {%endfor%}
+              </div>
+            </div>
+            {%endif%} {%if sta.os==true%}
+            <div class="form-group ep-checkbox-line">
+              <label for="" style="margin-right: 0px; width: 90%"
+                >STP5. 天文台科学（Observatory Science）
+                <span
+                  class="fa fa-question-circle label-help"
+                  data-toggle="tooltip"
+                  ,
+                  data-placement="top"
+                  title="上述领域工作组没有包含的科学目标，如恒星耀发、太阳系天体等。"
+                ></span
+              ></label>
+            </div>
+            <div class="row mb-12 ep_surveyCard" id="collapse_os" style="margin-bottom: 20px">
+              <div class="card-header">请填写具体研究方向，并提供与所选领域相关的代表性论文，每个领域不超过 3 篇</div>
+              <div class="card card-body">
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.os_type.label}}</small></label>
+                    {{form.os_type(class="form-control os_type_input",value=sta.os_type,disabled=true)}}
+                  </div>
+                </div>
+                <p>论文标题,发表期刊,发表年份,作者排名,是否通讯作者</p>
+                {% set os_paper = sta.os_paper.split('\n') %} {% for paper in os_paper %} {% if paper|length >10 %}
+                <p>{{paper}}</p>
+                {%endif%} {%endfor%}
+              </div>
+            </div>
+            {%endif%} {%if sta.fuoa==true%}
+            <div class="form-group ep-checkbox-line">
+              <label for="" style="margin-right: 0px; width: 90%"
+                >STP6. 后随观测（Follow-up Observation Activities）
+                <span
+                  class="fa fa-question-circle label-help"
+                  data-toggle="tooltip"
+                  ,
+                  data-placement="top"
+                  title="涉及其他多波段设备与EP的协同和后随观测，预期申请人具有利用多波段设备开展暂现源/变源的后随和协同观测的研究专长和经验，或掌握特定的望远镜观测资源，或证明有能力获取相关望远镜观测时间资源。"
+                ></span
+              ></label>
+            </div>
+            <div class="row mb-12 ep_surveyCard" id="collapse_fuoa" style="margin-bottom: 20px">
+              <div class="card-header">介绍可配合EP开展观测的其他波段的观测设备或资源</div>
+1             <div class="card card-body">
+                <p>{{sta.fuoa_intro}}</p>
+              </div>
+              <div class="card-header">提供与所选领域相关的代表性论文，每个领域不超过 3 篇</div>
+              <div class="card card-body">
+                <p>论文标题,发表期刊,发表年份,作者排名,是否通讯作者</p>
+                {% set fuoa_paper = sta.fuoa_paper.split('\n') %} {% for paper in fuoa_paper %} {% if paper|length >10 %}
+                <p>{{paper}}</p>
+                {%endif%} {%endfor%}
+              </div>
+            </div>
+            {%endif%}
+            <br />
+            <div class="row">
+              <div class="col-7">
+                <h3>是否愿意担任所选领域工作组负责人：{%if sta.be_chair%} 愿意 {%else%} 不愿意 {%endif%}</h3>
+              </div>
+              <div class="col-5">
+                <a
+                  type="button"
+                  class="btn btn-primary"
+                  target="_blank"
+                  href="{{ url_for('cms.get_stappfile',filename=sta.application_file)}}"
+                  style="margin-right: 50px"
+                  >下载申请书文件</a
+                >
+              </div>
+            </div>
+
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

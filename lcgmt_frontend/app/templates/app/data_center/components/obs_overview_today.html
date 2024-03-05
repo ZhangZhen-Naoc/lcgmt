@@ -1,0 +1,160 @@
+{% block content %}
+
+
+
+<div class="card w-100">
+    <div class="card-header bg-light">
+        <h5>Observed Transients and Variable Sources</h5>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-6">
+                <div class="table-responsive table-bordered">
+                    <table class="table table-hover table-sm">
+                        <!-- <caption><h6>Query Results</h6></caption> -->
+                        <tr>
+                            <th>TDE</th>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <th>GRB</th>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <th>SBO</th>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th>XRB</th>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <th>MAGNETAR</th>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <th>ULX</th>
+                            <td>1</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="table-responsive table-bordered">
+                    <table class="table table-hover table-sm">
+                        <!-- <caption><h6>Query Results</h6></caption> -->
+                        <tr>
+                            <th>AGN</th>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <th>CV</th>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <th>SNR</th>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th>STAR</th>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <th>GALAXY</th>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <th>UNKNOWN</th>
+                            <td>1</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="card w-100">
+<div class="card-header bg-light">
+    <h5>Observation List</h5>
+</div>
+<div class="card-body">
+<div class="table-responsive">
+    <table class="table table-hover table-bordered table-striped" id="obs_table">
+      <!-- <caption><h6>Query Results</h6></caption> -->
+      <thead class="table-secondary">
+        <tr>
+          <th>Obs ID/CMOS</th>
+          <!-- <th>CMOS</th> -->
+          <th>Pointing RA</th>
+          <th>Pointing Dec</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Exposure Time</th>
+          <th>PI</th>
+          <th>Quick Look</th>
+          <th>Option</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for key,value in obs.iterrows() %}
+
+        <tr>
+          <td>
+            {% if not value.private or current_user.id==value.user_id %}
+            <a type="button" class="btn btn-outline-primary btn-block btn-sm"
+              href="{{url_for('data_center.observation_detail', obs_id=value.obs_id,cmos_id=value.detnam)}}"  target="_blank">{{value.obs_id}} {{value.detnam}}</a>
+             
+          </td>
+          {% else%}
+          <a type="button" class="btn btn-outline-secondary btn-block btn-sm"  disabled>{{value.obs_id}} {{value.detnam}}</a>
+ 
+
+        </td>
+          {% endif %}
+       
+          <td>{{value.pnt_ra| round(3, 'floor')}}</td>
+          <td>{{value.pnt_dec| round(3, 'floor')}}</td>
+          <td>{{value.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+          <td>{{value.obs_end}}</td>
+          <td>{{value.exposure_time| round(2, 'floor') }}</td>
+
+          <td>{{value.user_name}}</td>
+          <td>
+            {#{% if not value.private or current_user.id==value.user_id %}#}
+            
+            <i class="fas fa-image fa-lg thumb"
+              imgsrc="{{url_for('data_center.get_quick_look_image',obs_id=value.obs_id, cmos_id=value.detnam, version=value.version)}}">
+              <figure class="figure">
+                <figcaption class="figure-caption" hidden>{{value.obs_id}} {{value.detnam}} Image</figcaption>
+
+              </figure>
+            </i>
+            
+            {#{% else%}
+            <i class="fas fa-image fa-lg" style="color:grey"></i>
+            {% endif %}#}
+
+          </td>
+          <td>
+            {% if not value.private or current_user.id==value.user_id %}
+            <a type="button" class="btn btn-outline-info btn-sm"
+              href="{{url_for('data_center.observation_detail', obs_id=value.obs_id,cmos_id=value.detnam)}}">Download</a>
+          </td>
+          {% else%}
+          <a type="button" class="btn btn-outline-secondary btn-sm"  disabled>Download</a></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+  
+
+  {% endblock %}

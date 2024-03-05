@@ -1,0 +1,17 @@
+<!-- <input class="btn btn-primary" type="button" id="resolve" value="resolve"/> -->
+<script>
+  // 天体名称解析
+  $("#resolve").click(function () {
+    obj_name = document.getElementById("object_name").value;
+    resolve_result = $.get("{{url_for('proxy.solve')}}" + "?obj=" + obj_name).then(function (data) {
+      src = JSON.parse(data);
+
+      $("#ra").val(src["ra"]);
+      $("#dec").val(src["dec"]);
+      $("#radius").val(1);
+      if (src["ra"] == "-1000.0000000") {
+        window.alert("Failed to resolve the object name!");
+      }
+    });
+  });
+</script>

@@ -1,0 +1,19 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Article Category') }}{% endblock %}
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {{ render_breadcrumb_item('main.index', _('Home')) }}
+            {{ render_breadcrumb_item('sysadmin.index', _('Dashboard')) }}
+            {{ render_breadcrumb_item('cms.index', _('Content Management')) }}
+            {{ render_breadcrumb_item('cms.list_category', _('Article Category')) }}
+            {{ render_breadcrumb_item('cms.edit_category', _('Edit Article Category')) }}
+        </ol>
+    </nav>
+
+{{ render_form(form) }}
+{% endblock %}

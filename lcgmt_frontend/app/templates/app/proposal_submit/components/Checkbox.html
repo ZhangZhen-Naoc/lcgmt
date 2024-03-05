@@ -1,0 +1,10 @@
+{% macro Checkbox(content="",checked=True) %}
+{%if checked %}
+    <!-- <i class="fa fa-check-square-o" aria-hidden="true"> -->
+    <input type="checkbox" disabled checked>
+{% else %}
+    <!-- <i class="fa fa-square-o" aria-hidden="true"> -->
+    <input type="checkbox" disabled>
+{% endif %}
+<label>{{content}} </label>
+{% endmacro %}

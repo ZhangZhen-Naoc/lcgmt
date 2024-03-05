@@ -1,0 +1,94 @@
+{% extends 'app/base_lhaaso.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+
+
+
+<div class="row">
+  <div class="col text-center">
+    <div class="alert alert-primary" role="alert">
+      <h1>LHAASO Catalogues</h1>
+    </div>
+  </div>
+</div>
+
+<form class="range-field">
+  <label for="layerTrans"> Set LHAASO WCDA Layer Transparency: </label>
+  <input type="range" min="0" max="10" id="layerTrans" />
+</form>
+
+<div class="row">
+  <div class="col" id="with-aladin">
+    <div id="aladin-lite-div">
+
+    </div>
+  </div>
+</div>
+
+<script>
+
+
+  $(document).ready(function () {
+    $('#aladin-lite-div').width($('#with-aladin').width());
+    $('#aladin-lite-div').height(800);
+
+  });
+
+  var aladin = A.aladin('#aladin-lite-div',
+    // {fov:1, target: 'M81'}
+    {
+      // survey: 'http://hips.china-vo.org/m/CDS_P_allWISE_color', // set initial image survey
+      survey: "P/Fermi/color",
+      cooFrame: "j2000d",
+      fov: 180, // initial field of view in degrees
+      target: '270 30', // initial target
+      showReticle: false,
+      // reticleColor: '#ff89ff', // change reticle color
+      // reticleSize: 64 // change reticle size
+    }
+
+  );
+  aladin.setImageSurvey(aladin.createImageSurvey("LHAASO WCDA", "LHAASO WCDA", '{{url_for("static",filename="hips/signif_hips_202103_202109_012")}}', "equatorial", 3, { imgFormat: 'png',colormap:'rainbow' })); // setting a custom HiPS
+  aladin.setOverlayImageLayer("P/Fermi/color");
+  aladin.getOverlayImageLayer().setAlpha(0.5);
+
+  // var hips10 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_lhaaso_WCDA_source.csv")}}', { onClick: 'showPopup', name: 'LHAASO WCDA Source' });
+  var hips2 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_tev_fast_pulsar_gpps.csv")}}', { onClick: 'showPopup', name: 'Fast Pulsar GPPS', shape: 'triangle', color: 'purple' });
+  var hips1 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_tev_lhaaso_km2a.csv")}}', { onClick: 'showPopup', name: 'LHAASO KM2A Source', shape: 'circle', color: 'blue',sourceSize:20 });
+  var hips3 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_tev_fast_pulsar_crafts.csv")}}', { onClick: 'showPopup', name: 'Fast Pulsar Crafts', shape: 'circle', color: 'red' });
+  // var hips4 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_tev_hmxbga.csv")}}', { onClick: 'showPopup', name: 'HMXBGA', shape: 'rhomb', color: 'purple' });
+  // var hips5 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_tev_lmchmxbat.csv")}}', { onClick: 'showPopup', name: 'LMCHMXBAT', shape: 'triangle', color: 'red' });
+  // var hips6 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_tev_mxbga.csv")}}', { onClick: 'showPopup', name: 'MXBGA', shape: 'cross', color: 'cyan' });
+  var hips7 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_tev_pulsar_antf.csv")}}', { onClick: 'showPopup', name: 'Pulsar ANTF', shape: 'rhomb', color: 'yellow' });
+  // var hips8 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_tev_ritterlmxbga.csv")}}', { onClick: 'showPopup', name: 'RITTERLMXGBA', shape: 'rhomb', color: 'DarkOrange' });
+  var hips9 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_tev_snrcat.csv")}}', { onClick: 'showPopup', name: 'SNRCAT', shape: 'circle', color: 'green',sourceSize:20 });
+  // var hips11 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_tev_uchiicat.csv")}}', { onClick: 'showPopup', name: 'UCHIICAT', shape: 'plus', color: 'RoyalBlue' });
+  var hips = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_tev-header.csv")}}', { onClick: 'showPopup', name: 'Tev Header', shape: 'circle', color: 'yellow',sourceSize:20 });
+
+  aladin.addCatalog(hips);
+  aladin.addCatalog(hips1);
+  aladin.addCatalog(hips2);
+  aladin.addCatalog(hips3);
+  // aladin.addCatalog(hips4);
+  // aladin.addCatalog(hips5);
+  // aladin.addCatalog(hips6);
+  aladin.addCatalog(hips7);
+  // aladin.addCatalog(hips8);
+  aladin.addCatalog(hips9);
+  // aladin.addCatalog(hips10);
+  // aladin.addCatalog(hips11);
+
+  $("#layerTrans").on("input change", function (e) {
+    var value = $(this).val();
+    aladin.getOverlayImageLayer().setAlpha(1-0.1 * value);
+  });
+
+
+
+</script>
+
+{% endblock %}

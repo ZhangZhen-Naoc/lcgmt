@@ -1,0 +1,303 @@
+{#{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}#}
+
+
+
+{% block styles %}
+{#{{ super() }}#}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/addons/datatables.min.css', v='11') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='jquery-ui/jquery-ui.min.css', v='11') }}">
+
+
+<style>
+    html {
+        margin: 0 auto;
+    }
+
+    body {
+        margin: 0 auto;
+    }
+
+    #SpecLinesChkboxesDiv {
+        text-align: left;
+    }
+
+    #SpecLinesChkboxesDiv div.level_0 {
+        margin-top: 10px;
+        float: left;
+        margin-left: 10px;
+    }
+
+    #SpecLinesChkboxesDiv table tr:hover {
+        background-color: #CCC;
+    }
+
+    .spec_scale {
+        width: 40px;
+    }
+</style>
+{% endblock%}
+
+{% block scripts %}
+{#<script src="https://cdn.staticfile.org/echarts/5.2.0/echarts.min.js"></script>
+{{ super() }}#}
+
+<script type="text/javascript" src="{{ url_for('static', filename='highcharts/highcharts.js', v='2') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='highcharts/highcharts-more.js', v='2') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='highcharts/exporting.js', v='2') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='highcharts/data.js', v='2') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='highcharts/export-data.js', v='2') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='highcharts/accessibility.js', v='2') }}"></script>
+
+
+<script src="{{ url_for('static', filename='jquery-ui/jquery-ui.min.js', v='2') }}"></script>
+
+
+
+
+{% endblock %}
+
+{#{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}#}
+
+
+{% block content %}
+<div class="card w-100">
+    <div class="card-header bg-light">
+        <div class="row">
+        <div class="col-md-8">
+        <h5>Light Curves of <span class="badge badge-success">{{source.source_name}}</span>
+        </h5>
+        </div>
+        
+        <div class="col-md-4">
+        <select class="custom-select" id="timebin">
+            
+            <option value="100">100s</option>
+            <option value="50" selected>50s</option>
+            <option value="10">10s</option>
+            <option value="5">5s</option>
+            <option value="1" >1s</option>
+        </select>
+        </div>
+        </div>
+    </div>
+    <div class="card-body">
+<div class="row">
+    <div class="col">
+        <figure class="highcharts-figure">
+            <div id="lcchart"></div>
+        </figure>
+    </div>
+
+</div>
+</div>
+
+    <script>
+        // var chart_width = $('#lcchart').width()
+        // var echart = echarts.init(document.getElementById("lcchart"),null,{width:chart_width,height:600});
+        var data = {{ lc_origin_json| safe}};
+        // var lc_1s_json = {{ lc_1s_json| safe}};
+        // var lc_5s_json = {{ lc_5s_json| safe}};
+        // var lc_10s_json = {{ lc_10s_json| safe}};
+        // var lc_50s_json = {{ lc_50s_json| safe}};
+        // var lc_100s_json = {{ lc_100s_json| safe}};
+        // var lc_origin_json = {{ lc_origin_json| safe}};
+
+        // var data={}
+        // console.log(data);
+//         var option = {
+//   xAxis: {},
+//   yAxis: {},
+//   series: [
+//     {
+//       data: [
+//         [20, 120],
+//         [50, 200],
+//         [40, 50]
+//       ],
+//       type: 'line'
+//     }
+//   ]
+// };
+
+        // echart.setOption(
+        //     {
+        //     // chart: {
+        //     //     zoomType: 'x'
+        //     // },
+        //     // title: {
+        //     //     text: 'Light Curve of the Source'
+        //     // },
+        //     // subtitle: {
+        //     //     text: document.ontouchstart === undefined ?
+        //     //         'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+        //     // },
+        //     xAxis: {
+        //         category: data["time"],
+        //         // title: {
+        //         //     text: 'Time'
+        //         // }
+        //     },
+        //     yAxis: {
+        //         // title: {
+        //         //     text: 'Counts'
+        //         // }
+        //     },
+        //     // legend: {
+        //     //     enabled: false
+        //     // },
+        //     // plotOptions: {
+        //     //     area: {
+        //     //         fillColor: {
+        //     //             linearGradient: {
+        //     //                 x1: 0,
+        //     //                 y1: 0,
+        //     //                 x2: 0,
+        //     //                 y2: 1
+        //     //             },
+        //     //             stops: [
+        //     //                 [0, Highcharts.getOptions().colors[0]],
+        //     //                 [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+        //     //             ]
+        //     //         },
+        //     //         marker: {
+        //     //             radius: 2
+        //     //         },
+        //     //         lineWidth: 1,
+        //     //         states: {
+        //     //             hover: {
+        //     //                 lineWidth: 1
+        //     //             }
+        //     //         },
+        //     //         threshold: null
+        //     //     }
+        //     // },
+        //     // credits: { enabled: false },
+        
+        //     // tooltip: {
+        //     //     valueSuffix: ' Count/Time'
+        //     // },
+
+        //     series: [{
+        //         type: 'line',
+        //         // name: 'Count Rate',
+        //         data: data['RATE']
+        //     },
+        //         // {
+        //         // 	name: 'Background Count Rate',
+        //         // 	data:data_bk['RATE']
+        //         // }
+        //     ]
+        // });
+       var chart = Highcharts.chart('lcchart', {
+            chart: {
+                zoomType: 'x'
+            },
+            title: {
+                text: 'Light Curve of the Source'
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+            },
+            xAxis: {
+                category: data["time"],
+                title: {
+                    text: 'Time'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Counts'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    marker: {
+                        radius: 2
+                    },
+                    lineWidth: 1,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+            credits: { enabled: false },
+            legend: {
+                // layout: 'vertical',
+                // align: 'right',
+                // verticalAlign: 'middle'
+            },
+            tooltip: {
+                valueSuffix: ' Count/Time'
+            },
+
+            series: [{
+                // type: 'area',
+                name: 'Count Rate',
+                data: data['RATE']
+            },
+                // {
+                // 	name: 'Background Count Rate',
+                // 	data:data_bk['RATE']
+                // }
+            ]
+        });
+
+        $('#timebin').change(function (e) {
+            console.log(e.target.value);
+            switch (e.target.value) {
+                case "1": data = {{ lc_1s_json | safe }};
+                updateChart(data);
+                    break;
+                case "5": data = {{ lc_5s_json | safe }};
+                updateChart(data);
+                    break;
+                case "10": data = {{ lc_10s_json | safe }};
+                updateChart(data);
+                    break;
+                case "50": data = {{ lc_50s_json | safe }};
+                updateChart(data);
+                    break;
+                case "100": data = {{ lc_100s_json | safe }};
+                updateChart(data);
+                    break;
+            };
+        });
+
+   function updateChart(data)
+   {
+    chart.update({
+       
+        series: [{
+                // type: 'area',
+                name: 'Count Rate',
+                data: data['RATE']
+            }
+        ]
+    });
+   }
+   updateChart( {{ lc_50s_json | safe }})
+   
+
+    </script>
+    {% endblock %}

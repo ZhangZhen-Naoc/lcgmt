@@ -1,0 +1,352 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}{{_('Proposal List')}}{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+$(document).ready(function(){
+
+$('.review').on("click",function(){
+   var no=$(this).attr('no');
+   var pi=$(this).attr('pi');
+   var ex_id=$(this).attr('ex_id');
+   var proposal_id=$(this).attr('proposal_id');
+   $('.review-data').attr('ex_id',ex_id);
+   $('.review-data').attr('proposal_id',proposal_id);
+   $('#proposal-review').html("{{_('NO:')}}"+'&nbsp;'+no+'&nbsp; &nbsp;'+"{{_('PI:')}}"+'&nbsp;'+pi);
+   $("#add-review").modal('show');
+
+});
+
+$('.review-data').on("click",function(){
+    var ex_id=$(this).attr('ex_id');
+    var score=$('#score').val();
+    var comment=$('#comment').val();
+    var proposal_id=$(this).attr('proposal_id');
+    var data={'reviewer_id':ex_id,'score':score,'comment':comment,'proposal_id':proposal_id};
+    $.ajax({
+               type: 'POST',
+               url:"{{ url_for('proposal_review.review_proposal') }}",
+               data: JSON.stringify(data),
+               dataType: "json",
+               contentType: "application/json",
+               success:function(res){
+                                    if(res.success=='ok')
+                   3                {
+                                         window.location.reload();
+                                    }
+                                    if(res.score=='not_in')
+                                    {
+                                        alert("{{_('Score should be between 0 and 10.')}}");
+                                    }
+                                    if(res.score=='not_ok')
+                                    {
+                                        alert("{{_('Score should be a number.')}}");
+                                    }
+                                    if(res.comment=='not_ok')
+                                    {
+                                        alert("{{_('Please fill in the Peer Review.')}}");
+                                    }
+                                    if(res.time=='not_ok')
+                                    {
+                                        alert("{{_('The review time for this proposal has expired.')}}");
+                                    }
+                              },
+               error:function(){
+               }
+      });
+     return false;
+});
+
+$('.show-review').on("click",function(){
+   var no=$(this).attr('no');
+   var pi=$(this).attr('pi');
+   var ex_id=$(this).attr('ex_id');
+   $('#get-proposal-review').html("{{_('NO:')}}"+'&nbsp;'+no+'&nbsp; &nbsp;'+"{{_('PI:')}}"+'&nbsp;'+pi);
+   var data={'reviewer_id':ex_id};
+    $.ajax({
+               type: 'get',
+               url:"{{ url_for('proposal_review.get_review_result') }}",
+               data: data,
+               dataType: "json",
+               success:function(res){
+                          $('#show-score').html(res.score);
+                          $('#show-content').html(res.comment);
+                          $("#get-review").modal('show');
+                          },
+               error:function(){
+               }
+      });
+      return false;
+});
+
+
+$('.modify').on("click",function(){
+   var no=$(this).attr('no');
+   var pi=$(this).attr('pi');
+   var ex_id=$(this).attr('ex_id');
+   var proposal_id=$(this).attr('proposal_id');
+   $('.review-data').attr('proposal_id',proposal_id);
+   $('.review-data').attr('ex_id',ex_id);
+   $('#proposal-review').html("{{_('NO:')}}"+'&nbsp;'+no+'&nbsp; &nbsp;'+"{{_('PI:')}}"+'&nbsp;'+pi);
+   var data={'reviewer_id':ex_id,'proposal_id':proposal_id};
+   $.ajax({
+               type: 'get',
+               url:"{{ url_for('proposal_review.get_review_result') }}",
+               data: data,
+               dataType: "json",
+               success:function(res){
+                          $('#score').val(res.score);
+                          $('#comment').val(res.comment);
+                3         $("#add-review").modal('show');
+                          },
+               error:function(){
+               }
+      });
+      return false;
+});
+
+
+$('.show_technical_review').on("click",function(){
+    var no=$(this).attr('no');
+    var pi=$(this).attr('pi');
+    var proposal_id=$(this).attr('proposal_id');
+    var rid = $(this).attr('rid');
+    var data={'proposal_id':proposal_id,'rid':rid};
+    $('#get-proposal-technical-review').html("{{_('NO:')}}"+'&nbsp;'+no+'&nbsp; &nbsp;'+"{{_('PI:')}}"+'&nbsp;'+pi);
+       $.ajax({
+               type: 'get',
+               url:"{{ url_for('proposal_review.get_technical_review_result') }}",
+               data: data,
+               dataType: "json",
+               success:function(res){
+                           var content = '';
+                               content += '<thead>';
+                                       content += '<tr>';
+                                            content += '<th scope="col" style="text-align:center;width: 10px;">{{_("Feasibility ")}}</th>';
+                                            content += '<th scope="col"  style="text-align:center;width: 100px;">{{_("Comment ")}}</th>';
+                                       content += '</tr>';
+                              content += '</thead>';
+                              for(var i=0; i<res.length;i++)
+                              {
+                                  content +=  '<tbody>';
+                                            content += '<tr>';
+                                                   content += '<td style="text-align:center;width: 10px;vertical-align:middle;"><strong>'+res[i].review_result +'</strong></td>';
+                                                   content += '<td style="text-align:left;width: 100px;">'+res[i].content + '</td>';
+                                            content += '</tr>';
+                                  content +=  '</tbody>';
+                              }
+                          $("#insert-table").html(content);
+                          $("#get-technical-review").modal('show');
+                          },
+               error:function(){
+               }
+      });
+      return false;
+});
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<br>
+<div class="container-fluid">
+    <div class="from-row">
+        <div class="col-md-3">
+            <h5>{{_('Total ')}}:
+                &nbsp;&nbsp;&nbsp;&nbsp;{{ can_review_count }}
+            </h5>
+        </div>
+        <div class="col-md-3">
+            <h5>{{_('Awaitting Review ')}}:
+                &nbsp;&nbsp;&nbsp;&nbsp;{{ need_to_review_count }}
+            </h5>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="alert alert-warning">
+        <div class="form-row">
+            <i><span style="color:red">* {{_('You can submit and modify your review result before proposal expiration date')}}</span></i>
+        </div>
+        <div class="form-row">
+            <i><span style="color:red">* {{_('The score is between 0 and 10. 10 is the best.')}}</span></i>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <table class="table table-bordered ">
+        <thead>
+        <tr class="table-primary">
+            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('NO ')}}</th>
+            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Expiration ')}}(UTC+8)</th>
+            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('PI-Name ')}}</th>
+            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Request ')}}(hours)</th>
+            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Status ')}}</th>
+            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Technical Review ')}}</th>
+            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Proposal ')}}</th>
+            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Peer Review ')}}</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for u in review_proposals %}
+        <tr>
+            <td style="text-align:center;vertical-align:middle;">{{ u[0].get_no() }}</td>
+            <td style="text-align:center;vertical-align:middle;">{{ u[1].review_deadline }}</td>
+            <td style="text-align:center;vertical-align:middle;">{{ u[0].get_pi_name() }}</td>
+            <td style="text-align:center;vertical-align:middle;">{{ u[0].total_time_request }}</td>
+            <td style="text-align:center;vertical-align:middle;">
+                {% if u[1].submit_status %}
+                <a class="btn btn-success active" role="button">{{_('Reviewed')}}</a>
+                {% else %}
+                <a class="btn btn-warning active" role="button">{{_('Awaitting Review')}}</a>
+                {% endif %}
+            </td>
+            <td style="text-align:center;vertical-align:middle;">
+                <a role="button" class="btn btn-success active show_technical_review" proposal_id="{{u[0].id}}" no="{{u[0].get_no()}}" pi="{{u[0].get_pi_name()}}" rid="{{u[1].id}}">{{_('View ')}}</a>
+            </td>
+            <td style="text-align:center;vertical-align:middle;">
+                <a href="{{ url_for('proposal_submit.user_get_pdf',proposal_id=u[0].id,filename=u[0].get_no()+'.pdf',from_where='review',rid=u[1].id) }}" class="btn btn-primary active" role="button">
+                    {{_('View ')}}
+                </a>
+                <!--                <a href="#" class="btn btn-primary active" role="button">-->
+                <!--                    {{_('Scientific Output')}}-->
+                <!--                </a>-->
+            </td>
+            <td style="text-align:center;vertical-align:middle;">
+                {% if u[1].submit_status %}
+                <!--                <a class="btn btn-success show-review" role="button" no="{{u[0].get_no()}}" pi="{{u[0].get_pi_name()}}" ex_id="{{u[1].id}}"><strong>{{_('View')}} </strong></a>-->
+                <a class="btn btn-info modify active" role="button" no="{{u[0].get_no()}}" pi="{{u[0].get_pi_name()}}" ex_id="{{u[1].id}}" proposal_id="{{u[0].id}}">{{_('Modify ')}}</a>
+                {% else %}
+                <a class="btn btn-info review active" role="button" no="{{u[0].get_no()}}" pi="{{u[0].get_pi_name()}}" ex_id="{{u[1].id}}" proposal_id="{{u[0].id}}">{{_('Review ')}}</a>8                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+</div>
+<br>
+<br>
+
+{{ render_pagination(pagination,endpoint=None,prev=_('Previous Page'),next=_('Next Page'),ellipses='…',align='center') }}
+
+<!-- Modal  for  add user -->
+<div class="modal fade bd-example-modal-lg" id="add-review" tabindex="-1" role="dialog" aria-labelledby="proposal-review" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="proposal-review"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-row"><strong>{{_('Score')}}<a style="color:red">*</a>: </strong> &nbsp;&nbsp;&nbsp;&nbsp; <i style="color:green;"><strong>(10 ~ 0) &nbsp;&nbsp; {{_('The score is between 0 and 10. 10 is the best.')}}</strong></i>{{ form.score(class="form-control",onkeyup="this.value=value.replace(/[^\d\.]/g,'')") }}</div>
+                        <br>
+                        <div class="form-row"><strong>{{_('Peer Review')}}<a style="color:red">*</a>:</strong> {{ form.comment(class="form-control",rows="15") }}</div>
+                        <br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{_('Close ')}}</button>
+                    {{ form.submit(class="btn btn-info review-data", value=_('submit ')) }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="get-review" tabindex="-1" role="dialog" aria-labelledby="get-proposal-review" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="get-proposal-review"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-row">
+                            <strong>{{_('Score')}}<a style="color:red">*</a>: </strong> &nbsp;&nbsp;&nbsp;&nbsp; <i style="color:green;"><strong>(10 ~ 0) &nbsp;&nbsp; {{_('The score is between 0 and 10. 10 is the best.')}}</strong></i>
+                        </div>
+                        <div class="form-row">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <div id="show-score"></div>
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <strong>{{_('Peer Review')}}<a style="color:red">*</a>:</strong>
+                        </div>
+                        <div class="form-roq">
+                            <div id="show-content"></div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{_('Close ')}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" id="get-technical-review" tabindex="-1" role="dialog" aria-labelledby="get-proposal-technical-review" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="get-proposal-technical-review"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0">
+                <div class="modal-body">
+                    <div class="container">
+                        <table class="table table-md table-bordered" style="table-layout:fixed;" id="insert-table">
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{_('Close ')}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}
+

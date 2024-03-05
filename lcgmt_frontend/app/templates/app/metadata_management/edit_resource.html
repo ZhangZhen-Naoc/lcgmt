@@ -1,0 +1,257 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'wtf_fext/form.html' import render_form, render_field %}
+{% block title %}{{_('Resources List')}}{% endblock %}
+
+{% block content %}
+<script>
+     $(document).ready(function () {
+        function changeIndex(str){
+            return str.replace(
+                new RegExp("-(\\d+)-", "gi"),
+                function($0, $1){
+                    var i = parseInt($1) + 1;
+                    return "-" + i + "-";
+                }
+                );
+            }
+            $('#addAuthor').on("click", function () {
+                var $card = $("#authors").children('div.card').last().clone();
+                var inputs = $card.find(':input');
+                for (var i = 1; i < inputs.length; i++){
+                    inputs[i].setAttribute("value","");
+                    inputs[i].setAttribute("id", changeIndex(inputs[i].getAttribute("id")));
+                    inputs[i].setAttribute("name", changeIndex(inputs[i].getAttribute("name")));
+                }
+                var labels = $card.find('label');
+                for (var i = 0; i < labels.length; i++){
+                    labels[i].setAttribute("for", changeIndex(labels[i].getAttribute("for")));
+                }
+                $('#authors').append($card);
+                $(".card-header").delegate("button.deleteAuthor","click",function(){
+                    $(this).parent('div').parent('div').remove();
+                });
+            });
+            $('.deleteAuthor').on('click', function () {
+                $(this).parent('div').parent('div').remove();
+            });
+            $('#addTemporals').on("click", function () {
+                var $row = $("#temporals").children('div.row').last().clone();
+                var inputs = $row.find(':input');
+                for (var i = 0; i < inputs.length-1; i++){
+                    inputs[i].setAttribute("value","");
+                    inputs[i].setAttribute("id", changeIndex(inputs[i].getAttribute("id")));
+                    inputs[i].setAttribute("name", changeIndex(inputs[i].getAttribute("name")));
+                }
+                var labels = $row.find('label');
+                for (var i = 0; i < labels.length; i++){
+                    labels[i].setAttribute("for", changeIndex(labels[i].getAttribute("for")));
+                }
+                $('#temporals').append($row);
+                $(".row").delegate("button.deleteTemporal","click",function(){
+                    $(this).parent('div').parent('div').remove();
+                });
+            });
+            $('.deleteTemporal').on('click', function () {
+                $(this).parent('div').parent('div').remove();
+            });
+            $('#addRights').on("click", function () {
+                var $card = $("#rights").children('div.card').last().clone();
+                var inputs = $card.find(':input');
+                for (var i = 1; i < inputs.length; i++){
+                    inputs[i].setAttribute("value","");
+                    inputs[i].setAttribute("id", changeIndex(inputs[i].getAttribute("id")));
+                    inputs[i].setAttribute("name", changeIndex(inputs[i].getAttribute("name")));
+                }
+                var labels = $card.find('label');
+                for (var i = 0; i < labels.length; i++){
+                    labels[i].setAttribute("for", changeIndex(labels[i].getAttribute("for")));
+                }
+                $('#rights').append($card);
+                $(".card-header").delegate("button.deleteRights","click",function(){
+                    $(this).parent('div').parent('div').remove();
+                });
+            });
+            $('.deleteRight').on('click', function () {
+                $(this).parent('div').parent('div').remove();
+            });
+            $('#addCap').on("click", function () {
+                var $card = $("#caps").children('div.card').last().clone();
+                var inputs = $card.children('.card-body').find(':input');
+                for (var i = 0; i < inputs.length; i++){
+                    inputs[i].setAttribute("value","");
+                    inputs[i].setAttribute("id", changeIndex(inputs[i].getAttribute("id")));
+                    inputs[i].setAttribute("name", changeIndex(inputs[i].getAttribute("name")));
+                }
+                $('#caps').append($card);
+                $(".card-header").delegate("button.deleteCap","click",function(){
+                    $(this).parent('div').parent('div').remove();
+                });
+            });
+            $('.deleteCap').on('click', function () {
+                $(this).parent('div').parent('div').remove();
+            });
+     });
+
+
+</script>
+<div class="container-fluid">
+    <div class="card m-3">
+        <div class="card-header">
+            {{_('Edit Resource Metadata')}}
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {{ form.csrf_token }}
+                {{render_field(form.id)}}
+                {{render_field(form.identifier)}}
+                {{render_field(form.doi)}}
+                {{render_field(form.cstr)}}
+                {{render_field(form.title_zh)}}
+                {{render_field(form.title_en)}}
+                {{render_field(form.shortname_zh)}}
+                {{render_field(form.shortname_en)}}
+                {{render_field(form.description_zh)}}
+                {{render_field(form.description_en)}}
+                {{render_field(form.type)}}
+                {{render_field(form.created)}}
+                {{render_field(form.updated)}}
+                {{render_field(form.publicated)}}
+                {{render_field(form.status)}}
+                {{render_field(form.publisher)}}
+                {{render_field(form.version)}}
+                {{render_field(form.keyword_zh)}}
+                {{render_field(form.keyword_en)}}
+                {{render_field(form.url)}}
+                {{render_field(form.source)}}
+                {{render_field(form.share_methods)}}
+                {{render_field(form.share_scope)}}
+                {{render_field(form.apply_procedure)}}
+                <div id="authors">
+                    <label class="form-control-label">{{ _('Authors') }}</label>
+                    <button type="button" id="addAuthor" class="btn btn-sm btn-dark"><i class="oi oi-plus"></i> {{
+                        _('Add') }}
+                    </button>
+                    {% for author in form.authors %}
+                    <div class="card">
+                        <div class="card-header">
+                            <!--                            {{ _('Author')}}-->
+                            <button type="button" class="deleteAuthor btn btn-sm btn-dark"><i class="oi oi-x"></i> {{
+                                _('Remove')}}
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">{{ render_field(author.name_zh) }}
+                                </div>
+                                <div class="col-md-4">{{ render_field(author.affiliation_zh) }}
+                                </div>
+                                <div class="col-md-4">{{ render_field(author.address_zh)
+                                    }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">{{ render_field(author.name_en) }}
+                                </div>
+                                <div class="col-md-4">{{ render_field(author.affiliation_en) }}
+                                </div>
+                                <div class="col-md-4">{{ render_field(author.address_en)
+                                    }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">{{ render_field(author.email) }}</div>
+                                <div class="col-md-4">{{ render_field(author.tepephone) }}
+                                </div>
+                                <div class="col-md-4">{{ render_field(author.orcid) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {{render_field(form.wavebands)}}
+                {{render_field(form.telescopes)}}
+                {{render_field(form.subjects)}}
+                {{render_field(form.data_production_types)}}
+                {{render_field(form.data_types)}}
+                {{render_field(form.data_levels)}}
+                {{render_field(form.production_ages)}}
+                {{render_field(form.content_levels)}}
+                {{render_field(form.data_classes)}}
+                {{render_field(form.content_types)}}
+
+                {{render_field(form.acknowledgement_zh)}}
+                {{render_field(form.acknowledgement_en)}}
+                {{render_field(form.facility)}}
+                {{render_field(form.footprint)}}
+                <div id="temporals">
+                    <label class="form-control-label">{{ _('Temporals') }}</label>
+                    <button type="button" id="addTemporals" class="btn btn-sm btn-dark"><i class="oi oi-plus"></i> {{
+                        _('Add') }}
+                    </button>
+                    {% for temp in form.temporals %}
+                    <div class="row">
+                        <div class="col-md-5">{{render_field(temp.start)}}</div>
+                        <div class="col-md-5">{{render_field(temp.end)}}</div>
+                        <div class="col-md-2">
+                            <button type="button"
+                                    class="deleteTemporal btn btn-sm btn-dark"><i class="oi oi-x"></i> {{ _('Remove') }}
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div id="rights">
+                    <label class="form-control-label">{{ _('Rights') }}</label>
+                    <button type="button" id="addRights" class="btn btn-sm btn-dark"><i class="oi oi-plus"></i> {{
+                        _('Add') }}
+                    </button>
+                    {% for r in form.rights %}
+                    <div class="card">
+                        <div class="card-header">
+                            <button type="button"
+                                    class="deleteRights btn btn-sm btn-dark"><i class="oi oi-x"></i> {{ _('Remove') }}
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            {{render_field(r.url_zh)}}
+                            {{render_field(r.url_en)}}
+                            {{render_field(r.title_zh)}}
+                            {{render_field(r.title_en)}}
+                            {{render_field(r.content_zh)}}
+                            {{render_field(r.content_en)}}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div id="caps">
+                    <label class="form-control-label">{{ _('Capabilities') }}</label>
+                    <button type="button" id="addCap" class="btn btn-sm btn-dark"><i class="oi oi-plus"></i> {{ _('Add')
+                        }}
+                    </button>
+                    {% for c in form.capabilities %}
+                    <div class="card">
+                        <div class="card-header">
+                            <button type="button"
+                                    class="deleteCap btn btn-sm btn-dark"><i class="oi oi-x"></i> {{ _('Remove') }}
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            {{render_field(c.cap_name)}}
+                            {{render_field(c.description_zh)}}
+                            {{render_field(c.description_en)}}
+                            {{render_field(c.access_url_type)}}
+                            {{render_field(c.access_url)}}
+                            {{render_field(c.mirror_url)}}
+                            {{render_field(c.test_query_string)}}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {{render_field(form.submit,class='btn btn-block btn-primary')}}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

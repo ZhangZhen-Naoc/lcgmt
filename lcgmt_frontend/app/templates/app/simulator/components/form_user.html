@@ -1,0 +1,26 @@
+<div class="card">
+    <div class="card-header">Input User Info</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                {% if current_user.is_authenticated%}
+                {{
+                TextInputer("username",tooltip="Enter your name to find the task in
+                list",defaultValue=current_user.name)
+                }}
+                {%else%}
+                {{
+                TextInputer("username",tooltip="Enter your name to find the task in list",defaultValue="Anonymous")
+
+                }}
+                {%endif%}
+            </div>
+            <div class="col-md-3">
+                {{
+                TextInputer("taskname",tooltip="Simply mark this simulation to find the task it in list")
+                }}
+            </div>
+
+        </div>
+    </div>
+</div>

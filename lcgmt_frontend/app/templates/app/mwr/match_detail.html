@@ -1,0 +1,43 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center Result') }}{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="card bg-light w-100">
+        <div class="card-header">
+            <h4>{{_('Cross-Matching Details')}}</h4>
+        </div>
+
+        <div class="card-body">
+            {% for match_cat in match_column_names.keys() %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <caption><h6>{{match_cat | title}}</h6></caption>
+                    <thead class="thead-dark">
+                        <tr>
+                            {% for col in match_column_names[match_cat] %}
+                            <th>{{col}}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in match_data_rows[match_cat] %}
+                        <tr>
+                            {% for row_ in row %}
+                            <td>{{row_}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

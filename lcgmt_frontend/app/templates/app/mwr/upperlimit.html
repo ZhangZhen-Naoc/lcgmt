@@ -1,0 +1,17 @@
+{% extends 'app/base.html' %}
+{% block title %}{{ _('Upper Limit') }}{% endblock %}
+{% block content %}
+{% for mission,data in upperlimit.items()%}
+<h3>{{mission}}</h3>
+<dl>
+    {% for item in data%}
+    <div class="row">
+{% for key,value in item.items()%}
+<dt class="col-3">{{key}}</dt>
+<dd class="col-3">{{value}}</dd>
+{% endfor %}
+    </div>
+{%endfor%}
+</dl>
+{%endfor%}
+{% endblock %}

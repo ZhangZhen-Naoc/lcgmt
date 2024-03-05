@@ -1,0 +1,853 @@
+{% extends 'app/survey_base.html' %} {% block title %}EP Science Team Application{% endblock %} {% block content %}
+<div class="container-fluid" style="margin: 0px; padding: 0px; font-family: 微软雅黑, Arial, Helvetica, sans-serif;">
+  <div class="card w-100" style="border: 0px">
+    <div class="card-body ep-newsView">
+      <div id="article_body" class="ep_article">
+        <h3 class="ep_article_title">EP科学领域工作组中方正式成员申请</h3>
+
+        <div class="articleContent">
+
+          <p>
+            <strong>背景：</strong><a  target="_blank" href="{{url_for('main.index')}}">爱因斯坦探针（Einstein Probe，EP）卫星</a>是中国科学院空间科学先导专项二期的空间科学任务，是由中国科学院（CAS）主导，9空局（ESA）、德国马普地外物理所（MPE）和法国航天局（CNES）合作参与的国际合作项目。EP卫星的主要目标是对软X射线的天空开展快速时域巡天监测，旨在发现和探索宇宙中的各类高能暂现和爆发天体，并监测各类天体的X射线变化。
+          </p>
+          <p>
+            EP科学团队是由上述机构指定的科学家组成的联合科学团队，主体是几个面向多学科方向的科学领域工作组（Science Topical Panel, STP），其正式成员（STP members）即为 EP 科学团队的骨干成员。
+          </p>
+          <p>
+            根据中科院空间科学先导专项管理规定，EP项目现开展科学领域工作组中方正式成员（第一批）的征聘工作，由EP科学应用系统协助开展，邀请在中国工作的相关科研人员申请，征聘结果由中国科学院空间科学先导专项总体审批。第一批正式成员总共不超过60人。
+          </p>
+          <p>
+            EP科学团队之外的学者，可通过申请客座观测项目(Guest Observer Program, 或 GO;暂定每年征集一次)和首席专属观测时间项目(DDT，针对 ToO 机遇观测) 使用EP卫星开展科学观测。
+          </p>
+          <p>
+            衷心感谢国内同行的积极参与以及对EP项目的长期支持！
+          </p>
+          <!-- <p><strong>目的：本次调研旨在提前了解EP国内潜在的科学团队规模及感兴趣的研究方向，帮助我们后续更高效和有针对性地组建EP科学团队。</strong></p> -->
+          <div class="alert alert-secondary" style="padding-bottom: 0" role="alert">
+            <p>请完整填写以下的申请资料，并按照模板填写和上传附件6里的《EP科学领域工作组正式成员申请表》。</p>
+            <p>更多信息请参见附件2里的《EP科学领域工作组正式成员申请说明》。</p>
+            <p><strong>注意：本次申请的截止日期为2022年12月4日。</strong></p>
+          </div>
+          <hr />
+          <p>
+            正式成员申请条件：第一任职单位为中国（包括港澳台）的研究机构和大学的科研人员，具有相关专业的博士学位，助理研究员（或工程师）/助理教授（或讲师）或以上的正式职位（不包括主要工作单位为国外机构，在国内单位兼职的人员）。
+          </p>
+
+          <form id="form" method="POST" enctype=multipart/form-data action="{{ url_for('cms.science_team_apply')}}">
+            {{ form.csrf_token() }}
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">姓名</label>
+                <div class="input-group col-sm-10">{{ form.name(class="form-control name_input",id="name") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">职称</label>
+                <div class="input-group col-sm-10">{{ form.title(class="form-control title_input",id="title") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">单位</label>
+                <div class="input-group col-sm-10">{{ form.institute(class="form-control institute_input",id="institute") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Email</label>
+                <div class="input-group col-sm-10">{{ form.email(class="form-control email_input",id="email") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">您的研究类型：</label>
+
+                <div class="input-group col-sm-10">{{ form.reseach_type(class="form-control reseach_type_input",id="reseach_type") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"
+                  >观测研究：
+                  <small id="fet_intro_help" class="form-text text-muted">您所用主要设备的观测波段 （可多选）</small>
+                </label>
+
+                <div class="input-group col-sm-10">
+                  {{ form.observation_research(class="form-control observation_research_input",id="observation_research") }}
+                </div>
+              </div>
+            </div>
+
+            <br />
+            <h3>申请加入的领域工作组：</h3>
+            <br />
+            <p>
+              目前EP科学团队设置以下6个科学领域工作组（Science Topical Panel，简称 STP）。EP科学团队成员必须是至少1个领域工作组的成员。请选择申请加入的领域工作组：（STP1-5最多可选2个， STP6⽆限制）
+            </p>
+            <div class="form-group ep-checkbox-line">
+              <label for="" style="margin-right: 0px; width: 90%">STP1. 活动星系核和潮汐瓦解事件（AGN & TDE）</label
+              >{{form.agntde(class="form-check-input agntde_input ep_surveyCheckbox_mobile",style="transform:scale(1.4,1.4);",id="agntde")}}
+            </div>
+
+            <div class="collapse" id="collapseExample">
+              <div class="card card-body">
+                Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant
+                trigger.
+              </div>
+            </div>
+            <div class="row mb-12 collapse ep_surveyCard" id="collapse_agntde" style="margin-bottom: 20px">
+              <div class="card-header">提供与所选领域相关的代表性论文，每个领域不超过 3 篇</div>
+              <div class="card card-body">
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.agntde_p1_title.label}}</small></label>
+                    {{form.agntde_p1_title(class="form-control agntde_p1_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.agntde_p1_journal.label}}</small></label>
+                    {{form.agntde_p1_journal(class="form-control agntde_p1_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.agntde_p1_year.label}}</small></label>
+                    {{form.agntde_p1_year(class="form-control agntde_p1_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.agntde_p1_rank.label}}</small></label>
+                    {{form.agntde_p1_rank(class="form-control agntde_p1_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.agntde_p1_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.agntde_p1_ca(class="agntde_p1_ca_input",style="transform:scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.agntde_p2_title.label}}</small></label>
+                    {{form.agntde_p2_title(class="form-control agntde_p2_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.agntde_p2_journal.label}}</small></label>
+
+                    {{form.agntde_p2_journal(class="form-control agntde_p2_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.agntde_p2_year.label}}</small></label>
+
+                    {{form.agntde_p2_year(class="form-control agntde_p2_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.agntde_p2_rank.label}}</small></label>
+                    {{form.agntde_p2_rank(class="form-control agntde_p2_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.agntde_p2_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.agntde_p2_ca(class="agntde_p2_ca_input",style="transform: scale(1.6,1.6)")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.agntde_p3_title.label}}</small></label>
+                    {{form.agntde_p3_title(class="form-control agntde_p3_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.agntde_p3_journal.label}}</small></label>
+
+                    {{form.agntde_p3_journal(class="form-control agntde_p3_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.agntde_p3_year.label}}</small></label>
+
+                    {{form.agntde_p3_year(class="form-control agntde_p3_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.agntde_p3_rank.label}}</small></label>
+                    {{form.agntde_p3_rank(class="form-control agntde_p3_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.agntde_p3_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.agntde_p3_ca(class="agntde_p3_ca_input",style="transform: scale(1.6,1.6)")}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group ep-checkbox-line">
+              <label for="" style="margin-right: 0px; width: 90%"> STP2. 快速河外暂现源（Fast Extragalactic Transients）
+                <span
+                class="fa fa-question-circle label-help"
+                data-toggle="tooltip"
+                ,
+                data-placement="top"
+                title="包括伽马射线暴、超新星激波暴等各类河外短时标暂现源。"
+              ></span
+            ></label>{{form.fet(class="form-check-input
+              fet_input ep_surveyCheckbox_mobile",style="transform: scale(1.4,1.4);",id="fet")}}
+            </div>
+            <div class="row mb-12 collapse ep_surveyCard" id="collapse_fet" style="margin-bottom: 20px">
+              <div class="card-header">提供与所选领域相关的代表性论文，每个领域不超过 3 篇</div>
+              <div class="card card-body">
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.fet_p1_title.label}}</small></label>
+                    {{form.fet_p1_title(class="form-control fet_p1_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.fet_p1_journal.label}}</small></label>
+                    {{form.fet_p1_journal(class="form-control fet_p1_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fet_p1_year.label}}</small></label>
+                    {{form.fet_p1_year(class="form-control fet_p1_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fet_p1_rank.label}}</small></label>
+                    {{form.fet_p1_rank(class="form-control fet_p1_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.fet_p1_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.fet_p1_ca(class="fet_p1_ca_input",style="transform:scale(1.6,1.6)")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.fet_p2_title.label}}</small></label>
+                    {{form.fet_p2_title(class="form-control fet_p2_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.fet_p2_journal.label}}</small></label>
+                    {{form.fet_p2_journal(class="form-control fet_p2_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fet_p2_year.label}}</small></label>
+                    {{form.fet_p2_year(class="form-control fet_p2_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fet_p2_rank.label}}</small></label>
+                    {{form.fet_p2_rank(class="form-control fet_p2_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.fet_p2_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.fet_p2_ca(class="fet_p2_ca_input",style="transform:scale(1.6,1.6)")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.fet_p3_title.label}}</small></label>
+                    {{form.fet_p3_title(class="form-control fet_p3_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.fet_p3_journal.label}}</small></label>
+                    {{form.fet_p3_journal(class="form-control fet_p3_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fet_p3_year.label}}</small></label>
+                    {{form.fet_p3_year(class="form-control fet_p3_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fet_p3_rank.label}}</small></label>
+                    {{form.fet_p3_rank(class="form-control fet_p3_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.fet_p3_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.fet_p3_ca(class="fet_p3_ca_input",style="transform:scale(1.6,1.6)")}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group ep-checkbox-line">
+              <label for="" style="margin-right: 0px; width: 90%"
+                >STP3. 多信使天文（Multi-messenger Astronomy）
+                <span
+                  class="fa fa-question-circle label-help"
+                  data-toggle="tooltip"
+                  ,
+                  data-placement="top"
+                  title="对引力波、中微子等多信使事件的协同观测。本方向的EP科学观测由EP科学中心统一组织，不接受机遇观测申请。"
+                ></span
+              ></label>
+
+              {{form.mma(class="form-check-input mma_input ep_surveyCheckbox_mobile",style="transform:scale(1.4,1.4);",id="mma")}}
+            </div>
+
+            <div class="row mb-12 collapse ep_surveyCard" id="collapse_mma" style="margin-bottom: 20px">
+              <div class="card-header">提供与所选领域相关的代表性论文，每个领域不超过 3 篇</div>
+              <div class="card card-body">
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.mma_p1_title.label}}</small></label>
+                    {{form.mma_p1_title(class="form-control mma_p1_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.mma_p1_journal.label}}</small></label>
+                    {{form.mma_p1_journal(class="form-control mma_p1_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.mma_p1_year.label}}</small></label>
+                    {{form.mma_p1_year(class="form-control mma_p1_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.mma_p1_rank.label}}</small></label>
+                    {{form.mma_p1_rank(class="form-control mma_p1_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.mma_p1_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.mma_p1_ca(class="mma_p1_ca_input",style="transform:scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.mma_p2_title.label}}</small></label>
+                    {{form.mma_p2_title(class="form-control mma_p2_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.mma_p2_journal.label}}</small></label>
+                    {{form.mma_p2_journal(class="form-control mma_p2_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.mma_p2_year.label}}</small></label>
+                    {{form.mma_p2_year(class="form-control mma_p2_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.mma_p2_rank.label}}</small></label>
+                    {{form.mma_p2_rank(class="form-control mma_p2_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.mma_p2_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.mma_p2_ca(class="mma_p2_ca_input",style="transform:scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.mma_p3_title.label}}</small></label>
+                    {{form.mma_p3_title(class="form-control mma_p3_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.mma_p3_journal.label}}</small></label>
+                    {{form.mma_p3_journal(class="form-control mma_p3_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.mma_p3_year.label}}</small></label>
+                    {{form.mma_p3_year(class="form-control mma_p3_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.mma_p3_rank.label}}</small></label>
+                    {{form.mma_p3_rank(class="form-control mma_p3_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.mma_p3_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.mma_p3_ca(class="mma_p3_ca_input",style="transform:scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group ep-checkbox-line">
+              <label for="" style="margin-right: 0px; width: 90%"
+                >STP4. 恒星级致密天体（Compact Stellar Objects）
+                <span
+                  class="fa fa-question-circle label-help"
+                  data-toggle="tooltip"
+                  ,
+                  data-placement="top"
+                  title="银河系内和近邻星系里的黑洞、白矮星、中子星及其双星系统、极亮X射线源等。"
+                ></span
+              ></label>
+              {{form.cso(class="form-check-input cso_input ep_surveyCheckbox_mobile",style="transform:scale(1.4,1.4);",id="cso")}}
+            </div>
+            <div class="row mb-12 collapse ep_surveyCard" id="collapse_cso" style="margin-bottom: 20px">
+              <div class="card-header">提供与所选领域相关的代表性论文，每个领域不超过 3 篇</div>
+              <div class="card card-body">
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.cso_p1_title.label}}</small></label>
+                    {{form.cso_p1_title(class="form-control cso_p1_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.cso_p1_journal.label}}</small></label>
+                    {{form.cso_p1_journal(class="form-control cso_p1_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.cso_p1_year.label}}</small></label>
+                    {{form.cso_p1_year(class="form-control cso_p1_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.cso_p1_rank.label}}</small></label>
+                    {{form.cso_p1_rank(class="form-control cso_p1_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.cso_p1_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.cso_p1_ca(class="cso_p1_ca_input",style="transform:scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.cso_p2_title.label}}</small></label>
+                    {{form.cso_p2_title(class="form-control cso_p2_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.cso_p2_journal.label}}</small></label>
+                    {{form.cso_p2_journal(class="form-control cso_p2_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.cso_p2_year.label}}</small></label>
+                    {{form.cso_p2_year(class="form-control cso_p2_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.cso_p2_rank.label}}</small></label>
+                    {{form.cso_p2_rank(class="form-control cso_p2_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2 ep_surveyCard">
+                    <label><small>{{form.cso_p2_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.cso_p2_ca(class="cso_p2_ca_input",style="transform:scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.cso_p3_title.label}}</small></label>
+                    {{form.cso_p3_title(class="form-control cso_p3_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.cso_p3_journal.label}}</small></label>
+                    {{form.cso_p3_journal(class="form-control cso_p3_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.cso_p3_year.label}}</small></label>
+                    {{form.cso_p3_year(class="form-control cso_p3_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+       4            <label><small>{{form.cso_p3_rank.label}}</small></label>
+                    {{form.cso_p3_rank(class="form-control cso_p3_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2 ep_surveyCard">
+                    <label><small>{{form.cso_p3_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.cso_p3_ca(class="cso_p3_ca_input",style="transform:scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group ep-checkbox-line">
+              <label for="" style="margin-right: 0px; width: 90%"
+                >STP5. 天文台科学（Observatory Science）
+                <span
+                  class="fa fa-question-circle label-help"
+                  data-toggle="tooltip"
+                  ,
+                  data-placement="top"
+                  title="上述领域工作组没有包含的科学目标，如恒星耀发、太阳系天体等。"
+                ></span
+              ></label>
+              {{form.os(class="form-check-input os_input ep_surveyCheckbox_mobile",style="transform:scale(1.4,1.4);",id="os")}}
+            </div>
+            <div class="row mb-12 collapse ep_surveyCard" id="collapse_os" style="margin-bottom: 20px">
+              <div class="card-header">请填写具体研究方向，并提供与所选领域相关的代表性论文，每个领域不超过 3 篇</div>
+              <div class="card card-body">
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.os_type.label}}</small></label>
+                    {{form.os_type(class="form-control os_type_input")}}
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.os_p1_title.label}}</small></label>
+                    {{form.os_p1_title(class="form-control os_p1_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.os_p1_journal.label}}</small></label>
+                    {{form.os_p1_journal(class="form-control os_p1_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.os_p1_year.label}}</small></label>
+                    {{form.os_p1_year(class="form-control os_p1_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.os_p1_rank.label}}</small></label>
+                    {{form.os_p1_rank(class="form-control os_p1_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.os_p1_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.os_p1_ca(class="os_p1_ca_input",style="transform: scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.os_p2_title.label}}</small></label>
+                    {{form.os_p2_title(class="form-control os_p2_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.os_p2_journal.label}}</small></label>
+                    {{form.os_p2_journal(class="form-control os_p2_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.os_p2_year.label}}</small></label>
+                    {{form.os_p2_year(class="form-control os_p2_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.os_p2_rank.label}}</small></label>
+                    {{form.os_p2_rank(class="form-control os_p2_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+       3            <label><small>{{form.os_p2_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.os_p2_ca(class="os_p2_ca_input",style="transform: scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.os_p3_title.label}}</small></label>
+                    {{form.os_p3_title(class="form-control os_p3_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.os_p3_journal.label}}</small></label>
+                    {{form.os_p3_journal(class="form-control os_p3_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.os_p3_year.label}}</small></label>
+ 7                  {{form.os_p3_year(class="form-control os_p3_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.os_p3_rank.label}}</small></label>
+                    {{form.os_p3_rank(class="form-control os_p3_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.os_p3_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.os_p3_ca(class="os_p3_ca_input",style="transform: scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group ep-checkbox-line">
+              <label for="" style="margin-right: 0px; width: 90%">STP6. 后随观测（Follow-up Observation Activities） <span
+                class="fa fa-question-circle label-help"
+                data-toggle="tooltip"
+                ,
+                data-placement="top"
+                title="涉及其他多波段设备与EP的协同和后随观测，预期申请人具有利用多波段设备开展暂现源/变源的后随和协同观测的研究专长和经验，或掌握特定的望远镜观测资源，或证明有能力获取相关望远镜观测时间资源。"
+              ></span
+            ></label>
+              {{form.fuoa(class="form-check-input fuoa_input ep_surveyCheckbox_mobile",style="transform:scale(1.4,1.4);",id="fuoa")}}
+            </div>
+            <div class="row mb-12 collapse ep_surveyCard" id="collapse_fuoa" style="margin-bottom: 20px">
+              <div class="card-header">介绍可配合EP开展观测的其他波段的观测设备或资源</div>
+              <div class="card card-body">
+                {{ form.fuoa_intro(class="form-control fuoa_intro_input",rows=5,id="fuoa_intro",placeholder="不超过500个字符") }}
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.fuoa_p1_title.label}}</small></label>
+                    {{form.fuoa_p1_title(class="form-control fuoa_p1_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.fuoa_p1_journal.label}}</small></label>
+                    {{form.fuoa_p1_journal(class="form-control fuoa_p1_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fuoa_p1_year.label}}</small></label>
+                    {{form.fuoa_p1_year(class="form-control fuoa_p1_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fuoa_p1_rank.label}}</small></label>
+                    {{form.fuoa_p1_rank(class="form-control fuoafuoa_p1_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.fuoa_p1_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.fuoa_p1_ca(class="fuoa_p1_ca_input",style="transform: scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.fuoa_p2_title.label}}</small></label>
+                    {{form.fuoa_p2_title(class="form-control fuoa_p2_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label><small>{{form.fuoa_p2_journal.label}}</small></label>
+                    {{form.fuoa_p2_journal(class="form-control fuoa_p2_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fuoa_p2_year.label}}</small></label>
+                    {{form.fuoa_p2_year(class="form-control fuoa_p2_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fuoa_p2_rank.label}}</small></label>
+                    {{form.fuoa_p2_rank(class="form-control fuoa_p2_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.fuoa_p2_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.fuoa_p2_ca(class="fuoa_p2_ca_input",style="transform: scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label><small>{{form.fuoa_p3_title.label}}</small></label>
+                    {{form.fuoa_p3_title(class="form-control fuoa_p3_title_input")}}
+                  </div>
+                  <div class="form-group col-md-3">
+  0                 <label><small>{{form.fuoa_p3_journal.label}}</small></label2
+                    {{form.fuoa_p3_journal(class="form-control fuoa_p3_journal_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fuoa_p3_year.label}}</small></label>
+                    {{form.fuoa_p3_year(class="form-control fuoa_p3_year_input")}}
+                  </div>
+                  <div class="form-group col-md-1">
+                    <label><small>{{form.fuoa_p3_rank.label}}</small></label>
+                    {{form.fuoa_p3_rank(class="form-control fuoa_p3_rank_input")}}
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label><small>{{form.fuoa_p3_ca.label}}</small></label>
+                    <div class="input-group mb-3" style="padding: 8px 30px">
+                      {{form.fuoa_p3_ca(class="fuoa_p3_ca_input",style="transform: scale(1.6,1.6);")}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+         <br>
+              <h3>您是否有意向担任所选领域工作组负责人:</h3>
+           
+              <p>领域工作组负责人将负责领导和协调各个工作组（中欧联合的国际团队）的研究工作，包括将承担相应的EP 科学组织、管理和团队合作协调等日常工作，并参与 EP 科学管理委员会的工作及会议，因此需要负责人能保障充足的时间和精力投入。负责人的具体职责和义务见附件5的《EP科学领域工作组职责》。鼓励具有领导和协调国际合作团队研究的经验并具有较强的沟通和英文表达能力的申请人申请。
+              </p>
+              <div class="form-group">
+              {{form.be_chair(class="be_chair_input",id="be_chair")}}</div>
+               
+            
+            <br />
+
+
+            
+            <div class="form-group">
+            
+                <h3>请填写并上传《EP科学领域工作组中方正式成员申请表》（请下载附件6并填写，只接收pdf格式，文件大小不超过10MB）</h3>
+            
+            </div>
+            <div class="form-group ep-checkbox-line">
+     
+                <label for="application_file" class="btn ep-manage-btn">上传申请表文件</label>
+                <input type="file" hidden name="application_file" id="application_file"  accept=".pdf" />
+              </div>
+                <br>
+               {# <div class="form-group">
+            
+                  <h3>请上传签字盖章后的《申请人承诺书》扫描件（请下载附件7并填写，只接收pdf格式，文件大小不超过10MB）</h3>
+              
+              </div>
+              <div class="form-group ep-checkbox-line">
+       
+                  <label for="commitment_file" class="btn ep-manage-btn">上传承诺书文件</label>
+                  <input type="file" hidden name="commitment_file" id="commitment_file"  accept=".pdf" />
+                </div>
+                  <br>#}
+                <a target="_blank" href="{{ url_for('static',filename='resources/关于征聘EP卫星STP正式成员_第一批_的通知.pdf')}}" style="margin-right:50px" >附件1：《关于征聘EP卫星STP正式成员（第一批）的通知》</a>
+                <br>
+                <a target="_blank" href="{{ url_for('static',filename='resources/EP科学团队正式成员申请说明_20221103.pdf')}}" style="margin-right:50px" >附件2：《EP科学领域工作组中方正式成员申请说明》</a>
+                <br>
+                <a  target="_blank" href="{{ url_for('static',filename='resources/EP项目简介_20221103.pdf')}}" style="margin-right:50px">附件3：《EP卫星项目简介》</a>
+                <br>
+                <a  target="_blank" href="{{ url_for('static',filename='resources/EP国际合作科学管理方案_20221029V2.pdf')}}" style="margin-right:50px">附件4：《EP国际合作科学管理方案》（Einstein Probe science management scheme principles）</a>
+                <br>
+                <a  target="_blank" href="{{ url_for('static',filename='resources/EP科学领域工作组职责_20221029V1.pdf')}}" style="margin-right:50px">附件5：《EP科学领域工作组职责》(Terms of reference for Einstein Probe Science Topical Panels)</a>
+                <br>
+                <a  target="_blank" href="{{ url_for('static',filename='resources/EP科学团队正式成员申请表_20221103.docx')}}" style="margin-right:50px">附件6：《EP科学领域工作组中方正式成员申请表模板》</a>
+                <br>
+              {#  <a  target="_blank" href="{{ url_for('static',filename='resources/申请人承诺书.pdf')}}" style="margin-right:50px">附件7：《申请人承诺书模板》</a>#}
+            
+            
+              
+
+            <div class="col-md-12 text-center">{{ form.submit(class="btn ep_openBtn", value='提交' ) }}</div>
+            <br />
+            <br />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+  $("select").select2({});
+
+  $("form").submit(function (e) {
+    // alert("submit");
+    var inte_count = 0;
+    var error_msg = "";
+    if ($("#agntde").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("agntde", "一");
+    }
+    if ($("#fet").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("fet", "二");
+    }
+    if ($("#mma").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("mma", "三");
+    }
+    if ($("#cso").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("cso", "四");
+    }
+    if ($("#os").is(":checked")) {
+      inte_count++;
+      if ($("#os_type").val().length <= 0) {
+        error_msg += "如果选择工作组五，请填写具体的研究方向。\r\n";
+      }
+      error_msg += CheckPaperInput("os", "五");
+    }
+    if ($("#fuoa").is(":checked")) {
+      if ($("#fuoa_intro").val().length <= 0) {
+        error_msg += "如果选择工作组六，请介绍可配合EP开展观测的其他波段的观测设备或资源。\r\n";
+      }
+      error_msg += CheckPaperInput("fuoa", "六");
+    }
+    if (inte_count > 2 || inte_count == 0) {
+      error_msg += "请正确选择有意加入的领域工作组，1-5 需选一至两个， 6 无限制。\r\n";
+    }
+    var file_input = $("#application_file").get(0).files[0];
+    if (!file_input)
+    {
+      error_msg += "请上传《EP科学领域工作组中方正式成员申请表》。\r\n";
+    }
+
+    if (error_msg.length > 0) {
+      e.preventDefault();
+      alert(error_msg);
+    }
+  });
+
+
+    //选择文件后更新Button内容
+  $("input[type='file']").change(function (event) {
+    let filename = event.currentTarget.files[0].name;
+    $(this)
+      .siblings("label")
+      .text(() => {
+        return filename;
+      });
+  });
+
+  function CheckPaperInput(element, index) {
+    var message = "";
+
+    if (
+      ($("#" + element + "_p1_title").val().length > 0 &&
+        $("#" + element + "_p1_journal").val().length > 0 &&
+        $("#" + element + "_p1_year").val().length > 0 &&
+        $("#" + element + "_p1_rank").val().length > 0) ||
+      ($("#" + element + "_p1_title").val().length == 0 &&
+        $("#" + element + "_p1_journal").val().length == 0 &&
+        $("#" + element + "_p1_year").val().length == 0 &&
+        $("#" + element + "_p1_rank").val().length == 0)
+    ) {
+      message += "";
+    } else {
+      message += "请在工作组" + index + "处完整填写第一篇代表性论著。\r\n";
+    }
+    if (
+      ($("#" + element + "_p2_title").val().length > 0 &&
+        $("#" + element + "_p2_journal").val().length > 0 &&
+        $("#" + element + "_p2_year").val().length > 0 &&
+        $("#" + element + "_p2_rank").val().length > 0) ||
+      ($("#" + element + "_p2_title").val().length == 0 &&
+        $("#" + element + "_p2_journal").val().length == 0 &&
+        $("#" + element + "_p2_year").val().length == 0 &&
+        $("#" + element + "_p2_rank").val().length == 0)
+    ) {
+      message += "";
+    } else {
+      message += "请在工作组" + index + "处完整填写第二篇代表性论著。\r\n";
+    }
+    if (
+      ($("#" + element + "_p3_title").val().length > 0 &&
+        $("#" + element + "_p3_journal").val().length > 0 &&
+        $("#" + element + "_p3_year").val().length > 0 &&
+        $("#" + element + "_p3_rank").val().length > 0) ||
+      ($("#" + element + "_p3_title").val().length == 0 &&
+        $("#" + element + "_p3_journal").val().length == 0 &&
+        $("#" + element + "_p3_year").val().length == 0 &&
+        $("#" + element + "_p3_rank").val().length == 0)
+    ) {
+      message += "";
+    } else {
+      message += "请在工作组" + index + "处完整填写第三篇代表性论著。\r\n";
+    }
+
+    return message;
+  }
+
+  function isInteger(obj) {
+    return typeof obj === "number" && obj % 1 === 0;
+  }
+
+  function CheckCollapse(element) {
+    if ($("#" + element).is(":checked") == true) {
+      $("#collapse_" + element).collapse("show");
+    } else {
+      $("#collapse_" + element).collapse("hide");
+    }
+  }
+
+  $(document).ready(function () {
+    CheckCollapse("os");
+    CheckCollapse("cso");
+    CheckCollapse("fet");
+    CheckCollapse("agntde");
+    CheckCollapse("mma");
+    CheckCollapse("fuoa");
+  });
+</script>
+
+{% endblock %}

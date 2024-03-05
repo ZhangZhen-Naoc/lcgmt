@@ -1,0 +1,362 @@
+{% from 'bootstrap/nav.html' import render_nav_item %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    {% block head %}
+    <title>{% block title %}{% endblock %} |Einstein Probe TDIC</title>
+    {% endblock head %}
+    {% block styles %}
+
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='open-iconic/font/css/open-iconic-bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-treeview.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/select2.min.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/select2-bootstrap.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/aladin.min.css', v='2') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ep.css', v='14') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome/all.css', v='12') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/addons/datatables.min.css', v='11') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-datetimepicker-standalone.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tabulator5.3.4.min.css') }}">
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.dataTables.min.css">
+    <!-- <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet"> -->
+
+
+    
+
+
+    {% endblock styles %}
+    {% block scripts %}
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="{{ url_for('static', filename='js/jquery-1.12.1.min.js') }}"></script> 
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js', v='2') }}"></script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-treeview.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/aladinv3/aladin.js', v='8') }}"></script>  
+   
+    <script src="{{ url_for('static', filename='js/ep.js', v='3') }}"></script>
+    <script src="{{ url_for('static', filename='js/addons/datatables.min.js', v='2') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment-with-locales-2.9.0.min.js', v='2') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
+    
+    <!--luxon-->
+    <script src="{{ url_for('static',filename="luxon/3.1.1/luxon.min.js")}}" ></script>
+    <!-- tabulator 5.3 -->
+    <script src="{{ url_for('static', filename='js/tabulator.5.4.3.min.js', v='2') }}"></script>
+
+    <!-- csv-->
+    <script src="{{ url_for('static', filename='js/d3js.min.js', v='2') }}"></script>
+
+    <!--vue-->
+    <script src="{{ url_for('static',filename="vue/3.2.44/vue.global.js")}}" ></script>
+
+    <!--datatables button-->
+    <script src="https://cdn.datatables.net/buttons/2.3.2/js/daoaTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
+
+    <!-- echarts -->
+    <script src="{{ url_for('static',filename="echarts/5.4.1/echarts.js")}}" ></script>
+
+    
+  {# #}
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/d3@7"></script> -->
+
+    <!-- <script>$(document).ready(function () { $('body').bootstrapMaterialDesign(); });</script> -->
+    <script type="text/javascript">
+        var prx = '{{get_subsite()}}';
+        var csrf_token = "{{ csrf_token() }}";
+        {% if current_user.is_authenticated %}
+        var is_authenticated = true;
+        {% else %}
+        var is_authenticated = false;
+        {% endif %}
+        $(function () {
+            if ($(".index-SecNav").css("width").replace(/[^-\d\.]/g, '') > 768) {
+                $(".dropdown").mouseover(function () {
+                    $(".dropdown").removeClass("show");
+                    $(this).addClass("show");
+                    $(".dropdown-toggle").attr("aria-expanded", "false");
+                    $(this).children(".dropdown-toggle").attr("aria-expanded", "true");
+                    $(".dropdown-menu").removeClass("show");
+                    $(this).children(".dropdown-menu").addClass("show");
+                });
+                $(".dropdown").not($(this).children(".dropdown-menu").mouseenter()).mouseleave(function () {
+                    $(".dropdown").removeClass("show");
+                    $(".dropdown-toggle").attr("aria-expanded", "false");
+                    $(".dropdown-menu").removeClass("show");
+                });
+            }
+        });
+        var browserRule = /^.*((iPhone)|(iPad)|(Safari))+.*$/;
+    if (browserRule.test(navigator.userAgent)) {
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                window.location.reload()
+            }
+        };
+    }
+
+      //选择文件后更新Button内容
+      $(document).ready(function(){
+            $("input[type='file']").change(function (event) {
+                let filename = event.currentTarget.files[0].name;
+                $(this)
+                .siblings("label")
+                .text(() => {
+                    return filename;
+                });
+            });
+    })
+        
+    </script>
+        
+        
+    {% endblock %}
+</head>
+
+<body>
+    {% block navbar %}
+    <nav class="index-SecNav navbar navbar-expand-md mmdcsNav"
+        style="width: 100%; background-color: #ffff; margin: 0px; height: 95px;">
+        <div class="container mmdcs-navbar-container">
+
+            <a class="navbar-brand" href="{{url_for('main.index')}}">
+                <img src="{{url_for('static',filename='/images/index-logos/eplogo3.png')}}" style="height: 87px; vertical-align:middle;"
+                    alt="logo">
+            </a>
+
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#mmdcs-navbar"
+                aria-controls="mmdcs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mmdcs-navbar">
+                <ul class="navbar-nav ml-auto mmdcsNavbar-ul">
+                   {#<li class="nav-item">
+                        <a class="nav-link" href="#" id="navbarDropdownLNG" role="button" aria-haspopup="true"
+                            aria-expanded="false"
+                            onclick="visit_url_and_refresh_current_page('{{ url_for('main.set_locale', locale='en' if get_locale()!='en' else 'zh_Hans_CN') }}')">
+                            {% if get_locale()!='en' %}English{% else %}中文{% endif %}
+                        </a>
+                    </li>#} 
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-item nav-link"
+                            href="{{ url_for('notification.show_notifications', filter='unread') }}">
+                            <span class="oi oi-bell"></span>
+                            <span id="notification-badge"
+                                class="{% if notification_count == 0 %}hide{% endif %} badge badge-danger badge-notification"
+                                data-href="{{ url_for('ajax.notifications_count') }}">{{ notification_count }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dropdown nav-item">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                aria-expanded="false">
+                                <img class="avatar-xs"
+                                    src="{{ url_for('main.get_avatar', filename=current_user.avatar_s) }}">
+                                <span class="caret"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right mmdcsNavbar-ul" role="menu">
+                                <h6 class="dropdown-header">{{ current_user.name }}</h6>
+                                <a class="dropdown-item" href="{{ url_for('user.index') }}">
+                                    <span class="oi oi-person"></span> {{_('My Home')}}
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('user.edit_profile') }}">
+                                    <span class="oi oi-cog"></span> {{_('Settings')}}
+                                </a>
+                                {% if3current_user.can('DASHBOARD_VIEW') %}
+                                <a class="dropdown-item" href="{{ url_for('sysadmin.index') }}">
+                                    <span class="oi oi-dashboard"></span> {{_('Dashboard')}}
+                                </a>
+                                {% endif %}
+                                {% if current_user.can('EPSMC_VIEW') %}
+                                <a class="dropdown-item" href="{{ url_for('science_management_committee.index') }}">
+                                    <span class="oi oi-document"></span> {{_('SMC Panel')}}
+                                </a>
+                                {% endif %}
+                                {% if current_user.can('CMS_EDIT') %}
+                                <a class="dropdown-item" href="{{ url_for('cms.science_team_apply_admin_access') }}">
+                                    <span class="oi oi-document"></span> {{_('STP Management')}}
+                                </a>
+                                {% endif %}
+                                {% if current_user.can('SY01_ACCESS') %}
+                                <a class="dropdown-item" href="{{ url_for('data_center.source_candidate_list_ta_get') }}">
+                                    <span class="oi oi-task"></span> {{_('TA Quick Tool')}}
+                                </a>
+                                {% endif %}
+                                <a class="dropdown-item" href="{{ url_for('user.logout') }}">
+                                    <span class="oi oi-power-standby"></span> {{_('Logout')}}
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user.login') }}">{{_('Login')}}</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <nav class="index-SecNav navbar navbar-expand-md navbar-dark bg-dark nav-fill ep-menu-nav">
+        <div class="container mmdcs-navbar-container">
+            <button type="button" class="navbar-toggler" data-toggle4"collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav ep-nav nav justify-content-center" style="width: 100%;">
+                    <li class="nav-item">
+                 3      <a class="nav-link" href="{{url_for('main.index')}}">Home</a>
+                    </li>
+                    {% with menu_l0 = get_system_menu(0) %}
+                    {% for m0 in menu_l0 %}
+                        {% with menu_l1 = get_system_menu(m0.id) %}
+                        {% if menu_l1 | count>0 %}
+                        <li class="nav-item dropdown ">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown0" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{m0.title_en}}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown0">
+                            {% for m1 in menu_l1 %}
+                            <a class="dropdown-item" href="{{m1.url}}">{{m1.title_en }}</a>
+                            {% endfor %}
+                        </div>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{m0.url}}">{{m0.title_en }}</a>
+                        </li>
+                        {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+                    {% endwith %}
+                </ul>
+            </div>
+
+            {#<div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav ep-nav nav justify-content-center">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{url_for('main.index')}}">Home</span></a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Proposal</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Data Center
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <!-- <a class="dropdown-item" href="#">Data Simulation</a>
+                            <div class="dropdown-divider"></div> -->
+                            <!-- <a class="dropdown-item" href="#">Quicklook Data</a> -->
+                            <a class="dropdown-item" href="{{url_for('data_center.observation_data')}}">Observation Data</a>
+                            <a class="dropdown-item" href="{{url_for('data_center.source_list')}}">Source List</a>
+                            <!-- <a class="dropdown-item" href="#">Transient</a>
+                            <a class="dropdown-item" href="#">Variable Source</a> -->
+                            <a class="dropdown-item" href="#">Data Analysis Software</a>
+                            <a class="dropdown-item" href="#">Calibration DB</a>
+
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('mwr.index')}}">Cross-Matching</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Time Domain Database</a>
+                    </li>
+                    
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#">Publications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Meetings</a>
+                    </li> -->
+
+                </ul>
+            </div>#}
+        </div>
+
+    </nav>
+
+    {% endblock %}
+    <div class="container-fluid main-mmdcs-container" style="background:white; padding-top:10px;" >
+        {% for message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ message[0] }}" style="padding-top: 10px;">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message[1] | safe}}
+        </div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+    </div>
+    {% block footer %}
+ 
+
+    <footer class="bg-dark footer_ep">
+        <div class="container ">
+            <div class="row">
+                <div class="col-sm-2 footer_img"><img src="{{ url_for('static', filename='images/index-logos/logo_bottom_3.png') }}" height="130px;"></div>
+
+                <div class="col-sm-7 footer_cont">
+                    <p>Copyright 2018-2022 © National Astronomical Observatories, Chinese Academy of Sciences </p>
+                    <p> Address:No. 20, Datun Road, Chaoyang District, Beijing, China E-mail:ep@nao.cas.cn
+                    </p>
+                </div>
+
+                <div class="col-sm-3" style="float:right; text-align: right; line-height: 130px;">
+                  <a href="https://nadc.china-vo.org/"><img src="{{ url_for('static', filename='images/index-logos/logo_nsti_and_nadc.png') }}" style="width:230px; "></a>
+                </div>
+                <div class="col-sm-12 text-center">
+                    <a href="http://www.china-vo.org/"><img style="height:30px; margin-top: 10px;" src="{{ url_for('static', filename='images/index-logos/power_logo_white.png') }}"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+    {% block tail %}{% endblock %}
+    <!-- Piwik -->
+    <script type="text/javascript">
+        var _paq = _paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "//analytics.escience.org.cn/";
+            _paq.push(['setTrackerUrl', u + 'piwik.php']);
+            _paq.push(['setSiteId', '23']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'piwik.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <!-- End Piwik Code -->
+
+</body>
+
+</html>

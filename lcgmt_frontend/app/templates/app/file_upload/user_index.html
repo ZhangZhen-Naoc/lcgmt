@@ -1,0 +1,76 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{_('File Upload')}} | {{project.project_name}}{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ moment.include_jquery() }}
+{{ moment.include_moment() }}
+{% endblock scripts %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        {{ render_breadcrumb_item('main.index', _('Home')) }}
+        {{ render_breadcrumb_item('user.index', _('User')) }}
+        {{ render_breadcrumb_item('project.user_project_list', _('My Projects')) }}
+        {{ render_breadcrumb_item('metadata_submission.metadata_list', project.project_name, project_id=project_id) }}
+        {{ render_breadcrumb_item('file_upload.user_index', _('File Upload')) }}
+    </ol>
+</nav>
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-3 w-100 bg-light">
+                <div class="card-header">
+                    <h4>{{_('File Uploaded')}} ({{stat.count}} {{_('files')}} {{humanbytes(stat.total_size)}})</h4>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <form class="inline" action="{{ url_for('file_upload.upload') }}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="project_id" value="{{ project_id }}">
+                            <input type="hidden" name="resource_id" value="{{ resource_id }}">
+                            <input type="file" multiple name="file">
+                            <input type="submit" class="btn btn-primary btn-sm" value="{{_('Upload')}}">
+                        </form>
+                    </div>
+                    {% if files %}
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>filename</th>
+                            <th>file size</th>
+                            <th>uploaded_time</th>
+                            <th>uploader</th>
+                            <th>actions</th>
+                        </tr>
+                        </thead>
+                        {% for f in files %}
+                        <tr>
+                            <td><a href="{{url_for('.download', id=f.id)}}">{{f.filename}}</a></td>
+                            <td>{{humanbytes(f.file_size)}}</td>
+                            <td>{{f.uploaded_time.strftime('%Y-%m-%d %I:%M:%S')}}</td>
+                            <td><label email="{{f.uploader.email}}">{{f.uploader.name}}</label></td>
+                            <td>
+                                <form action="{{ url_for('.delete', id=f.id) }}" class="inline" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="submit" onclick="return confirm('{{_('Are you sure?')}}');" class="btn btn-warning btn-sm" value="Delete">
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% endif %}
+                    <div class="text-right page-footer">
+                        {{ render_pagination(pagination) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

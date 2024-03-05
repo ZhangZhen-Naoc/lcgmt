@@ -1,0 +1,25 @@
+
+{% extends 'app/base.html' %}
+ {% block title %}
+    Independent Password
+ 
+ {% endblock %} 
+ {% block content %}
+    Independent Password Required for This Page:
+    <input name="pwd" type="text"> <button onclick="type_pwd()">Confirm</button>
+
+    <script>
+        function setCookie(cname, cvalue) {
+
+            const d = new Date();
+            d.setTime(d.getTime() + (2*24*60*60*1000));
+            let expires = "expires="+ d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+        function type_pwd(){
+            pwd = document.getElementsByName("pwd")[0].value
+            setCookie("PWD_"+"{{key}}",pwd)
+            location.reload()
+        }
+    </script>
+ {% endblock%}

@@ -1,0 +1,560 @@
+<div class="card w-100" style="margin-top: 20px">
+<div class="card-header bg-light">
+    <div style="color: #004386; font-weight: bold; font-size: 16px">
+      <span class="wxt_obs_num_sor_loc"></span> WXT, <span class="fxt_obs_num_sor_loc"></span> FXT Observations at Source Location
+    </div>
+</div>
+<div class="card-body">
+    
+    
+      <!-- 选项卡 -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#wxt">WXT</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#fxt">FXT</a>
+    </li>
+  </ul>
+
+  <!-- 选项卡对应内容 -->
+  <div class="tab-content">
+    <div class="tab-pane active container" id="wxt">
+      <div id="result_tab" style="z-index: 50; width: 100%"></div>
+    </div>
+    <div class="tab-pane container" id="fxt">
+      <div id="fxt_result_tab" style="z-index: 50; width: 100%"></div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+  var ra = "{{sourceInDetection.ra}}";
+  var dec = "{{sourceInDetection.dec}}";
+  var sy01_api_url="{{ url_for('data_center.sy01_observation_data') }}"
+  {#var fxt_api_url = "{{ url_for('data_center.fxt_obs_list_api') }}"#}
+</script>
+<script src="{{url_for('static',filename='js/app/data_center/observations_at_this_location.js')}}"></script>
+<script>
+  var result_table;
+  var lastSelectedRow; //表中当前选中行
+  var lastSelectedFov; //图层中选中的fov
+  var currentRes;
+  var objClicked;
+  function digit3(num){
+    return Number.parseFloat(num.toFixed(3))
+  }
+  function digit0(num){
+    return Math.floor(num)
+  }
+
+  // function HighlightCurrentFov(fov_id){
+  //   var footprint = aladin.layerByName("fov").overlays.filter((footprint) => {
+  //           return footprint.name == fov_id;
+  //         })[0];
+  // }
+
+  function gotoLocation(ra, dec) {
+    this.aladin.gotoRaDec(ra, dec);
+  }
+
+  function showQuicklook(obs_id, cmos_id, version) {
+    var basesrc = "{{url_for('data_center.get_quick_look_image',obs_id='obs_id5ph', cmos_id='cmos_id_ph',version='version')}}";
+
+    var caption = "Quick look of " + obs_id + " " + cmos_id;
+    var imagesrc = basesrc.replace("obs_id_ph", obs_id).replace("cmos_id_ph", cmos_id).replace("version", version);
+
+    $("#imageModalTitle").text(caption);
+
+    $("#image-model").attr("src", imagesrc);
+
+    $("#image-modal-div").modal("show");
+  }
+
+  function downloadLevel2(obs_id, cmos_id,version) {
+    var baseUrl = "{{url_for('data_center.download_lv2', obsid='obs_id_ph',cmosid='cmos_id_ph',version='version')}}";
+    var targetUrl = baseUrl.replace("obs_id_ph", obs_id).replace("cmos_id_ph", cmos_id).replace('version',version);
+    window.open(targetUrl, "_blank").focus();
+  }
+
+  function showObsDetailPage(obs_id, cmos_id,version) {
+    var baseUrl = "{{url_for('data_center.sy01_observation_detail', obs_id='obs_id_ph',cmos_id='cmos_id_ph',version='version')}}";
+    var targetUrl = baseUrl.replace("obs_id_ph", obs_id).replace("cmos_id_ph", cmos_id).replace('version',version);
+    window.open(targetUrl, "_blank").focus();
+  }
+
+  var gotoIcon = function (cell, formatterParams, onRendered) {
+    return '<i class="fas fa-bullseye"></i>';
+  };
+
+  var imageIcon = function (cell, formatterParams, onRendered) {
+    return '<i class="fas fa-eye"></i>';
+  };
+
+  var downloadIcon = function (cell, formatterParams, onRendered) {
+    return '<i class="fas fa-download"></i>';
+  };
+
+  var detailIcon = function (cell, formatterParams, onRendered) {
+    return '<i class="fas fa-info-circle"></i>';
+  };
+
+  function clearSelectedRow() {
+    if (lastSelectedRow != undefined) {
+      lastSelectedRow.deselect();
+    }
+  }
+
+  function addErrorCircle(ra, dec, radius) {
+    if (ra != "" && dec != "" && radius != "") {
+      var overlay = A.graphicOverlay({ name: "search error circle", color: "#ee2345", lineWidth:3 });
+      aladin.addOverlay(overlay);
+      var circle = A.circle(Number(ra), Number(dec), Number(radius));
+      overlay.add(circle);
+    }
+  }
+
+ 
+  function getFovPolySTCS(fov) {
+    if (fov != null) {
+      var re = new RegExp("[0-9\.e\-]+", "g");
+      var points = fov.match(re);
+
+      return `Polygon ICRS ${r2d(points[0])} ${r2d(points[1])} ${r2d(points[2])} ${r2d(points[3])} ${r2d(points[4])} ${r2d(points[5])} ${r2d(
+        points[6]
+      )} ${r2d(points[7])}`;
+    } else {
+      return "-1";
+    }
+  }
+
+  function r2d(point) {
+    var deg = parseFloat(point) * (180 / Math.PI);
+    return deg;
+  }
+
+  function mergeSameObsId(data) {
+    if (data == null || !Array.isArray(data)) {
+      return [];
+    }
+    let result = [];
+    let map = new Map();
+    for (let item of data) {
+      if (map.has(item.obs_id)) {
+        let temp = map.get(item.obs_id);
+        temp.push(item);
+        map.set(item.obs_id, temp);
+      } else {
+        map.set(item.obs_id, [item]);
+      }
+    }
+    for (let [key, value] of map) {
+      let temp = value[0];
+      if (value.length > 1) {
+        temp._children = value.slice(1);
+      }
+      result.push(temp);
+    }
+    return result;
+  }
+
+  $(".datetimepicker").datetimepicker({
+    allowInputToggle: true,
+    showClose: false,
+    showClear: false,
+    showTodayButton: false,
+    format: "YYYY-MM-DD HH:mm:ss",
+  });
+
+  $(document).ready(function () {
+    $("#aladin-lite-div").width($("#aladin-div").width());
+    $("#aladin-lite-div").height(550);
+  });
+
+  let aladin;
+  let obs_id_hips = "{{sourceInDetection.detection.obs_id}}";
+  A.init.then(() => {
+    aladin = A.aladin("#aladin-lite-div", {
+    //   survey: "http://127.0.0.1:5000/ep/static/hips/RASS/ov-gso_P_RASS/",
+    survey:"https://ep.bao.ac.cn/leia/static/hips/RASS/ov-gso_P_RASS/",
+
+      fov: 360,
+      fullScreen: false,
+      cooFrame: "galactic",
+      showReticle: true,
+      reticleSize: 64, // change reticle size
+      showSimbadPointerControl: true
+    });
+    aladin.setProjection("AIT");
+
+    aladin.gotoRaDec({{sourceInDetection.ra}},{{sourceInDetection.dec}});
+
+    aladin.setBaseImageLayer(
+      aladin.createImageSurvey(
+        "RASS",
+        "ROSAT All Sky Survey (RASS) - 0.1-2.4 keV",
+        // 'http://127.0.0.1:5000/ep/static/hips/RASS/ov-gso_P_RASS/',
+
+        'https://ep.bao.ac.cn/leia/static/hips/RASS/ov-gso_P_RASS/',
+        "galactic",
+        3,
+        { imgFormat: "jpeg", colormap: "rainbow" }
+      )
+    );
+    aladin.setOverlayImageLayer(
+        aladin.createImageSurvey(
+          obs_id_hips,
+          obs_id_hips,
+          "https://ep.bao.ac.cn/leia/hips/"+obs_id_hips,
+
+          "equatorial",
+          3,
+          {
+            imgFormat: "png",
+            colormap: "rainbow",
+          }
+        ),
+        obs_id_hips
+      );
+
+    // aladin.setOverlayImageLayer("CDS/P/DSS2/color");
+    // aladin.getOverlayImageLayer().setAlpha(1);
+
+    aladin.on("objectClicked", function (object) {
+      // aladin.on("footprintClicked", function (object) {
+      var msg;
+      if (object) {
+        objClicked = object;
+        object.select();
+        // console.log(object);
+        if (object.id!=undefined && object.id.includes("footprint")) {
+          // console.log('fov',object);
+          if (lastSelectedRow != undefined && lastSelectedRow._row.data.id != object.name) {
+            lastSelectedRow.deselect();
+          }
+          //通过name（id）找到对应的行
+          console.log(object.name);
+          var row = [];
+          for (item of result_table.getRows()) {
+            if (item._row.data.id == object.name) {
+              row.push(item);
+              break;
+            } else if (item._row.data._children != undefined) {
+              var children = item.getTreeChildren();
+              for (child of children) {
+                if (child._row.data.id == object.name) {
+                  item.treeExpand();
+                  row.push(child);
+                  break;
+                }
+              }
+            }
+          }
+          lastSelectedRow = row[0];
+          row[0].select();
+          row[0].scrollTo();
+        }
+        else{
+            console.log('object click goes here');
+        }
+      } else {
+        objClicked.deselect();
+      }
+    });
+
+    this.aladin = aladin;
+    GetObsInSourceLocation(ra,dec);
+
+  });
+
+  $("#datetimepicker").datetimepicker({
+    allowInputToggle: true,
+    showClose: false,
+    showClear: false,
+    showTodayButton: false,
+    format: "YYYY-MM-DD HH:mm:ss",
+  });
+
+  $(".thumb").click(function () {
+    var caption = $(this).find("figcaption");
+
+    $("#imageModalTitle").text(caption.text());
+    var imagesrc = $(this).attr("imgsrc");
+    $("#image-model").attr("src", imagesrc);
+
+    $("#image-modal-div").modal("show");
+  });
+
+  function addCatalogues() {
+    var hips1 = A.catalogHiPS("https://data.darts.isas.jaxa.jp/pub/HiPS/CHANDRA_Catalogue/", {
+      onClick: "showTable",
+      name: "Chandra Catalogue",
+      shape: drawFunction,
+      color: "purple",
+    });
+    var hips2 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_maxi_merged_hips.csv")}}', {
+      onClick: "showTable",
+      name: "MAXI Catalogue",
+      shape: drawFunction,
+      color: "cyan",
+
+    });
+    var hips3 = A.catalogHiPS("https://axel.cds.unistra.fr/HiPSCatService/I/355/gaiadr3", {
+      onClick: "showTable",
+      name: "Gaia DR3 Catalogue",
+      shape: "cross",
+      color: "blue",
+    });
+
+    var hips4 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_4xmm.csv")}}', {
+      onClick: "showTable",
+      name: "4XMMDR11 Catalogue",
+      shape: drawFunction,
+      color: "red",
+    });
+    var hips5 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_ep_ref_hips.csv")}}', {
+      onClick: "showTable",
+      name: "EP Reference Catalogue",
+      shape: drawFunction, //pos err not available
+      color: "yellow",
+    });
+
+    var hips6 = A.catalogHiPS('{{url_for("static",filename="inden/HiPSCat_swift.csv")}}', {
+      onClick: "showTable",
+      name: "SWIFT 2SXPS Catalogue",
+      shape: drawFunction,
+      color: "purple",
+    });
+
+    var hips8 = A.catalogHiPS('https://axel.cds.unistra.fr/HiPSCatService/Simbad/', {
+      onClick: "showTable",
+      name: "SIMBAD Database",
+      shape: "square",
+      color: "blue",
+    });
+
+    var hips7 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_2rxs-flux.csv")}}', {
+      onClick: "showTable",
+      name: "2RXS Catalogue",
+      shape: drawFunction,
+      color: "green",
+    });
+
+    var hips9 = A.catalogHiPS('https://axel.cds.unistra.fr/HiPSCatService/II/328/allwise', {
+      onClick: "showTable",
+      name: "AllWISE Catalog",
+      shape: "square",
+      color: "#03DAC5",
+    });
+
+    var hips10 = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_des.csv")}}', {
+      onClick: "showTable",
+      name: "Dark Energy Survey Catalog",
+      shape: "square",
+      color: "brown",
+    });
+
+    //HiPSCat_des.csv
+
+    // this.aladin.addCatalog(hips1); //chandra
+    this.aladin.addCatalog(hips2); //maxi purple
+    hips2.hide();
+    // aladin.addCatalog(hips3); //gaia dr3
+    // this.aladin.addCatalog(hips4); //4xmmdr11
+
+    this.aladin.addCatalog(hips6); //2sxps purple
+    hips6.hide();
+    this.aladin.addCatalog(hips7); //2rxs green
+    hips7.hide();
+    this.aladin.addCatalog(hips8); //simbad green
+    hips8.hide();
+    this.aladin.addCatalog(hips9); //allwise  light green
+    hips9.hide();
+    this.aladin.addCatalog(hips10); //allwise  light green
+    hips10.hide();
+    this.aladin.addCatalog(hips5); //ep ref yellow
+  }
+
+  function showSourceDetail(){
+    console.log("Show source details");
+  }
+
+  function drawFunction(source, canvasCtx, viewParams, color = "red") {
+      var fov = Math.max(viewParams["fov"][0], viewParams["fov"][1]);
+      var radiusDegrees = 32/3600.0;
+      if (source.data["pos_err"] != undefined ) {
+        if ( source.data["pos_err"] >0.1)
+        {
+            radiusDegrees = parseFloat(source.data["pos_err"]) / 3600.0;
+        }
+        else{
+            radiusDegrees = parseFloat(source.data["pos_err"]);
+        }
+      }
+      var ra = parseFloat(source.data["ra"]);
+      var dec =
+        parseFloat(source.data["dec"]) +
+        (ra > 0 ? -radiusDegrees : radiusDegrees);
+      // console.log("dec", dec);
+
+      var circlePtXyView = aladin.webglAPI.worldToScreen(ra, dec);
+      // console.log("circlePtXyView", circlePtXyView);
+      if (!circlePtXyView) {
+        // the circle border goes out of the projection
+        // we do not draw it
+        return;
+      }
+      var dx = circlePtXyView[0] - source.x;
+      var dy = circlePtXyView[1] - source.y;
+      var radiusInPix = Math.sqrt(dx * dx + dy * dy);
+      // console.log("radiusInPix", radiusInPix);
+      // console.log("source", source);
+      canvasCtx.beginPath();
+      canvasCtx.lineWidth = 3;
+      if (fov > 50) {
+        return;
+        // canvasCtx.arc(source.x, source.y, 2, 0, 2 * Math.PI, false);
+      } else {
+        canvasCtx.arc(
+          source.x,
+          source.y,
+          radiusInPix * 2,
+          0,
+          2 * Math.PI,
+          false
+        );
+      }
+      canvasCtx.closePath();
+      canvasCtx.strokeStyle = color;
+
+      (canvasCtx.globalAlpha = 1), canvasCtx.stroke();
+
+      // object name is displayed only if fov<10°
+      //   if (fov > 10) {
+      //     return;
+      //   }
+
+      // canvasCtx.globalAlpha = 0.9;
+      // canvasCtx.globalAlpha = 1;
+      // var xShift = 20;
+      // canvasCtx.font = "15px Arial";
+      // canvasCtx.fillStyle = "#eee";
+      // canvasCtx.fillText(source.data["source_name"], source.x + xShift, source.y - 4);
+      // object type is displayed only if fov<2°
+      // if (fov > 2) {
+      //   return;
+      // }
+    }
+  // aladin.addCatalog(hips8);
+
+  $("#search-current-position").click(function () {
+    $("#spinner-div").show();
+    var ra;
+    var dec;
+    [ra, dec] = aladin.getRaDec();
+    console.log(ra, dec);
+    var radius = 3;
+    aladin.removeLayers();
+
+    addErrorCircle(ra, dec, radius);
+
+    $.ajax({
+      type: "POST",
+      url: "{{ url_for('data_center.sy01_observation_data') }}",
+      dataType: "json",
+      data: { obs_id: "", ra: ra, dec: dec, radius: radius, start_datetime: "", end_datetime: "" },
+      success: function (res) {
+        // console.log(res);
+        addFov(res);
+        var table = new Tabulator("#result_tab", {
+          data: mergeSameObsId(res),
+          // data: res,
+          selectable: 1,
+          dataTree: true,
+          height: 500,
+          scrollToRowIfVisible: true,
+          layout: "fitDataFill",
+          columns: [
+            { title: "OBS ID", field: "obs_id", sorter: "string" },
+            { title: "CMOS ID", field: "detnam", sorter: "string" },
+            {
+              title: "",
+              formatter: gotoIcon,
+              width: 50,
+              hozAlign: "center",
+              tooltip: "Go to Obs Location",
+
+              cellClick: function (e, cell) {
+                gotoLocation(cell.getRow().getData().pnt_ra, cell.getRow().getData().pnt_dec);
+              },
+            },
+            {
+              title: "",
+              formatter: imageIcon,
+              width: 50,
+              hozAlign: "center",
+              tooltip: "Show Quicklook Image",
+
+              cellClick: function (e, cell) {
+                showQuicklook(cell.getRow().getData().obs_id, cell.getRow().getData().detnam);
+              },
+            },
+            {
+              title: "",
+              formatter: downloadIcon,
+              width: 50,
+              hozAlign: "center",
+              tooltip: "Download Level2-3 Data",
+              cellClick: function (e, cell) {
+                downloadLevel2(cell.getRow().getData().obs_id, cell.getRow().getData().detnam);
+              },
+            },
+            {
+              title: "",
+              formatter: detailIcon,
+              width: 50,
+              hozAlign: "center",
+              tooltip: "Show Detail",
+
+              cellClick: function (e, cell) {
+                showObsDetailPage(cell.getRow().getData().obs_id, cell.getRow().getData().detnam);
+              },
+            },
+            { title: "Pointing RA", field: "pnt_ra", sorter: "number" },
+            { title: "Pointing Dec", field: "pnt_dec", sorter: "number" },
+            { title: "Exposure Time", field: "exposure_time", sorter: "string" },
+            { title: "Obs Start Time", field: "obs_start",timezone:'utc' },
+            { title: "Obs End Time", field: "obs_end",timezone:'utc' },
+            { title: "ID", field: "id", sorter: "number" },
+          ],
+        });
+        result_table = table;
+
+        result_table.on("rowSelected", function (row) {
+          if (lastSelectedRow != undefined && lastSelectedRow._row.data.id == row._row.data.id) {
+            return;
+          }
+          clearSelectedRow();
+          lastSelectedRow = row;
+          if (objClicked != undefined) {
+            objClicked.deselect();
+          }
+
+          aladin.gotoRaDec(row.getData().pnt_ra, row.getData().pnt_dec);
+          // console.log(row.getData());
+          var footprint = aladin.layerByName("fov").overlays.filter((footprint) => {
+            return footprint.name == row.getData().id;
+          })[0];
+          footprint.select();
+          // console.log(footprint);
+          objClicked = footprint;
+        });
+      },
+      error: function () {},
+
+      complete: function () {
+        $("#spinner-div").hide(); //Request is complete so hide spinner
+      },
+    });
+  });
+</script>

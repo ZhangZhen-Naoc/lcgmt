@@ -1,0 +1,290 @@
+{% extends 'app/base_new.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+
+          
+           
+                <div class="row">
+                    <div class="col">
+                        <button type="button" id="center" class="btn btn-outline-primary">Load Matched Results</button>
+                        <button type="button" id="mwr" class="btn btn-outline-primary">Load Unmatch Results</button>
+                        <!-- <button type="button" id="lmc" class="btn btn-outline-primary">LMC</button>
+                        <button type="button" id="smc" class="btn btn-outline-primary">SMC</button> -->
+                        <input type="text" class="form-control" id="ra" placeholder="ra in degrees"/>
+                        <input type="text" class="form-control" id="dec" placeholder="dec in degrees"/>
+
+                        <button type="button" id="goto" class="btn btn-primary">Goto</button>
+
+                        </div>
+                    </div>
+
+                <div class="row">
+                    <div class="col-6" id="with-aladin">
+                        <div id="aladin-lite-div">
+                
+                        </div>
+                        </div>
+                        <div class="col-6" id="with-aladin-1">
+                          <div id="aladin-lite-div-1">
+                  
+                          </div>
+                        </div>
+                </div>
+    <script>
+        var source_group = JSON.parse('{{leia_source_json|tojson}}');
+        var so_known_group = JSON.parse('{{so_known_group|tojson}}');
+
+        function showObservationDetail(source){
+
+    
+
+          var url = "{{url_for('data_center.get_obs_by_source_id')}}"+"/"+source.data["source_id"];
+       
+          window.open(url, '_blank').focus();
+
+
+        }
+
+  
+        
+            // define custom draw function
+            function drawFunction(source, canvasCtx, viewParams) {
+              var fov = Math.max(viewParams["fov"][0], viewParams["fov"][1]);
+              // if (fov < 1) {
+              //   return;
+              // }
+        
+              canvasCtx.beginPath();
+              canvasCtx.arc(
+                source.x,
+                source.y,
+                source.data["size"] * 1,
+                0,
+                2 * Math.PI,
+                false
+              );
+              canvasCtx.closePath();
+              canvasCtx.strokeStyle = "#FFD700";
+              canvasCtx.lineWidth = 3;
+              (canvasCtx.globalAlpha = 0.7), canvasCtx.stroke();
+              
+        
+              // object name is displayed only if fov<10°
+              // if (fov > 10) {
+              //   return;
+              // }
+        
+              canvasCtx.globalAlpha = 0.9;
+              canvasCtx.globalAlpha = 1;
+              var xShift = 20;
+              canvasCtx.font = "15px Arial";
+              canvasCtx.fillStyle = "#eee";
+              canvasCtx.fillText(source.data["source_name"], source.x + xShift, source.y - 4);
+              // object type is displayed only if fov<2°
+              // if (fov > 2) {
+              //   return;
+              // }
+            };
+        
+            //在天球上添加暂现源，payload是源信息，listname是图层名字，用于表示暂现源类型
+           function addSourceList2Aladin(aladin, payload, listname) {
+             var aladin = aladin;
+              var sourceList = [];
+              for (var target in payload) {
+                var source = this.A.source(
+                  parseFloat(payload[target].ra),
+                  parseFloat(payload[target].dec),
+                  {
+                    size: 6.5,
+                    source_name: "id: "+payload[target].id,
+                    source_id:payload[target].id
+                    // chinese_name: payload[target].suggested_chinese_name
+                  }
+                );
+                // console.log(source);
+                sourceList.push(source);
+              }
+           
+              // if (cat != null) {
+              //   // this.aladin.removeCatalog(this.cat);
+              //   aladin.removeLayers();
+              // }
+        
+              cat = A.catalog({
+                // shape: c, labelColumn: 'name', displayLabel: true, labelColor: '#fff', labelFont: '14px sans-serif'
+                name: listname,
+                onClick: this.showObservationDetail,
+                shape: this.drawFunction
+                // source
+              });
+              // add sources to the new layer
+              cat.addSources(sourceList);
+              aladin.addCatalog(this.cat);
+            };
+        
+        
+            $(document).ready(function () {
+                $('#aladin-lite-div').width($('#with-aladin').width());
+                $('#aladin-lite-div').height(800);
+
+                $('#aladin-lite-div-1').width($('#with-aladin-1').width());
+                $('#aladin-lite-div-1').height(800);
+                
+            });
+
+            let aladin;
+            let aladin1;
+            var colormap=['green',
+            'Chartreuse',
+            'yellow',
+            'purple',
+            'red',
+             'cyan',
+             'PaleGreen',
+             'DarkOrange',
+             'LightCoral',
+             'RoyalBlue',
+             'Gold'];
+
+            $("#center").click(function(){
+              var count = Object.keys(source_group['matched']).length;
+              
+              console.log(count);
+                let overlay = A.graphicOverlay({color: colormap[0], lineWidth: 1});
+                let overlay1 = A.graphicOverlay({color: colormap[0], lineWidth: 5});
+
+                aladin.addOverlay(overlay);
+                aladin.addOverlay(overlay1);
+
+                // var cat = A.catalog({name: '1 arcmin errorbox markers', sourceSize: 18});
+                // aladin.addCatalog(cat);
+                let marker_list=[];
+                for(var group_index in source_group['matched'])
+                {
+                  // console.log(group_index);
+                    let colomap_index = Math.floor(Math.random()*10);
+                    let sources = source_group['matched'][group_index];
+                    for(let source_index in sources)
+                    {
+                      let source =sources[source_index];
+                      let ra = source['ra'];
+                      let dec = source['dec'];
+                      let pos_err = source['pos_err'];
+                      if(source['type']=='ep average')
+                      {
+                        overlay1.add(A.circle(parseFloat(ra), parseFloat(dec),0.1667*3, {color: colormap[colomap_index]}));//误差半径1个角分
+
+                      }
+                      else{
+                      overlay.add(A.circle(parseFloat(ra), parseFloat(dec),parseFloat(pos_err), {color: colormap[colomap_index]}));
+                    }
+                      if(source_index == 0)
+                      {
+                        marker_list.push(source);//把每组第一个用标记显示出来
+                      }
+                    }
+                }
+                addSourceList2Aladin(aladin, marker_list,'cross matching group');
+    
+            });
+
+            $("#mwr").click(function(){
+              var count = Object.keys(so_known_group['unmatched']).length;
+              
+              console.log(count);
+                let overlay = A.graphicOverlay({color: colormap[0], lineWidth: 1});
+                let overlay1 = A.graphicOverlay({color: colormap[0], lineWidth: 5});
+
+                aladin1.addOverlay(overlay);
+                aladin1.addOverlay(overlay1);
+
+                // var cat = A.catalog({name: '1 arcmin errorbox markers', sourceSize: 18});
+                // aladin.addCatalog(cat);
+                let marker_list=[];
+                for(var group_index in so_known_group['unmatched'])
+                {
+                  // console.log(group_index);
+                    let colomap_index = Math.floor(Math.random()*10);
+                    let source = so_known_group['unmatched'][group_index];
+                    // for(let source_index in sources)
+                    // {
+                      // let source =sources[source_index];
+                      let ra = source['ra'];
+                      let dec = source['dec'];
+                      let pos_err = source['pos_err'];
+                      if(source['type']=='ep average')
+                      {
+                        overlay1.add(A.circle(parseFloat(ra), parseFloat(dec),0.1667*3, {color: colormap[colomap_index]}));//误差半径1个角分
+
+                      }
+                      else{
+                      overlay.add(A.circle(parseFloat(ra), parseFloat(dec),parseFloat(pos_err), {color: colormap[colomap_index]}));
+                      }
+                      // if(source_index == 0)
+                      // {
+                        marker_list.push(source);//把每组第一个用标记显示出来
+                      // }
+                    // }
+                }
+                addSourceList2Aladin(aladin1, marker_list,'unmatching group');
+    
+            });
+
+            $("#goto").click(function(){
+              var ra= parseFloat($('#ra').val());
+              console.log(ra);
+              var dec = parseFloat($('#dec').val());
+              console.log(dec);
+
+              aladin.gotoRaDec(ra,dec);
+              aladin.setFov(0.25);
+              aladin1.gotoRaDec(ra,dec);
+              aladin1.setFov(0.25);
+
+              
+            });
+           
+            A.init.then(() => {
+        aladin = A.aladin("#aladin-lite-div", {
+         survey: "CDS/P/DSS2/color",
+          // survey:{url:'{{url_for("static",filename="hips/RASS/ov-gso_P_RASS")}}', imgFormat: 'jpeg',colormap:'rainbow' },
+          fov: 360,
+          fullScreen: false,
+          cooFrame: "galactic",
+          showReticle: true,
+          reticleSize: 64 // change reticle size
+        });
+        aladin.setProjection("AIT");
+        aladin.setOverlayImageLayer(aladin.createImageSurvey("RASS", "RASS allsky", '{{url_for("static",filename="hips/RASS/ov-gso_P_RASS")}}', "galactic", 3, { imgFormat: 'jpeg',colormap:'rainbow' }),'RASS');
+        this.aladin = aladin;
+      });
+      
+
+
+        A.init.then(() => {
+        _aladin = A.aladin("#aladin-lite-div-1", {
+          survey: "CDS/P/DSS2/color",
+          // survey:{url:'{{url_for("static",filename="hips/RASS/ov-gso_P_RASS")}}', imgFormat: 'jpeg',colormap:'rainbow' },
+          fov: 360,
+          fullScreen: false,
+          cooFrame: "galactic",
+          showReticle: true,
+          reticleSize: 64 // change reticle size
+        });
+        _aladin.setProjection("AIT");
+        _aladin.setOverlayImageLayer(_aladin.createImageSurvey("RASS", "RASS allsky", '{{url_for("static",filename="hips/RASS/ov-gso_P_RASS")}}', "galactic", 3, { imgFormat: 'jpeg',colormap:'rainbow' }),'RASS');
+        // this.aladin = aladin;
+        aladin1= _aladin;
+      });
+            // var hips = A.catalogHiPS('{{url_for("static",filename="hips/HiPSCat_cata_total_maxi.fits")}}', { onClick: 'showPopup', name: 'Maxi Rosat', shape: 'triangle', color: 'Green' });
+
+            //     aladin.addCatalog(hips);
+            //     aladin1.addCatalog(hips);
+     
+        </script>
+        
+        {% endblock %}

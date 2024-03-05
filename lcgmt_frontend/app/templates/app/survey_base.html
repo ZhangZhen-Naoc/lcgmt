@@ -1,0 +1,165 @@
+{% from 'bootstrap/nav.html' import render_nav_item %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" />
+    {% block head %}
+    <title>{% block title %}{% endblock %} | TDIC</title>
+    {% endblock head %} {% block styles %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='open-iconic/font/css/open-iconic-bootstrap.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-treeview.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/select2.min.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/select2-bootstrap.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/aladin.min.css', v='2') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ep.css', v='12') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome/all.css', v='12') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/addons/datatables.min.css', v='11') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css') }}" />
+
+    {% endblock styles %} {% block scripts %}
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js', v='2') }}"></script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-treeview.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/ep.js', v='2') }}"></script>
+    <script src="{{ url_for('static', filename='js/addons/datatables.min.js', v='2') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment-with-locales-2.9.0.min.js', v='2') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
+
+    <script type="text/javascript">
+          var prx = '{{get_subsite()}}';
+          var csrf_token = "{{ csrf_token() }}";
+          {% if current_user.is_authenticated %}
+          var is_authenticated = true;
+          {% else %}
+          var is_authenticated = false;
+          {% endif %}
+          $(function () {
+              if ($(".index-SecNav").css("width").replace(/[^-\d\.]/g, '') > 768) {
+                  $(".dropdown").mouseover(function () {
+                      $(".dropdown").removeClass("show");
+                      $(this).addClass("show");
+                      $(".dropdown-toggle").attr("aria-expanded", "false");
+                      $(this).children(".dropdown-toggle").attr("aria-expanded", "true");
+                      $(".dropdown-menu").removeClass("show");
+                      $(this).children(".dropdown-menu").addClass("show");
+                  });
+                  $(".dropdown").not($(this).children(".dropdown-menu").mouseenter()).mouseleave(function () {
+                      $(".dropdown").removeClass("show");
+                      $(".dropdown-toggle").attr("aria-expanded", "false");
+                      $(".dropdown-menu").removeClass("show");
+                  });
+              }
+          });
+          var browserRule = /^.*((iPhone)|(iPad)|(Safari))+.*$/;
+      if (browserRule.test(navigator.userAgent)) {
+          window.onpageshow = function(event) {
+              if (event.persisted) {
+                  window.location.reload()
+              }
+          };
+      }
+    </script>
+
+    {% endblock %}
+  </head>
+
+  <body>
+    {% block navbar %}
+    <nav class="index-SecNav navbar navbar-expand-md mmdcsNav" style="width: 100%; background-color: #ffff; margin: 0px; height: 95px">
+      <div class="container mmdcs-navbar-container">
+        <a class="navbar-brand" href="{{url_for('main.index')}}">
+          <img src="{{url_for('static',filename='/images/index-logos/eplogo3.png')}}" style="height: 87px; vertical-align: middle" alt="logo" />
+        </a>
+
+        <button
+          type="button"
+          class="navbar-toggler"
+          data-toggle="collapse"
+          data-target="#mmdcs-navbar"
+          aria-controls="mmdcs-navbar"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mmdcs-navbar"></div>
+      </div>
+    </nav>
+
+    {% endblock %}
+    <div class="container main-mmdcs-container" style="background: white; padding-top: 10px">
+      {% for message in get_flashed_messages(with_categories=True) %}
+      <div class="alert alert-{{ message[0] }}" style="padding-top: 10px">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message[1] | safe}}
+      </div>
+      {% endfor %} {% block content %}{% endblock %}
+    </div>
+    {% block footer %}
+
+    <footer class="bg-dark footer_ep">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-2 footer_img">
+            <img src="{{ url_for('static', filename='images/index-logos/epOnlyLogoBlue Trans.png') }}" height="120px;" />
+          </div>
+
+          <div class="col-sm-7 footer_cont">
+            <p>Copyright 2018-2022 © National Astronomical Observatories, Chinese Academy of Sciences</p>
+            <p>Address:No. 20, Datun Road, Chaoyang District, Beijing, China E-mail:ep@nao.cas.cn</p>
+          </div>
+
+          <div class="col-sm-3" style="float: right; text-align: right; line-height: 130px">
+            <a href="https://nadc.china-vo.org/"
+              ><img src="{{ url_for('static', filename='images/index-logos/logo_nsti_and_nadc.png') }}" style="width: 230px"
+            /></a>
+          </div>
+          <div class="col-sm-12 text-center">
+            <a href="http://www.china-vo.org/"
+              ><img style="height: 30px; margin-top: 10px" src="{{ url_for('static', filename='images/index-logos/power_logo_white.png') }}"
+            /></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    {% endblock %} {% block tail %}{% endblock %}
+    <!-- Piwik -->
+    <script type="text/javascript">
+      var _paq = _paq || [];
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+      _paq.push(["trackPageView"]);
+      _paq.push(["enableLinkTracking"]);
+      (function () {
+        var u = "//analytics.escience.org.cn/";
+        _paq.push(["setTrackerUrl", u + "piwik.php"]);
+        _paq.push(["setSiteId", "23"]);
+        var d = document,
+          g = d.createElement("script"),
+          s = d.getElementsByTagName("script")[0];
+        g.type = "text/javascript";
+        g.async = true;
+        g.defer = true;
+        g.src = u + "piwik.js";
+        s.parentNode.insertBefore(g, s);
+      })();
+    </script>
+    <!-- End Piwik Code -->
+  </body>
+</html>

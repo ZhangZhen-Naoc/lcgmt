@@ -1,0 +1,213 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% block title %}{{_('Proposal Submit')}}{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+$(document).ready(function(){
+
+$('#add-expert-i').on("click",function(){
+   $("#add-expert").modal('show');
+});
+
+
+   $('.submit_button').on("click",function(){
+   var proposal_id =  $(this).attr("proposal_id");
+   $('#confirm').attr("proposal_id",proposal_id);
+   $("#submit-proposal").modal('show');
+});
+
+
+$('#confirm').on("click",function(){
+ var proposal_id =  $(this).attr("proposal_id");
+      $.ajax({
+               type: 'GET',
+               url:"{{ url_for('proposal_submit.user_proposal_submit_confirm') }}",
+               dataType: "json",
+               data: {'proposal_id':proposal_id},
+               success:function(res){
+                   if(res.content_status == 'not_ok')
+                   {
+                     alert("Failed to submit. Please fill in proposal overview.");
+                   }
+                   
+                   if(res.science_case_upload_status == 'not_ok')
+                   {
+                     alert("Failed to submit. Please upload your science justification.");
+                   }
+                    if(res.source_list == 'not_ok')
+                   {
+                     alert("Failed to submit. Please upload your source list.");
+                   }
+                   if(res.success == 'ok')
+                   {
+                     window.location.reload();
+                     alert("Submit successfully.");
+                   }
+                   if(res.success == 'not_ok')
+                   {
+                     window.location.reload();
+                   }
+
+               },
+                error:function(){
+               }
+      });
+});
+
+
+
+});
+
+
+
+
+
+
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 offset-md-6">
+            <a href="{{ url_for('proposal_submit.user_proposal_list') }}" role="button" class="btn btn-md btn-primary">Proposal List</a>
+            <button type="button" class="btn btn-md btn-secondary active"><strong><a style="color:red;">{{_('Status ')}}:</a> </strong>&nbsp;{{proposal.get_proposal_status()}}</button>
+            <a role="button" class="btn btn-md  btn-success" href="{{ url_for('proposal_submit.user_get_pdf',proposal_id=proposal.id,filename=proposal.get_file_name()) }}" target="_blank">View Proposal</a>
+            {% if proposal.get_proposal_status() == 'Draft' %}
+            <a role="button" class="btn btn-md  btn-warning submit_button" proposal_id="{{proposal_id}}">Submit Proposal</a>
+            {% else %}
+            <a role="button" class="btn btn-md  btn-secondary">Submit Proposal</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<br>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item ">
+        <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='overview') }}">Proposal Overview</a>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='sources')}}">Target List</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link " href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='investigators') }}">Investigators</a>
+    </li>
+    {% if proposal.scientific_review_finished and proposal.submit_status %}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='review')}}">Peer Review</a>
+    </li>
+    {% endif %}
+</ul>
+
+<div class="card">
+    <div class="container-fluid">
+        <br>
+        <div class="alert alert-warning">
+            <div class="form-row">
+                <span style="color:black;">* You can list NOT more than three reviewers as needed, and your proposal will NOT be sent to them.</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <button type="button" class="btn btn-md btn-success" id="add-expert-i">Add Non-preferred Reviewer</button>
+            </div>
+        </div>
+        <br>
+
+        <table class="table table-bordered ">
+            <thead>
+            <tr class="table-primary">
+                <th scope="col" style="text-align:center;vertical-align:middle;">Name</th>
+                <th scope="col" style="text-align:center;vertical-align:middle;">Institute</th>
+                <th scope="col" style="text-align:center;vertical-align:middle;">Operation</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ex in experts %}
+            <tr>
+                <td style="text-align:center;vertical-align:middle;word-wrap:break-word; word-break:break-all;">{{ex.name}}</td>
+                <td style="text-align:center;vertical-align:middle;word-wrap:break-word; word-break:break-all;">{{ex.institution}}</td>
+                <td style="text-align:center;vertical-align:middle;word-wrap:break-word; word-break:break-all;">
+                    <a role="button" class="btn btn-warning" href="{{ url_for('proposal_submit.user_proposal_delete_expert',proposal_id=proposal_id,expert_id=ex.id)}}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<br>
+<br>
+<br>
+
+
+<!-- Modal  for  add user -->
+<div class="modal fade bd-example-modal-lg" id="add-expert" tabindex="-1" role="dialog" aria-labelledby="expert-info" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="expert-info">Add Non-preferred Reviewer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form id="form" method="POST" action="{{ url_for('proposal_submit.user_proposal_add_expert',proposal_id=proposal_id)}}">
+                {{ form.csrf_token() }}
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-row"><strong>Name<a style="color:red">*</a>:</strong> {{ form.name(class="form-control") }}</div>
+                        <br>
+                        <div class="form-row"><strong>Institute<a style="color:red">*</a>:</strong> {{ form.institute(class="form-control") }}</div>
+                        <br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    {{ form.add_expert(class="btn btn-primary", value='Save' ) }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- CONFIRM to submit -->
+<div class="modal fade bd-example-modal-lg" id="submit-proposal" tabindex="-1" role="dialog" aria-labelledby="pro" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pro">Confirm to submit this proposal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="form-row">
+                        <strong>I have finished my proposal, and confirm to submit it.</strong>
+                        <br>
+                        <i style="color:red">(After submission, you can not modify your proposal again.)</i>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal" id="confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endif %}
+{% endblock %}
+

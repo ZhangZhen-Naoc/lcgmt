@@ -1,0 +1,10 @@
+<p>Dear Project {{source.pid}} Users:</p>
+
+{% if checked == '1' %}
+<p>The Source {{source.source_name}} Observation time was allocated. Please submit your observation parameters.</p>
+{% endif %}
+
+
+{% if checked == '0' %}
+<p>The Source {{source.source_name}} was rejected. Please Resubmit your source information</p>
+{% endif %}

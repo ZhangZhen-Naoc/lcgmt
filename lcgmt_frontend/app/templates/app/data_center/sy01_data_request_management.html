@@ -1,0 +1,140 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+    <nav aria-label="breadcrumb" style="margin-bottom: 10px;">
+      <ol class="breadcrumb">
+        {{ render_breadcrumb_item('main.index', _('Home')) }}
+
+        <li class="breadcrumb-item">Observation Data Request Management</li>
+      </ol>
+
+    </nav>
+    <div class="card w-100">
+        <div class="card-header bg-light ep-cardheader">
+          <div class="card-header-title">LEIA Observation Data Request Management</div>
+        </div>
+        <div class="card-body ep_datasearch_card">
+            <div class="row">
+                <div class="col-12" >
+                    <div id="reuqest_list_table"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+var app_table;
+$(document).ready(function () {
+      
+
+      //我的申请表格
+      var table = new Tabulator("#reuqest_list_table", {
+            data: {{applications|safe}},
+            // data: res,my
+            // selectable: true,
+            // dataTree: true,
+            height: 500,
+            scrollToRowIfVisible: true,
+            layout: "fitDataFill",
+            selectable: 1,
+            columns: [
+              {
+                formatter:"rownum", hozAlign:"center"
+              },
+                { title: "Requester", field: "apply_user_id", sorter: "string"},
+              //605是4个，310是2个
+              { title: "Observation ID", field: "detections_applied", sorter: "string",width:310,formatter:"textarea" },
+                 { title: "Requset Reason", field: "reason", sorter: "string",formatter:"textarea",width:180  },
+              { title: "Approved?",field: "approved",formatter:"tickCross", width:110, hozAlign:"center" },
+              
+              { title: "Option",
+              
+              formatter:changeStatusButton,
+              width:180, hozAlign:"center", 
+              cellClick:function(e, cell){ChangeApplicationStatus(cell.getRow().getData().id,cell.getRow().getData().approved)},
+            
+              },
+           
+              {
+                title: "Request Time",
+                field: "apply_time",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+              {
+                title: "Approver",
+                field: "approver_id",
+             
+              },
+              {
+                title: "Approve Time",
+                field: "approve_time",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+                  outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+              {
+                title: "Access Deadline",
+                field: "data_invalid_time",
+                formatter: "datetime",
+                formatterParams: {
+                  inputFormat: "iso",
+      8           outputFormat: "yyyy-MM-dd HH:mm:ss",
+                  invalidPlaceholder: "(invalid date)",
+                  timezone: "utc",
+                },
+              },
+
+           
+              { title: "ID", field: "id", sorter: "number"  },
+
+            ],
+          });
+          app_table=table;
+
+    });
+
+    var changeStatusButton = function (cell, formatterParams, onRendered) {
+        return '<button class="btn btn-sm btn-info">Change Status</button>';
+      };
+
+    function ChangeApplicationStatus(id,origin_status)
+    {
+      var that= this;
+      $.ajax({
+        type: "POST",
+        url: "{{ url_for('data_center.change_data_request_status') }}",
+        dataType: "json",
+        data: { id: id, origin_status:origin_status },
+        success: function (res) {
+            var changedRow= app_table.getRows().filter((row) => {
+                return row.getData().id == res['id'];
+            });
+            var newRow = JSON.parse(res['new_row']);
+            console.log(newRow['approve_time']);
+            changedRow[0].update({'approved':newRow['approved'],'approve_time':newRow['approve_time'],'data_invalid_time':newRow['data_invalid_time'],'approver_id':newRow['approver_id']});
+        },
+        error:function(res){
+
+        },
+        complete: function () {},
+      });
+
+    }
+
+    </script>
+
+
+{% endblock %}

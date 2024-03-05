@@ -1,0 +1,451 @@
+{% extends 'app/sysadmin/index.html' %}
+{% from 'bootstrap/form.html' import render_form,render_field %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}{{_('Allocate Peer Reviewers')}}{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#create-season').on("click", function () {
+            $("#add-proposal-season").modal('show');
+        });
+
+        var proposal_id = "{{proposal_id}}";
+        $('#reviewer_type').change(function () {
+            var reviewer_type = $(this).val();
+            var name = $('#name').val();
+            var email = $('#email').val();
+            window.location.href = "{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=proposal_id) }}?name=" + name + "&email=" + email + "&reviewer_type=" + reviewer_type;
+        });
+
+        $('#submit').on("click", function () {
+            var reviewer_type = $('#reviewer_type').val();
+            var name = $('#name').val();
+            var email = $('#email').val();
+            window.location.href = "{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=proposal_id) }}?name=" + name + "&email=" + email + "&reviewer_type=" + reviewer_type;
+        });
+
+
+        $('#reset').on("click", function () {
+            window.location.href = "{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=proposal_id) }}?name=&email=&reviewer_type=All";
+        });
+
+        $('.select_user').on("click", function () {
+            var user_id = $(this).attr('user_id');
+            $.ajax({
+                type: 'GET',
+                url: "{{ url_for('proposal_admin.admin_select_reviewer') }}",
+                data: { 'user_id': user_id, 'proposal_id': proposal_id },
+                dataType: "json",
+                success: function (res) {
+                    window.location.reload();
+                },
+                error: function () {
+                }
+            });
+        });
+
+        $('.modify').on("click", function () {
+            var review_deadline = $(this).attr('review_deadline');
+            var ex_id = $(this).attr('ex_id');
+            var ex_name = $(this).attr('ex_name');
+            $('#my_modify_time').attr('action', "{{url_for('proposal_admin.admin_modify_review_deadline')}}?ex_id=" + ex_id);
+            $('#my_modify_time #expert_name').html(ex_name);
+            $('#my_modify_time #review_deadline').val(review_deadline);
+            $("#modify-time").modal('show');
+        });
+
+
+
+        $('.modify_name_in').on("click", function () {
+            var u_id = $(this).attr('u_id');
+            var investigator_name = $(this).attr('investigator_name');
+            var investigator_institution = $(this).attr('investigator_institution');
+            $('#my_modify_info').attr('action', "{{url_for('proposal_admin.admin_modify_investigator_info')}}?u_id=" + u_id);
+            $('#my_modify_info #investigator_name').val(investigator_name);
+            $('#my_modify_info #investigator_institution').val(investigator_institution);
+            $("#modify-info").modal('show');
+        });
+
+
+    });
+
+
+
+
+
+
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<div class="card w-100">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Proposal Management</div>
+    </div>
+    <div class="card-body ep_datasearch_card" id='main-content'>
+        <div class="row justify-content-end">
+            <div class="col-md-2 " align="center">
+                {% if last_id !=-1%}
+                <a role="button" class="btn ep_openBtn " href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=last_id,card='peer') }}" > {{_('<- Previous Proposal')}}</a>
+                {%else%}
+                <button class="btn ep_openBtn"  disabled> {{_('<- Previous Proposal')}}</button>
+                {%endif%}
+            </div>
+            <div class="col-md-2" align="center">
+                {% if next_id !=-1%}
+                <a  role="button" class="btn ep_openBtn " href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=next_id,card='peer') }}" > {{_('Next Proposal ->')}}</a>
+                {%else%}
+                <button role="button" class="btn ep_openBtn"  disabled> {{_('Next Proposal ->')}}</button>
+                {%endif%}
+                </div>
+            
+            <div class="col-md-2" align="center">
+                <a role="button" class="btn ep_openBtn active" id="create-proposal" href="{{ url_for('proposal_admin.admin_proposal_list',season_id=proposal.proposal_season_id) }}">{{_('Proposal List')}}</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <h3>{{_('Title')}}: {{ proposal.proposal_title }}</h3>
+            </div>
+           
+        </div>
+        <hr>
+        <dl class="row">
+            <dt class="col-md-2">NO:</dt>
+            <dd class="col-md-4">{{ proposal.get_no() }}</dd>
+            <dt class="col-md-2">PI:</dt>
+            <dd class="col-md-4">{{ proposal.get_pi_name() }}/ {{ proposal.get_pi_email() }}</dd>
+            <dt class="col-md-2">Request:</dt>
+            <dd class="col-md-4">{{ proposal.total_time_request }} Seconds</dd>
+            <dt class="col-md-2">Category:</dt>
+            <dd class="col-md-4">{{ proposal.get_proposal_science_type() }}</dd>
+        </dl>
+
+
+        <br>
+
+
+
+        <ul class="nav nav-tabs ep-sourcelist-nav">
+            <li class="nnav nav-tabs ">
+                <a class="nav-link "
+                    href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=proposal_id,card='technical') }}">
+                    <strong>{{_('Technical Review')}}</strong></a>
+            </li>
+            <li class="nav nav-tabs ">
+                <a class="nav-link active"
+                    href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=proposal_id,card='peer') }}">
+                    <strong>{{_('Scientific Peer Reviewers')}}</strong></a>
+            </li>
+            <li class="nav nav-tabs">
+                <a class="nav-link"
+                    href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=proposal_id,card='result') }}">
+                    <strong>{{_('Review Result')}}</strong></a>
+            </li>
+            
+        </ul>
+
+        <div class="card">
+            <div class="container-fluid">
+                <br>
+                <!--同行评议人员-->
+                {% if res | length >0%}
+                <div class="row">
+                    <div class="col-md-2">
+                        <a style="color:balck;"><strong>{{_('Peer Reviewers')}}:</strong></a>
+                    </div>
+                </div>
+                <table class="table table-bordered table-sm"
+                    style="text-align:center;vertical-align:middle;table-layout:fixed;">
+                    <thead>
+                        <tr class="table-success">
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Name')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Email')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Expiration')}} (UTC+8)
+                            </th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Has Read')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Has Reviewed')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Operation')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for ex in res %}
+                        <tr>
+                            <td style="text-align:center;vertical-align:middle;">{{ex.name}}</td>
+                            <td style="text-align:center;vertical-align:middle;">{{ex.email}}</td>
+                            <td style="text-align:center;vertical-align:middle;">
+                                {{ex.review_deadline}}
+                                <svg class="bi bi-tools modify" width="1em" height="1em" viewBox="0 0 16 16"
+                                    fill="currentColor" ex_id="{{ex.id}}" ex_name="{{ex.name}}"
+                                    review_deadline="{{ex.review_deadline}}">
+                                    <path fill-rule="evenodd"
+                                        d="M0 1l1-1 3.081 2.2a1 1 0 0 1 .419.815v.07a1 1 0 0 0 .293.708L10.5 9.5l.914-.305a1 1 0 0 1 1.023.242l3.356 3.356a1 1 0 0 1 0 1.414l-1.586 1.586a1 1 0 0 1-1.414 0l-3.356-3.356a1 1 0 0 1-.242-1.023L9.5 10.5 3.793 4.793a1 1 0 0 0-.707-.293h-.071a1 1 0 0 1-.814-.419L0 1zm11.354 9.646a.5.5 0 0 0-.708.708l3 3a.5.5 0 0 0 .708-.708l-3-3z" />
+                                    <path fill-rule="evenodd"
+                                        d="M15.898 2.223a3.003 3.003 0 0 1-3.679 3.674L5.878 12.15a3 3 0 1 1-2.027-2.027l6.252-6.341A3 3 0 0 1 13.778.1l-2.142 2.142L12 4l1.757.364 2.141-2.141zm-13.37 9.019L3.001 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026z" />
+                                </svg>
+                            </td>
+                            <td style="text-align:center;vertical-align:middle;">
+                                {% if ex.is_sure %}
+                                {% if ex.read_status %}
+                                <a href="#" class="btn btn-success active" role="button">Y</a>
+                                {%else%}
+                                <a href="#" class="btn btn-secondary active" role="button">N</a>
+                                {%endif%}
+                                {%else%}
+                                -----
+                                {%endif%}
+                            </td>
+                            <td style="text-align:center;vertical-align:middle;">
+                                {% if ex.is_sure %}
+                                {% if ex.submit_status %}
+                                <a href="#" class="btn btn-success active" role="button">Y</a>
+                                {%else%}
+                                <a href="#" class="btn btn-secondary active" role="button">N</a>
+                                {%endif%}
+                                {%else%}
+                                -----
+                                {%endif%}
+                            </td>
+
+                            <td>
+                                <a href="{{ url_for('proposal_admin.admin_delete_reviewer',ex_id=ex.id) }}"
+                                    class="btn btn-danger active" title="delete" role="button"><i class="fas fa-trash-alt"></i></a>
+                                &nbsp; &nbsp;
+                                {% if ex.is_sure %}
+                                <a href="{{ url_for('proposal_admin.admin_confirm_or_cancel_reviewer',ex_id=ex.id) }}"
+                                    class="btn btn-info active" title="cancel" role="button"><i class="fas fa-ban"></i></a>
+                                {%else%}
+                                <a href="{{ url_for('proposal_admin.admin_confirm_or_cancel_reviewer',ex_id=ex.id) }}"
+                                    class="btn btn-success active" title="confirm" role="button"><i class="fas fa-check-circle"></i></a>
+                                {%endif%}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+
+                <br>
+                <div class="alert alert-success">
+                    
+                    <div class="form-row align-items-center">
+                        <div class="col-md-3">{{_('Reviewer Type')}} {{ form.reviewer_type(class="form-control") }}
+                        </div>
+                        <div class="col-md-3">{{_('Reviewer Name')}}{{
+                            form.name(list="reviewer_name",class="form-control") }}</div>
+                        <div class="col-md-3">{{_('Reviewer Email')}}{{
+                            form.email(list="reviewer_email",class="form-control") }}</div>
+                        <div class="col-auto " style="margin-top: 20px;">
+                            {{ form.submit(class ="btn btn-dark ") }}
+                        </div>
+                        <div class="col-auto " style="margin-top: 20px;">
+                            <a class="btn btn-dark active" role="button" id="reset">{{_('Reset')}}</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <datalist id="reviewer_name">
+                    {% for n in reviewers %}
+                    <option value="{{ n.name4}}">
+                        {% endfor %}
+                </datalist>
+                <datalist id="reviewer_email">
+                    {% for n in reviewers %}
+                    <option value="{{ n.email }}">
+                        {% endfor %}
+                </datalist>
+                <!--筛选列表-->
+                {% if users | length >0%}
+                <table class="table table-bordered table-sm"
+                    style="text-align:center;vertical-align:middle;table-layout:fixed;word-wrap:break-word; word-break:break-all;">
+                    <thead>
+                        <tr class="table-info">
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Name')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Email')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Institute')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Operate')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for u in users %}
+                        <tr>
+                            <td style="text-align:center;vertical-align:middle;">{{u.name}}</td>
+                            <td style="text-align:center;vertical-align:middle;">{{u.email}}</td>
+                            <td style="text-align:center;vertical-align:middle;">{{u.institution}}</td>
+                            <td>
+                                <a class="btn btn-dark active select_user" role="button"
+                                    user_id="{{u.id}}">{{_('Select')}}</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {{ render_pagination(pagination,endpoint=None,prev=_('Previous Page'),next=_('Next
+                Page'),ellipses='…',align='center') }}
+                {% endif %}
+
+                <!--回避的专家列表-->
+                {% if experts | length >0%}
+                <div class="row">
+                    <div class="col-md-2">
+                        <a style="color:balck;"><strong>{{_('Non-preferred Reviewers')}}:</strong></a>
+                    </div>
+                </div>
+                <table class="table table-bordered table-sm"
+                    style="text-align:center;vertical-align:middle;table-layout: fixed;word-wrap:break-word; word-break:break-all;">
+                    <thead>
+                        <tr class="table-secondary">
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Name')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Institute')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for ex in experts %}
+                        <tr>
+                            <td style="text-align:center;vertical-align:middle;">{{ex.name}}</td>
+                            <td style="text-align:center;vertical-align:middle;">{{ex.institution}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+
+                <!--合作者-->
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <a style="color:black;"><strong>{{_('Investigators')}}:</strong></a>
+                    </div>
+                </div>
+                <table class="table table-bordered table-sm"
+                    style="text-align:center;vertical-align:middle;table-layout: fixed;word-wrap:break-word; word-break:break-all;">
+                    <thead>
+                        <tr class="table-secondary">
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Name')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Institute')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Email')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Role')}}</th>
+                            <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Operate')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td style="text-align:center;vertical-align:middle;">{{pi.first_name+" "+pi.last_name}} </td>
+                            <td style="text-align:center;vertical-align:middle;">{{pi.institution}}</td>
+                            <td style="text-align:center;vertical-align:middle;">{{pi.email}}</td>
+                            <td style="text-align:center;vertical-align:middle;">PI</td>
+                            <td style="text-align:center;vertical-align:middle;">
+                                <a class="btn btn-dark active modify_name_in" role="button" u_id="{{pi.id}}"
+                                    investigator_name="{{pi.name}}"
+                                    investigator_institution="{{pi.institution}}">{{_('Modify')}}</a>
+                            </td>
+       3                </tr>
+
+                        {% for ex in cois %}
+                        <tr>
+                            <td style="text-align:center;vertical-align:middle;">{{ex.name}}</td>
+                            <td style="text-align:center;vertical-align:middle;">{{ex.institution}}</td>
+                            <td style="text-align:center;vertical-align:middle;">{{ex.email}}</td>
+                            <td style="text-align:center;vertical-align:middle;">CO-I</td>
+                            <td style="text-align:center;vertical-align:middle;">
+                                <a class="btn btn-dark active modify_name_in" role="button" u_id="{{ex.id}}"
+                                    investigator_name="{{ex.name}}"
+                                    investigator_institution="{{ex.institution}}">{{_('Modify')}}</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="modify-time" tabindex="-1" role="dialog" aria-labelledby="time-modify"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="time-modify">{{_('Modify Expiration Date')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0" method="POST" id="my_modify_time">
+                {{ modify_time.csrf_token() }}
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-row"><strong>{{_('Expert Name')}}<a
+                                    style="color:red">*</a>:</strong>&nbsp;&nbsp;&nbsp;&nbsp; <a id="expert_name"></a>
+                        </div>
+                        <br>
+                        <div class="form-row"><strong>{{_('Expiration Date')}}<a style="color:red">*</a>:</strong> {{
+                            modify_time.review_deadline(class="form-control",required="") }}</div>
+                        <br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{_('Close')}}</button>
+                    {{ modify_time.modify_time(class="btn btn-primary", value=_('Modify')) }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" id="modify-info" tabindex="-1" role="dialog" aria-labelledby="info-modify"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="mokal-title" id="info-modify">{{_('Modify Investigator Info')}}:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <form class="my-2 my-lg-0" method="POST" id="my_modify_info">
+                {{ form_info.csrf_token() }}
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-row"><strong>{{_('Name')}}<a
+                                    style="color:red">*</a>:</strong>&nbsp;&nbsp;&nbsp;&nbsp; {{
+                            form_info.investigator_name(class="form-control",required="") }}</div>
+                        <br>
+                        <div class="form-row"><strong>{{_('Institute')}}<a style="color:red">*</a>:</strong>
+                            &nbsp;&nbsp;&nbsp;&nbsp; {{
+                            form_info.investigator_institution(class="form-control",required="") }}</div>
+                        <br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{_('Close')}}</button>
+                    {{ form_info.modify_info(class="btn btn-primary", value=_('Modify')) }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endif %}
+
+<script>
+    $('a').tooltip();
+
+</script>
+{% endblock %}

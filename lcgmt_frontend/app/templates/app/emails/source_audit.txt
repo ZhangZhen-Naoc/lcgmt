@@ -1,0 +1,10 @@
+Dear Project {{source.pid}} Users:
+
+{% if verified == '1' %}
+The Source {{source.source_name}} Observation time was allocated. Please submit your observation parameters.
+{% endif %}
+
+
+{% if verified == '0' %}
+The Source {{source.source_name}} was rejected. Please Resubmit your source information
+{% endif %}

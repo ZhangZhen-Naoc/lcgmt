@@ -1,0 +1,82 @@
+
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %}{% from 'input.html' import ValueInputerUP, ValueInputer, TextInputer %}  {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %} {% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{ render_breadcrumb_item('proposal_submit.target_visibility_tool', _('Target Visibility Tool')) }}
+  </ol>
+</nav>
+
+<div class="card w-100">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">{{_('Long-term Visibility Prediction Tool')}}</div>
+  </div>
+ 
+  <div class="card-body ep_datasearch_card">
+    <div class="alert alert-dark" style="margin-bottom: 20px">
+
+      <p>
+        The Einstein Probe Target Visibility Tool is designed to predict the long-term visibility of EP observation for the specified target and time period. The following Solar and Moon constraints are applied to calculate the target visibility in 1-day time interval:
+      </p>
+      <ol>
+        <li>
+          Solar aspect angle > 94.5°
+        </li>
+        <li>
+          Moon aspect angle > 10°
+        </li>
+      </ol>
+    </div>
+    <form id="TargetVisilibityForm" action="" method="post" class="form" role="form">{{ form.csrf_token }}
+    <div class="row justify-content-center">
+   
+    <div class="col-md-4">{{ ValueInputerUP('ra','degree',label_class="ep_objsearch_label",hint="RA(J2000)",tooltip="")}}</div>
+    <div class="col-md-4">{{ ValueInputerUP('dec','degree',label_class="ep_objsearch_label",hint="Dec(J2000)",tooltip="")}}</div>
+    </div>
+    <div class="row justify-content-center">
+
+        <div class="col-md-4">{{ TextInputer("start_time",label_class="ep_objsearch_label",tooltip="",hint="Start Time", input_class="datetimepicker",id="start_time") }}</div>
+        <div class="col-md-4">{{ TextInputer("end_time",label_class="ep_objsearch_label",tooltip="",hint="End Time", input_class="datetimepicker",id="end_time") }}</div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-1">
+    {{ form.calculate(class="btn ep_openBtn", value='Calculate' ) }}</div>
+    </div>
+    </form>
+</div>
+
+
+</div>
+
+<div id="result">
+  <div class="card w-100" style="margin-top: 20px">
+    <div class="card-header bg-light ep-cardheader">
+      <div class="card-header-title">Visible Date of EP {{hint}}</div>
+    </div>
+    <div class="card-body">
+      <div id="vis_date_tab" style="z-index: 50; width: 100%"></div>
+      <img id="vis_png" style="z-index: 50; width: 100%" />
+    </div>
+  </div>
+ <div class="card w-100" style="margin-top: 20px">
+    <div class="card-header bg-light ep-cardheader">
+      <div class="card-header-title">Predicted Visibility of EP {{hint}}</div>
+    </div>
+    <div class="card-body">
+      <div id="result_tab" style="z-index: 50; width: 100%"></div>
+    </div>
+  </div>
+
+</div>
+<script>
+
+    var ra = "{{form.ra.data}}";
+    var dec = "{{form.dec.data}}";
+    var start_time = "{{form.start_time.data}}";
+    var end_time = "{{form.end_time.data}}";
+    var results = {{result_json|safe}};
+    var vis_date_results = {{visible_json|safe}};
+    var png_base64 = "{{visible_png}}"
+</script>
+<script src="{{ url_for('static', filename='js/app/proposal_submit/target_visibilty_tool.js', v=1) }}"></script>
+{% endblock %} 

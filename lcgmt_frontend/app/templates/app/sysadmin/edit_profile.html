@@ -1,0 +1,44 @@
+{% extends 'app/sysadmin/index.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{_('Edit profile')}}{% endblock %}
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {{ render_breadcrumb_item('main.index', _('Home')) }}
+            {{ render_breadcrumb_item('sysadmin.index', _('Dashboard')) }}
+            {{ render_breadcrumb_item('sysadmin.manage_user', _('Manage User')) }}
+            {{ render_breadcrumb_item('sysadmin.edit_profile_admin', _('Edit Profile')) }}
+        </ol>
+    </nav>
+    <div class="card w-100 bg-light">
+        <h3 class="card-header">{{_('Edit Profile')}}</h3>
+        <div class="card-body">
+            {{ render_form(form, form_type='horizontal') }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-multiselect.min.css') }}?1">
+{% endblock styles %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/bootstrap-multiselect.min.js') }}"></script>
+<script>
+    $(function(){
+        var multi_select_config={
+            includeSelectAllOption: true,
+            enableClickableOptGroups: true,
+            enableCollapsibleOptGroups: true,
+            numberDisplayed: 20
+        };
+        $('#scientific_categories').multiselect(multi_select_config);
+        $('#roles').multiselect(multi_select_config);
+    });
+</script>
+{% endblock scripts %}

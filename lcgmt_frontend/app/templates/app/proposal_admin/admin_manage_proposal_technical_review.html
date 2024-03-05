@@ -1,0 +1,250 @@
+{#{% extends 'app/sysadmin/index.html' %}#}
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}{{_('Technical Review')}}{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+$(document).ready(function(){
+
+$('#add-comment').on("click",function(){
+   $("#add-technical-review").modal('show');
+});
+
+
+});
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<div class="card w-100">
+    <div class="card-header bg-light ep-cardheader">
+      <div class="card-header-title">Proposal Management</div>
+    </div>
+    <div class="card-body ep_datasearch_card" id='main-content'>
+        <div class="row justify-content-end">
+            <div class="col-md-2 " align="center">
+                {% if last_id !=-1%}
+                <a role="button" class="btn ep_openBtn " href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=last_id,card='peer') }}" > {{_('<- Previous Proposal')}}</a>
+                {%else%}
+                <button class="btn ep_openBtn"  disabled> {{_('<- Previous Proposal')}}</button>
+                {%endif%}
+            </div>
+            <div class="col-md-2" align="center">
+                {% if next_id !=-1%}
+                <a  role="button" class="btn ep_openBtn " href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=next_id,card='peer') }}" > {{_('Next Proposal ->')}}</a>
+                {%else%}
+                <button role="button" class="btn ep_openBtn"  disabled> {{_('Next Proposal ->')}}</button>
+                {%endif%}
+                </div>
+            
+            <div class="col-md-2" align="center">
+                <a role="button" class="btn ep_openBtn active" id="create-proposal" href="{{ url_for('proposal_admin.admin_proposal_list',season_id=proposal.proposal_season_id) }}">{{_('Back to GP List')}}</a>
+            </div>
+            <div class="col-md-2" align="center">
+                <a role="button" class="btn ep_openBtn active" id="create-proposal" href="{{ url_for('proposal_admin.admin_too_proposal_list',season='EP ToO Season') }}">{{_('Back to ToO List')}}</a>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-md-10"><h3>{{_('Title')}}: {{ proposal.proposal_title }}</h3></div>
+            
+        </div>
+        <hr>
+        <dl class="row">
+            <dt class="col-md-2">NO:</dt>
+            <dd class="col-md-4">{{ proposal.get_no() }}</dd>
+            <dt class="col-md-2">PI:</dt>
+            <dd class="col-md-4">{{ proposal.get_pi_name() }}/ {{ proposal.get_pi_email() }}</dd>    
+            <dt class="col-md-2">Request:</dt>
+            <dd class="col-md-4">{{ proposal.total_time_request }} Seconds</dd>
+            <dt class="col-md-2">Category:</dt>
+            <dd class="col-md-4">{{ proposal.get_proposal_science_type() }}</dd> 
+        </dl>
+   
+
+
+<br>
+
+<ul class="nav nav-tabs ep-sourcelist-nav">
+ <li class="nav nav-tabs ">
+       <a class="nav-link active" href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=proposal_id,card='technical') }}"> <strong>{{_('Technical Review')}}</strong></a>
+    </li>
+<li class="nav nav-tabs">
+        <a class="nav-link" href="{{ url_for('proposal_admin.admin_manage_proposal',proposal_id=proposal_id,card='peer') }}"> <strong>{{_('Scientific Peer Reviewers')}}</strong></a>
+    </li>
+    <li class="nav nav-tabs">
+        <a class="nav-link" href="{{ url_for('proposal_admin.admih_manage_proposal',proposal_id=proposal_id,card='result') }}"> <strong>{{_('Scientific Review Result')}}</strong></a>
+    </li>
+
+</ul>
+
+<div class="card">
+    <div id="spinner-div">
+        Loading...
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    <br>
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <button type="button" class="btn btn-md btn-warning active" id="check_similar_too_propoal">{{_('Check Similar Target ToO Proposal')}}</button>
+            </div>
+            <form id="source_form" hidden>
+                <input id="ra" name="ra" value="{{proposal.get_too_source().ra}}">
+                <input id="dec" name="dec" value="{{proposal.get_too_source().dec}}">
+                <input id="start_time" name="start_time" value="{{proposal.get_too_source().start_time}}">
+                <input id="end_time" name="end_time" value="{{proposal.get_too_source().end_time}}">
+            </form>
+            <div class="col-md-2"> <button type="button" id="visibility-tool"  class="btn btn-md btn-info active" target="_blank"  href="#" value="Target Visibility Tool" >Check Too Proposal Source Visibility</button></div>
+            <div class=4col-md-2">
+                <button type="button" class="btn btn-md btn-success active" id="add-comment">{{_('Add Technical Review Comment')}}</button>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4" style="text-align:center;">
+                <h5>
+                    <a style="color:balck;">{{_('Similar Target ToO Proposal')}}</a>
+                </h5>
+            </div>
+        </div>
+       
+        <div class="row">
+        <div class="col-md-2"></div>
+            <div class="col-md-8" style="text-align:center;">
+                <div id="result_table"  style="z-index: 50; width: 100%"></div>
+            </div>
+            <div class="col-md-2"></div> 
+        </div>
+<hr>
+        <table class="table table-bordered" style="text-align:center;vertical-align:middle;">
+
+            <thead>
+            <tr class="table-info">
+                <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Feasibility')}}</th>
+                <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Comment')}}</th>
+                <th scope="col" style="text-align:center;vertical-align:middle;">{{_('Operate')}}</th>
+            </tr>
+            </thead>
+            {% if technical_reviews | length >0%}
+            {% for ex in technical_reviews %}
+            <tbody>
+            <tr>
+                <td style="text-align:center;vertical-align:middle;"><strong>{{ex.review_result}}</strong></td>
+                <td style="text-align:left;vertical-align:middle;table-layout:fixed;">{{ex.content}}</td>
+                <td><a role="button" class="btn btn-md btn-warning" href="{{ url_for('proposal_admin.admin_delete_technical_review',proposal_id=ex.proposal_id,tid=ex.id)}}">{{_('Delete')}}</a></td>
+            </tr>
+            </tbody>
+            {% endfor %}
+            {% endif %}
+        </table>
+        
+    </div>
+    <br>
+   
+</div>
+
+
+
+</div>
+</div>
+
+<!-- Modal 2for  add user -->
+<div class="modal fade bd-example-modal-lg" id="add-technical-review" tabindex="-1" role="dialog" aria-labelledby="technical-review-info" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="technical-review-info">{{_('Add Technical Review Comment')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form id="form" method="POST" action="{{ url_for('proposal_admin.admin_add_technical_review',proposal_id=proposal_id)}}">
+                {{ form.csrf_token() }}
+                <div class="modal-body">
+                    {{render_form(form)}}
+                  
+                </div>
+          
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        var proposal_id = {{proposal.id}};
+    // 选择按钮元素并为其添加点击事件
+    $("#check_similar_too_propoal").click(function() {
+        $("#spinner-div").show();
+        $.ajax({
+            url:'{{url_for(".check_similar_target_proposal")}}',
+            type:"POST",
+            data:{
+                "proposal_id":proposal_id,
+                "proposal_type":"too"
+            },
+            success:function(result){
+                alert("Checked Success.")
+                $("#spinner-div").hide();
+                renderTable(result)
+            },
+            error: function(xhr,status,error){
+                
+            }
+        });
+    });
+
+    
+});
+
+function renderTable(tabledata)
+{
+
+    var table = new Tabulator("#result_table", {
+        // data: mergeSameObsId(res),
+        data:tabledata,
+        layout: "fitDataFill",
+        // autoColumns:true,
+        columns:[
+        {title:"Proposal NO",field:"proposal_no"},
+        {title:"PI", field:"pi"}, 
+        {title:"Status", field:"status"}, 
+        {title:"RA", field:"ra"}, 
+        {title:"Dec", field:"dec"}, 
+        {title:"Priority", field:"priority"},
+
+        ],
+    });
+
+}
+var visibilityUrl = "{{ url_for('proposal_submit.target_visibility_tool')}}"
+
+    $("#visibility-tool").click(function () {
+        const  form = document.forms['source_form']
+        const ra = form.ra.value
+        const dec = form.dec.value
+        const start_time = form.start_time.value
+        const end_time = form.end_time.value
+        const url = `${visibilityUrl}?ra=${ra}&dec=${dec}&start_time=${start_time}&end_time=${end_time}`
+        // window.open(url)
+        location.href = url
+    })
+
+
+    </script>
+
+
+{% endif %}
+{% endblock %}
+

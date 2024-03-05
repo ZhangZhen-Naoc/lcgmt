@@ -1,0 +1,567 @@
+{% extends 'app/survey_base.html' %} {% block title %}EP Science Team Application{% endblock %} {% block content %}
+<div class="container-fluid" style="margin: 0px; padding: 0px; font-family: 微软雅黑, Arial, Helvetica, sans-serif;">
+  <div class="card w-100" style="border: 0px">
+    <div class="card-body ep-newsView">
+      <div id="article_body" class="ep_article">
+        <h3 class="ep_article_title">EP科学领域工作组中方一般成员（Associate Member）申请表</h3>
+
+        <div class="articleContent">
+
+          <p>
+            <strong>背景：</strong><a  target="_blank" href="{{url_for('main.index')}}">爱因斯坦探针（Einstein Probe，EP）卫星</a>是中国科学院空间科学先导专项二期的空间科学任务，是由中国科学院（CAS）主导，欧空局（ESA）、德国马普地外物理所（MPE）和法国航天局（CNES）合作参与的国际合作项目。EP卫星的主要目标是对软X射线的天空开展快速时域巡天监测，旨在发现和探索宇宙中的各类高能暂现和爆发天体，并监测各类天体的X射线变化。
+          </p>
+          <p>
+            EP科学团队是由上述机构指定的科学家组成的联合科学团队，主体是几个面向多学科方向的科学领域工作组（Science Topical Panels, STPs），包括正式成员（STP Members）和一般成员（Associate Members）。
+          </p>
+          <p>
+            受EP科学管理委员会委托，EP科学中心邀请EP科学团队正式成员推荐团队一般成员（Associate Members）。一般成员主要为正式成员研究组的博士后或博士生，或者与成员有密切合作关系的年轻学者。每位正式成员可推荐1-2 名申请人（如有特殊需求可增加至 3 名，但需说明理由），并为每位申请人指定1个科学领域工作组（STP），如果没有需要推荐的申请人可以不填表。EP科学管理委员会将根据推荐人的研究方向和研究性质及申请人的情况综合考虑，确定一般成员名单，并由中科院最终审批并公布。
+          </p>
+          <p>
+            一般成员主要职责包括但不限于：
+            </p>
+            <ul>
+            <li> 与正式成员合作，开展EP卫星的数据处理、分析或基于EP观测数据的理论模型研究工作。</li>
+            <li>有义务参与EP科学运行的TA（Transient Advocate）或DS（Duty Scientist）值班工作及相关培训。EP的科学运行需要TA和DS开展 7x24h 的轮流值班工作。</li>
+            <li>一般成员不能直接担任EP观测数据或研究项目的PI，但可以以第一作者或通讯作者发表基于EP数据的观测论文。
+            </li>
+          </ul>
+            <P>关于一般成员的政策的更多信息，详见附件中的《EP科学领域工作组职责》和《EP国际合作科学管理方案》文档。</P>
+          <hr />
+          <p><strong>提交截止时间：2023年4月23日</strong></p>
+
+      
+         
+          <hr />
+          <form id="form" method="POST" enctype=multipart/form-data action="{{ url_for('cms.associate_science_team_apply')}}">
+            {{ form.csrf_token() }}
+            <div class="ep_surveyCard" style="margin-bottom: 20px">
+              <div class="card-header">正式成员（推荐人）信息：</div>
+              <div class="card card-body">
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">姓名</label>
+                <div class="input-group col-sm-10">{{ form.referer_name(class="form-control referer_name_input",id="referer_name") }}</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">常用英文名 </label>
+                <div class="input-group col-sm-5">
+                  {{ form.referer_given_name(class="form-control referer_given_name_input",id="referer_given_name",placeholder="Given Name") }}
+                  </div>
+                <div class="input-group col-sm-5">
+                  {{ form.referer_family_name(class="form-control referer_family_name_input",id="referer_family_name",placeholder="Family Name") }}
+                </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            
+            
+           <div class="ep_surveyCard" style="margin-bottom: 20px">
+              <div class="card-header">申请人1：（第一优先级）</div>
+              <div class="card card-body">
+             
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">姓名</label>
+                <div class="input-group col-sm-10">{{ form.name1(class="form-control name1_input",id="name1") }}</div>
+              </div>
+              <div class="form-group">
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label" for="">常用英文名 </label>
+                  <div class="input-group col-sm-5">
+                    {{ form.given_name1(class="form-control given_name1_input",id="given_name1",placeholder="Given Name") }}
+                    </div>
+                  <div class="input-group col-sm-5">
+                    {{ form.family_name1(class="form-control family_name1_input",id="family_name1",placeholder="Family Name") }}
+                  </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">职称</label>
+                <div class="input-group col-sm-10">{{ form.title1(class="form-control title1_input",id="title1") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">单位</label>
+                <div class="input-group col-sm-10">{{ form.institute1(class="form-control institute1_input",id="institute1") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Email</label>
+                <div class="input-group col-sm-10">{{ form.email1(class="form-control email1_input",id="email1") }}</div>
+              </div>
+            </div>
+
+            <p>推荐领域工作组：（1-5只能选其一，6可选）</p>
+            <div class="row">
+              <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp" id="agntde1" value="agntde1">
+                      <label class="form-check-label" for="agntde1">STP1</label>
+                  </div>
+              </div>
+              <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp" id="fet1" value="fet1">
+                      <label class="form-check-label" for="fet1">STP2</label>
+                  </div>
+            </div>
+            <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp" id="mma1" value="mma1" >
+                      <label class="form-check-label" for="mma1">STP3 </label>
+                  </div>
+             </div>
+             <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp" id="cso1" value="cso1" >
+                      <label class="form-check-label" for="cso1">STP4 </label>
+                  </div>
+             </div>
+             <div class="col-2">
+                 <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp" id="os1" value="os1" >
+                      <label class="form-check-label" for="os1">STP5 </label>
+                </div>
+             </div>
+             <div class="col-2">
+                 <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name="fuoa1" id="fuoa1" value="fuoa1" >
+                      <label class="form-check-label" for="fuoa1">STP6 </label>
+                  </div>
+            </div>
+            </div>
+
+            <br>
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">推荐理由，简述被推荐成员的背景、相关论文发表情况，和预期参与的EP相关工作内容</label>
+                <div class="input-group col-sm-10">{{ form.intro1(class="form-control intro1_input",rows=5,id="intro1",placeholder="不超过300字") }}</div>
+              </div>
+            </div>
+             </div>
+           </div>
+           <div class="ep_surveyCard" style="margin-bottom: 20px">
+              <div class="card-header">申请人2：（第二优先级）</div>
+              <div class="card card-body">
+             
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">姓名</label>
+                <div class="input-group col-sm-10">{{ form.name2(class="form-control name2_input",id="name2") }}</div>
+              </div>
+            </div>
+            <div class="form-group">
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label" for="">常用英文名 </label>
+                  <div class="input-group col-sm-5">
+                    {{ form.given_name2(class="form-control given_name2_input",id="given_name2",placeholder="Given Name") }}
+                    </div>
+                  <div class="input-group col-sm-5">
+                    {{ form.family_name2(class="form-control family_name2_input",id="family_name2",placeholder="Family Name") }}
+                  </div>
+                  </div>
+                </div>
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">职称</label>
+                <div class="input-group col-sm-10">{{ form.title2(class="form-control title2_input",id="title2") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">单位</label>
+                <div class="input-group col-sm-10">{{ form.institute2(class="form-control institute2_input",id="institute2") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Email</label>
+                <div class="input-group col-sm-10">{{ form.email2(class="form-control email2_input",id="email2") }}</div>
+              </div>
+            </div>
+
+            <p>推荐领域工作组：（1-6只能选其一）</p>
+
+             <div class="row">
+              <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp2" id="agntde2" value="agntde2">
+                      <label class="form-check-label" for="agntde2">STP1</label>
+                  </div>
+              </div>
+              <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp2" id="fet2" value="fet2">
+                      <label class="form-check-label" for="fet2"6STP2</label>
+                  </div>
+            </div>
+            <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp2" id="mma2" value="mma2" >
+                      <label class="form-check-label" for="mma2">STP3 </label>
+                  </div>
+             </div>
+             <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp2" id="cso2" value="cso2" >
+                      <label class="form-check-label" for="cso2">STP4 </label>
+                  </div>
+             </div>
+             <div class="col-2">
+                 <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp2" id="os2" value="os2" >
+                      <label class="form-check-label" for="os2">STP5 </label>
+                </div>
+             </div>
+             <div class="col-2">
+                 <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name="fuoa2" id="fuoa2" value="fuoa2" >
+                      <label class="form-check-label" for="fuoa2">STP6 </label>
+                  </div>
+            </div>
+            </div>
+         
+            
+            <br>
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">推荐理由，简述被推荐成员的背景、相关论文发表情况，和预期参与的EP相关工作内容</label>
+                <div class="input-group col-sm-10">{{ form.intro2(class="form-control intro2_input",rows=5,id="intro2",placeholder="不超过300字") }}</div>
+              </div>
+            </div>
+             </div>
+           </div>
+            <div class="ep_surveyCard" style="margin-bottom: 20px">
+              <div class="card-header">申请人3：（如有特殊需求可增加，需说明理由）</div>
+              <div class="card card-body">
+             
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">姓名</label>
+                <div class="input-group col-sm-10">{{ form.name3(class="form-control name3_input",id="name3") }}</div>
+              </div>
+              <div class="form-group">
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label" for="">常用英文名 </label>
+                  <div class="input-group col-sm-5">
+                    {{ form.given_name3(class="form-control given_name3_input",id="given_name3",placeholder="Given Name") }}
+                    </div>
+                  <div class="input-group col-sm-5">
+                    {{ form.family_name3(class="form-control family_name3_input",id="family_name3",placeholder="Family Name") }}
+                  </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">职称</label>
+                <div class="input-group col-sm-10">{{ form.title3(class="form-control title3_input",id="title3") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">单位</label>
+                <div class="input-group col-sm-10">{{ form.institute3(class="form-control institute3_input",id="institute3") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Email</label>
+                <div class="input-group col-sm-10">{{ form.email3(class="form-control email3_input",id="email3") }}</div>
+              </div>
+            </div>
+
+            <p>推荐领域工作组：（1-5只能选其一，6可选）</p>
+            <div class="row">
+              <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp3" id="agntde3" value="agntde3">
+                      <label class="form-check-label" for="agntde3">STP1</label>
+                  </div>
+              </div>
+              <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp3" id="fet1" value="fet1">
+                      <label class="form-check-label" for="fet1">STP2</label>
+                  </div>
+            </div>
+            <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp3" id="mma3" value="mma3" >
+                      <label class="form-check-label" for="mma3">STP3 </label>
+                  </div>
+             </div>
+             <div class="col-2">
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp3" id="cso3" value="cso3" >
+                      <label class="form-check-label" for="cso3">STP4 </label>
+                  </div>
+             </div>
+             <div class="col-2">
+                 <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="stp3" id="os3" value="os3" >
+                      <label class="form-check-label" for="os3">STP5 </label>
+                </div>
+             </div>
+             <div class="col-2">
+                 <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name="fuoa3" id="fuoa3" value="fuoa3" >
+                      <label class="form-check-label" for="fuoa3">STP6 </label>
+                  </div>
+            </div>
+            </div>
+
+            <br>
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">推荐理由，简述被推荐成员的背景、相关论文发表情况，和预期参与的EP相关工作内容</label>
+                <div class="input-group col-sm-10">{{ form.intro3(class="form-control intro3_input",rows=5,id="intro3",placeholder="不超过300字") }}</div>
+              </div>
+            </div>
+             </div>
+           </div>
+            <p>领域工作组简介：</p>
+            <ul>
+        
+              <li for="" style="margin-right: 0px; ">STP1. 活动星系核和潮汐瓦解事件（AGNs & TDEs）</li
+              >
+            
+            
+              <li for="" style="margin-right: 0px; "> STP2. 快速河外暂现源（Fast Extragalactic Transients）
+                ：包括伽马射线暴、超新星激波暴等各类河外短时标暂现源。
+              </li>
+           
+           
+              <li for="" style="margin-right: 0px; "
+                >STP3. 多信使天文（Multi-messenger Astronomy）
+                ：对引力波、中微子等多信使事件的协同观测。本方向的EP科学观测由EP科学中心统一组织，不接受机遇观测申请。
+                </li>
+              <li for="" style="margin-right: 0px; "
+                >STP4. 恒星级致密天体（Compact Stellar Objects）
+                ：银河系内和近邻星系里的黑洞、白矮星、中子星及其双星系统、极亮X射线源等。
+                </li>
+            
+           
+              <li for="" style="margin-right: 0px; "
+                >STP5. 天文台科学（Observatory Science）
+                ：上述领域工作组没有包含的科学目标，如恒星耀发、太阳系天体等。
+               </li>
+   
+          
+            <li for="" style="margin-right: 0px; ">STP6. 后随观测（Follow-up Observation Activities） ：涉及其他多波段设备与EP的协同和后随观测，预期申请人具有利用多波段设备开展暂现源/变源的后随和协同观测的研究专长和经验，或掌握特定的望远镜观测资源，或证明有能力获取相关望远镜观测时间资源。
+            </li>
+             </ul>
+          
+         
+                <a  target="_blank" href="{{ url_for('static',filename='resources/EP项目简介_20221103.pdf')}}" style="margin-right:50px">附件1：《EP卫星项目简介》</a>
+                <br>
+                <a  target="_blank" href="{{ url_for('static',filename='resources/EP国际合作科学管理方案_20221029V2.pdf')}}" style="margin-right:50px">附件2：《EP国际合作科学管理方案》（Einstein Probe science management scheme principles）</a>
+                <br>
+                <a  target="_blank" href="{{ url_for('static',filename='resources/EP科学领域工作组职责_20221029V1.pdf')}}" style="margin-right:50px">附件3：《EP科学领域工作组职责》(Terms of reference for Einstein Probe Science Topical Panels)</a>
+                <br>
+
+            <div class="col-md-12 text-center" style="margin-top:10px">{{ form.submit(class="btn ep_openBtn", value='提交' ) }}</div>
+            
+          </form>
+       
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+  $("select").select2({});
+
+  $("form").submit(function (e) {
+    // alert("submit");
+     var error_msg = "";
+    if (($("#name1").val().length > 0 &&
+       $("#given_name1").val().length > 0 &&
+      $("#family_name1").val().length > 0 &&
+    $("#title1").val().length > 0 &&
+    $("#institute1").val().length > 0 &&
+    $("#email1").val().length > 0)||
+    ($("#name1").val().length == 0 &&
+    $("#title1").val().length == 0 &&
+    $("#institute1").val().length == 0 &&
+    $("#email1").val().length == 0))
+    {
+      error_msg += "";
+    }
+    else{
+      error_msg += "请完整填写候选人1的信息。\r\n";
+    }
+    
+
+    var inte_count1 = 0;
+    
+    if ($("#agntde1").is(":checked")) {
+      inte_count1++;
+      //error_msg += CheckPaperInput("agntde", "一");
+    }
+    if ($("#fet1").is(":checked")) {
+      inte_count1++;
+      //error_msg += CheckPaperInput("fet", "二");
+    }
+    if ($("#mma1").is(":checked")) {
+      inte_count1++;
+      //error_msg += CheckPaperInput("mma", "三");
+    }
+    if ($("#cso1").is(":checked")) {
+      inte_count1++;
+      //error_msg += CheckPaperInput("cso", "四");
+    }
+    if ($("#os1").is(":checked")) {
+      inte_count1++;
+      
+    }
+   /* if ($("#fuoa1").is(":checked")) {
+      inte_count1++;
+    }*/
+    if (inte_count1 > 1 || inte_count1 == 0) {
+      error_msg += "请正确选择申请人1有意加入的领域工作组，STP1-5仅可选择一个。\r\n";
+    }
+
+    var inte_count2 = 0;
+  
+    if ($("#agntde2").is(":checked")) {
+      inte_count2++;
+      //error_msg += CheckPaperInput("agntde", "一");
+    }
+    if ($("#fet2").is(":checked")) {
+      inte_count2++;
+      //error_msg += CheckPaperInput("fet", "二");
+    }
+    if ($("#mma2").is(":checked")) {
+      inte_count2++;
+      //error_msg += CheckPaperInput("mma", "三");
+    }
+    if ($("#cso2").is(":checked")) {
+      inte_count2++;
+      //error_msg += CheckPaperInput("cso", "四");
+    }
+    if ($("#os2").is(":checked")) {
+      inte_count2++;
+      
+    }
+    /* if ($("#fuoa2").is(":checked")) {
+      inte_count2++;
+    }*/
+    
+
+    if (inte_count2 > 1 ) {
+      error_msg += "请正确选择申请人2有意加入的领域工作组，STP1-5仅可选择一个。\r\n";
+    }
+
+    var inte_count3 = 0;
+    if ($("#agntde3").is(":checked")) {
+      inte_count3++;
+      //error_msg += CheckPaperInput("agntde", "一");
+    }
+    if ($("#fet3").is(":checked")) {
+      inte_count3++;
+      //error_msg += CheckPaperInput("fet", "二");
+    }
+    if ($("#mma3").is(":checked")) {
+      inte_count3++;
+      //error_msg += CheckPaperInput("mma", "三");
+    }
+    if ($("#cso3").is(":checked")) {
+      inte_count3++;
+      //error_msg += CheckPaperInput("cso", "四");
+    }
+    if ($("#os3").is(":checked")) {
+      inte_count3++;
+      
+    }
+    /* if ($("#fuoa2").is(":checked")) {
+      inte_count2++;
+    }*/
+    if (inte_count3 > 1 ) {
+      error_msg += "请正确选择申请人3有意加入的领域工作组，STP1-5仅可选择一个。\r\n";
+    }
+
+    if (
+      ($("#name2").val().length > 0 &&
+      $("#given_name2").val().length > 0 &&
+      $("#family_name2").val().length > 0 &&
+    $("#title2").val().length > 0 &&
+    $("#institute2").val().length > 0 &&
+    $("#email2").val().length > 0 &&
+    $("#intro2").val().length > 0 &&
+    inte_count2==1)||
+    ($("#name2").val().length 0= 0 &&
+     $("#given_name2").val().length == 0 &&
+    $("#family_name2").val().length == 0 &&
+    $("#title2").val().length == 0 &&
+    $("#institute2").val().length == 0 &&
+    $("#email2").val().length == 0 &&
+    $("#intro2").val().length == 0)
+    )
+    {
+      error_msg += "";
+    }
+    else{
+      error_msg += "请完整填写申请人2的信息。\r\n";
+    }
+
+    if (
+      ($("#name3").val().length > 0 &&
+      $("#given_name3").val().length > 0 &&
+      $("#family_name3").val().length > 0 &&
+    $("#title3").val().length > 0 &&
+    $("#institute3").val().length > 0 &&
+    $("#email3").val().length > 0 &&
+    $("#intro3").val().length > 0 &&
+    inte_count2==1)||
+    ($("#name3").val().length == 0 &&
+    $("#given_name3").val().length == 0 &&
+    $("#family_name3").val().length == 0 &&
+    $("#title3").val().length == 0 &&
+    $("#institute3").val().length == 0 &&
+    $("#email3").val().length == 0 &&
+    $("#intro3").val().length == 0)
+    )
+    {
+      error_msg += "";
+    }
+    else{
+      error_msg += "请完整填写申请人3的信息。\r\n";
+    }
+  
+
+    if (error_msg.length > 0) {
+      e.preventDefault();
+      alert(error_msg);
+    }
+  });
+
+
+  
+  
+
+ 
+
+ 
+</script>
+
+{% endblock %}

@@ -1,0 +1,297 @@
+<form
+  method="POST"
+  enctype="multipart/form-data"
+  action="{{ url_for('simulator.simulate',mode='monitoring')}}"
+  style="clear: both; padding-top: 20px"
+  class="ep-simulator-form"
+>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+  {%include "app/simulator/components/form_user.html"%}
+  <div class="card">
+    <div class="card-header">Input Basic Info</div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3">
+          {{
+          ValueInputerUP('ra','degree',0,label_class="ep_objsearch_label",hint="RA(J2000)",tooltip="The
+          right ascension of the simulated source in equinox J2000, ranges from
+          0 to 360 deg. Different coordinates will lead to different X-ray
+          diffuse background in the field of view. If the source coordinates are
+          unknown and a normal sky background is preferred, the default value of
+          0 deg can be used.")}}
+        </div>
+        <div class="col-md-3">
+          {{
+          ValueInputerUP('dec','degree',0,label_class="ep_objsearch_label",hint="Dec(J2000)",tooltip="The
+          declination of the simulated source in equinox J2000, ranges from -90
+          to 90 deg. Different coordinates will lead to different X-ray diffuse
+          background in the field of view. If the source coordinates are unknown
+          and a normal sky background is preferred, the default value of 0 deg
+          can be used.")}}
+        </div>
+        <div class="col-md-3">
+          {{
+          ValueInputerUP('orbit','',10,label_class="ep_objsearch_label",hint="Observation
+          Number",tooltip="Number of requested observations in EP/WXT. The gap
+          between two observations is ~291 min (three orbits).")}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="card">
+    <div class="card-header">Input Source Spectrum</div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label
+              for="spec_model"
+              class="ep_objsearch_label"
+              data-toggle="tooltip"
+              title="The input spectral model for the simulated source. An arbitrary user-defined model can be uploaded by choosing the “File” option, in which case a textfile which contains two columns should be uploaded. The first column should be the “photon energy” in units of keV. The second column should be the “photon flux” in units of counts s-1 cm-2 keV-1."
+            >
+              Spectral Model <span class="fa fa-question-circle"></span>:
+            </label>
+            <div class="input-group mb-3">
+              <select class="form-control" name="spec_model">
+                <option value="powerlaw">Power Law</option>
+                <option value="blackbody">Black Body</option>
+                <option value="file">File</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="spec-inputer spec-inputer-powerlaw col-md-3">
+          {{
+          ValueInputerUP('index',"",2,label_class="ep_objsearch_label",hint="Photon
+          Index", tooltip="If the Power Law model is selected then value is the
+          photon index, i.e [E^-(index)].")}}
+        </div>
+        <div class="spec-inputer spec-inputer-blackbody col-md-3">
+          {{
+          ValueInputerUP('temp','eV',100,label_class="ep_objsearch_label",hint="Temperature(kT)",
+          tooltip="The temperature of the input blackbody model.")}}
+        </div>
+
+        <div
+          class="spec-inputer spec-inputer-file col-md-4"
+          style="margin-top: 32px"
+        >
+          <label for="spec_file" class="btn ep-manage-btn"
+            >Select Spectrum File</label
+          >
+          <input type="file" hidden name="spec_file" id="spec_file" />
+          <a
+            target
+            _blank
+            href="{{ url_for('static',filename='resources/specdemo.txt')}}"
+            ><span class="badge badge-info"
+              ><span class="badge badge-info">example</span></span
+            ></a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="card">
+    <div class="card-header">Input Source Info</div>
+    <div class="card-body">
+      <div class="row">
+        {#
+        <div
+          class="col-md-3 spec-inputer spec-inputer-powerlaw spec-inputer-blackbody"
+        >
+          {{
+          ValueInputerUP('flux','erg/s/cm²',1e-10,label_class="ep_objsearch_label",
+          tooltip="The flux of the simulated source in the user specified energy
+          range. If a user-defined spectral model is uploaded, this input value
+          will be ignored, and the flux will be calculated directly from the
+          uploaded spectral model.")}}
+        </div>
+        #}
+        <div
+          class="col-md-2 mr-0 spec-inputer spec-inputer-powerlaw spec-inputer-blackbody"
+        >
+          {{
+          ValueInputerUP('emin','keV',0.5,label_class="ep_objsearch_label",hint="Energy
+          Range Low",tooltip="")}}
+        </div>
+        <div
+          class="col-md-2 ml-0 spec-inputer spec-inputer-powerlaw spec-inputer-blackbody"
+        >
+          {{
+          ValueInputerUP('emax','keV',4,label_class="ep_objsearch_label",hint="Energy
+          Range High",tooltip="")}}
+        </div>
+
+        <div class="col-md-2">
+          {{
+          ValueInputerUP('nh','cm⁻²',3e20,label_class="ep_objsearch_label",tooltip="The
+          X-ray absorption column density for the simulated source.")}}
+          <script>
+            //这里特殊格式nH用Js处理下。
+            $('label[for="nh"]>span.label-title').text("nH");
+          </script>
+        </div>
+
+        <div
+          class="spec-inputer col-md-3 spec-inputer-powerlaw spec-inputer-blackbody"
+          style="padding-top: 32px"
+        >
+          <div
+            class="ep_objsearch_label form-group ep-checkbox-line"
+            style="padding: 2px 10px"
+          >
+            <label
+              for="absp"
+              data-toggle="tooltip"
+              title="If this is chosen, the input flux will be taken as the absorbed flux, otherwise the flux will be taken as the unabsorbed (intrinsic) flux."
+              >Absorbed</label
+            >
+            <input type="checkbox" name="absp" value="True" id="absp" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br />
+  <div class="card">
+    <div class="card-header">
+      <label
+        for="lc"
+        data-toggle="tooltip"
+        title="The uploaded text file should contain two columns. First column is the time, which is in units of second and starts from zero. Second column is the flux in the user-input energy range, in units of “erg s-1 cm-2”. It is highly recommended that the duration of the input light curve should be longer than the requested monitoring period of EP, i.e., the duration is longer than (Observation Number-1)*291 min +20 min."
+        >Input Light Curve<span class="fa fa-question-circle"></span
+      ></label>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          {{
+          ValueInputerUP('start_time',"s","0",label_class="ep_objsearch_label",hint="Start
+          Time", tooltip="The time when EP/WXT starts tz monitor the source. It
+          means that the light curve data with time stamps smaller than the
+          input start time will not be used in the simulation. ")}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4" style="margin-top: 15px">
+          <div class="ep-checkbox-line" style="padding: 2px 20px">
+            <label for="lc_file" class="btn btn-secondary"
+              >Select Light Curve File</label
+            >
+            <input type="file" id="lc_file" required name="lc_file" />
+            <a
+              target
+              _blank
+              href="{{ url_for('static',filename='resources/lc_advanced.txt')}}"
+              ><span class="badge badge-info">example</span></a
+            >
+          </div>
+        </div>
+      </div>
+      <br />
+      <p>or select one from the templates:</p>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label
+              for="lc_templates"
+              class="ep_objsearch_label"
+              data-toggle="tooltip"
+              title=""
+            >
+              Light Curve Template
+              <!-- <span class="fa fa-question-circle"></span> -->
+              :
+            </label>
+            <div class="input-group mb-3">
+              <select
+                class="form-control"
+                name="lc_templates"
+                id="lc_templates"
+              >
+                <option value="null">None</option>
+
+                <option value="AGN_3C273">AGN 3C273</option>
+                <option value="AGN_NGC4051">AGN NGC4051</option>
+                <option value="Binary_BH_GX339-4">Binary BH GX339-4</option>
+                <option value="Binary_Pulsar_Herx-1">
+                  Binary Pulsar Herx-1
+                </option>
+                <option value="LGRB200303A">LGRB200303A</option>
+                <option value="LGRB210822A">LGRB210822A</option>
+                <option value="SGRB181123B">SGRB181123B</option>
+                <option value="star_Algol">star Algol</option>
+                <option value="TDE">TDE</option>
+                <option value="constant source">Constant Source</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4" id="peakflux">
+          {{
+          ValueInputerUP('peak_flux','erg/s/cm²',"",label_class="ep_objsearch_label",hint="Peak
+          Flux", tooltip="peak flux of the input light curve. A multiplicative
+          factor will be applied to scale the light curve so that its maximal
+          flux will be equal to the input peak flux.1e-20 to 1e-5")}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <figure class="figure" id="lc_image"></figure>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align: center; margin-top: 20px">
+    <input
+      type="submit"
+      class="btn ep_openBtn"
+      value="simulate"
+      style="width: 130px; height: 38px"
+    />
+  </div>
+  <style>
+    input[type="file"] {
+      position: absolute;
+      z-index: -1;
+      top: 10px;
+      left: 8px;
+      font-size: 17px;
+      color: #b8b8b8;
+    }
+  </style>
+
+  <script>
+    //
+    $("#lc_templates")
+      .on("change", function () {
+        if (this.value != "null") {
+          showLCImage(this.value);
+          $("#lc_file").removeAttr("required");
+          $("#peakflux").show(); //外层容器
+          $("#peak_flux").attr("required", true); //输入框
+        } else {
+          $("#lc_image").html("");
+          $("#lc_file").attr("required", true);
+          $("#peakflux").hide(); //外层容器
+          $("#peak_flux").removeAttr("required"); //输入框1        }
+      })
+      .change();
+
+    function showLCImage(lc_name) {
+      var lc_image_path = `/ep5static/resources/lc_template/${lc_name}.png`;
+      //var lc_image = {{lc_image_path}};
+
+      var html =
+        '<img src="' +
+        lc_image_path +
+        '" class="figure-img img-fluid rounded" />';
+      $("#lc_image").html(html);
+    }
+  </script>
+</form>

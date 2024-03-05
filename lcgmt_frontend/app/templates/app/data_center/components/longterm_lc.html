@@ -1,0 +1,278 @@
+<div class="row" >
+   {# <div class="col-6">
+<div id='longterm_counts_lc' style="width: 450px;height:400px;"></div>
+    </div>
+    #}  
+    <div class="col-12">
+<div id='longterm_flux_lc' style="width: 1000px;height:400px;"></div>
+</div>
+</div>
+<script>
+
+function convertMJDToDatetime(mjd) {
+  var unixTimestamp = (mjd + 2400000.5 - 2440587.5) * 86400;
+  var dateTime = new Date(unixTimestamp * 1000);
+
+
+  return dateTime;
+}
+function strftime(date){
+  let year = date.getUTCFullYear();
+  let month = date.getUTCMonth() + 1;
+  let day = date.getUTCDate();
+  return `${year}-${month}-${day}`
+}
+var option;
+obs_times=[]
+obs_times_utc = []
+time_flux = []
+time_upperlimit = []
+time_counts = []
+src_names = [] //flux的tooltip显示的名称
+up_names = [] //upperlimit的tooltip显示的名称
+fluxError=[]
+fluxErrorRange=[]
+obs_cmos = []
+{% for src_obs in sourceObs %}
+{% if src_obs.wxt_detection.trigger=='telemetry'%}
+    obs_time = {{src_obs.wxt_detection.observation.obs_start_mjd}}
+    obs_times.push(obs_time)
+    obs_times_utc.push("{{src_obs.wxt_detection.observation.obs_start.strftime('%Y-%m-%d')}}")
+    time_counts.push([obs_time,{{src_obs.net_counts}}])
+    time_flux.push([obs_time,{{src_obs.flux}}*1e11])
+    fluxError.push([obs_time,{{src_obs.flux_err}}*1e11])
+    fluxErrorRange.push([obs_time,{{src_obs.flux-src_obs.flux_err}}*1e11,{{src_obs.flux+src_obs.flux_err}}*1e11])
+    src_names.push('{{src_obs.name}}')
+    obs_cmos.push('{{src_obs.wxt_detection.obs_id}}{{src_obs.detnam}}')
+{% endif %}
+{% endfor %}
+xAxis_option = [
+  {
+    type: 'value',
+    data: obs_times,
+    scale:true,
+    name:"MJD",
+    // nameLocation:"center",
+    //nameTextStyle:{
+    //    "verticalAlign":"bottom",
+    //},
+    min: function (value) {
+        return value.min - 20;
+    },
+    axisLabel: {
+        formatter: (v)=>{
+          var utc = strftime(convertMJDToDatetime(v))
+          return `${v}\n${utc}`
+        },
+        
+    },
+  },
+  
+]
+
+yAxis_option = {
+    type: 'value',
+    show: true,
+    axisLine: {
+        show: true,
+    },
+    lineStyle: {
+      color: '#333',    // 坐标轴线线的颜色
+      width: '5',    // 坐标轴线线宽
+      type: 'solid',     // 坐标轴线线的类型（'solid'，实线类型；'dashed'，虚线类型；'dotted',点状类型）
+    },
+}
+tooltip = {
+  trigger: 'axis',
+  axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+      type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
+  },
+  formatter:(value)=>{
+    date = value[0].data[0]
+    data_value = value[0].data[1]
+    date_utc = strftime(convertMJDToDatetime(date))
+    // flux渲染
+    if (value[0].seriesName=="flux"){
+      idx = value[0].dataIndex
+      err = fluxError[idx][1]
+      src_name = src_names[idx]
+      return `
+      ${src_name}<br/>
+      MJD${date.toFixed(3)}<br/>
+      ${date_utc} <br/>
+      ${(data_value).toFixed(3)}±${(err).toFixed(3)}
+      `
+    }
+    else if (value[0].seriesName=="upperlimit"){
+      idx = value[0].dataIndex
+      src_name = up_names[idx]
+      return `
+      ${src_name}<br/>
+      MJD${date.toFixed(3)}<br/>
+      ${date_utc} <br/>
+      ${(data_value).toFixed(3)}
+      `
+    }
+  }
+}
+function renderErrorBar(params, api){
+  var xValue = api.value(0);
+  var highPoint = api.coord([xValue, api.value(1)]); //高点
+  var lowPoint = api.coord([xValue, api.value(2)]); //低点
+  // var halfWidth = api.size([1, 0])[0] * 0.1; //半宽度
+  
+  var style = api.style({
+    stroke: api.visual('color'),
+    fill: null,
+    
+  });					
+
+  return {
+    type: 'group',
+    children: [
+       
+      {
+        type: 'line',
+        shape: {
+          x1: highPoint[0],
+          y1: highPoint[1],
+          x2: lowPoint[0],
+          y2: lowPoint[1]
+        },
+        style: style
+      }, 
+      
+    ]
+  };
+
+}
+counts_option = {
+  color: ['#788DD2'],
+  title: {
+    text: 'LEIA Light curve (0.5-4keV) {% if source is not undefined %}{{source.simbad_name}}{%endif%}'
+  },
+  xAxis: xAxis_option,
+  yAxis: {
+    type: "value",
+    name:"counts",
+    nameLocation:"end",
+    show:true,
+    axisLine: {
+        show: true,
+    },
+  },
+  tooltip ,
+
+  series: [
+    {
+      data: time_counts,
+      type: 'scatter'
+    }
+  ]
+};
+flux_option = {
+  title: {
+    text: `LEIA light curve (0.5-4keV) {% if source is not undefined %}{{source.simbad_name}}{%endif%}`
+  },
+  color: ['#788DD2'],
+  xAxis: xAxis_option,
+  yAxis: {
+    type: "value",
+    name:"Flux 1e-11 erg/s/cm2",
+    nameLocation:"end",
+    show:true,
+    axisLine: {
+        show: true,
+    },
+  },
+  tooltip,
+  series: [
+    {
+      data: time_flux,
+      type: 'scatter',
+      symbolSize: 5,
+      name: 'flux'
+    },
+    {
+      data: time_upperlimit,
+      type: 'scatter',
+      symbolSize: 7,
+      name: 'upperlimit',
+      symbol: 'path://M0,0 L1,1 L2,0',
+      color: 'grey'
+
+
+    },
+    {
+      type:"custom",
+      itemStyle: {
+        normal: {
+          borderWidth: 1.5
+        }
+      },
+      renderItem: renderErrorBar,
+      data:fluxErrorRange,
+    },
+
+
+  ],
+  brush: {
+    xAxisIndex: 'all',
+    brushLink: 'all',
+    outOfBrush: {
+      colorAlpha: 0.1
+    }
+  },
+  toolbox: {
+    feature: {
+      dataZoom: {
+        yAxisIndex: false
+      },
+      brush: {
+        type: ['lineX', 'clear']
+      }
+    }
+  }
+};
+
+// var countsChart = echarts.init(document.getElementById('longterm_counts_lc'));
+var fluxChart = echarts.init(document.getElementById('longterm_flux_lc'));
+// counts_option && countsChart.setOption(counts_option);
+function renderFlux(){
+  flux_option&& fluxChart.setOption(flux_option);
+}
+renderFlux()
+{# Upperlimit #}
+var ra = "{{ra}}";
+var dec = "{{dec}}";
+var obs_id = "";
+var radius = "0.00278"; // 10/3600
+// var radius = 0.167
+var start_datetime = "";
+var end_datetime = "";
+$.ajax({
+        type: "POST",
+        url: "{{ url_for('data_center.sy01_observation_data') }}",
+        dataType: "json",
+        data: { obs_id: obs_id, ra: ra, dec: dec, radius: radius, start_datetime: start_datetime, end_datetime: end_datetime },
+        success: function (res) {
+          if (res['success'] == 'no result') {
+            res =[];
+          }
+          for (let item of res) {
+            if ( item['exposure_time'] < 100)
+              continue //<100s的观测不纳入统计
+            if ( obs_cmos.includes(`${item['obs_id']}${item['detnam']}`) )
+              continue //已检测出源的不再绘制upperlimit
+            obs_time = item['mjd']
+            obs_times.push(obs_time)
+            obs_times_utc.push(strftime(convertMJDToDatetime(item['mjd'])))
+            upperlimit = Number.parseFloat(item['upperlimit'])*1e11
+            time_upperlimit.push([obs_time,upperlimit])
+
+            up_names.push(`ep${item['obs_id']}`)
+          }
+          renderFlux()
+        }
+})
+</script>

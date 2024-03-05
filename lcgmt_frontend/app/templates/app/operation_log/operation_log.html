@@ -1,0 +1,74 @@
+{% extends 'app/sysadmin/index.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}{{_('Operation Logs')}}{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{# {{ moment.include_jquery() }} #}
+{{ moment.include_moment() }}
+{% endblock scripts %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        {{ render_breadcrumb_item('main.index', _('Home')) }}
+        {{ render_breadcrumb_item('sysadmin.index', _('Dashboard')) }}
+        {{ render_breadcrumb_item('operation_log.index', _('Operation Log')) }}
+    </ol>
+</nav>
+    <div class="page-header">
+        <h1>{{_('Operation Logs')}}</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="nav nav-pills flex-column" role="tablist" aria-orientation="vertical">
+                <a class="nav-item nav-link {% if request.args.get('module') == 'all' %}active{% endif %}"
+                   href="{{ url_for('.index', module='all') }}">
+                    {{_('All')}}
+                </a>
+                <a class="nav-item nav-link {% if request.args.get('module') == 'cms' %}active{% endif %}"
+                   href="{{ url_for('.index', module='user') }}">
+                    {{_('Content Management')}}
+                </a>
+                <a class="nav-item nav-link {% if request.args.get('module') == 'user' %}active{% endif %}"
+                   href="{{ url_for('.index', module='user') }}">
+                    {{_('User')}}
+                </a>
+                <a class="nav-item nav-link {% if request.args.get('module') == 'sysadmin' %}active{% endif %}"
+                   href="{{ url_for('.index', module='sysadmin') }}">
+                    {{_('User Management')}}
+                </a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card-header">
+            </div>
+            {% if logs %}
+                {% for l in logs %}
+                <div class="card bg-light w-100">
+                    <div class="card-header">
+                        {{ l.operator.name }} ( {{l.operator.email}} )
+                        <span class="float-right" style="display:inline">
+                            {{ moment(l.operation_time,local=True).format('YYYY-MM-DD HH:mm:ss') }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <blockquote>{{ l.operation }}</blockquote>
+                    </div>
+                </div>
+                {% endfor %}
+                 <div class="card-body">
+                    <div class="text-right page-footer">
+                        {{ render_pagination(pagination) }}
+                    </div>
+                 </div>
+            {% else %}
+                <div class="tip text-center">
+                    <h6>{{_('No Log.')}}</h6>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'app/simulator/form-framework.html' %} {% block form_content %}
+<!--标签-->
+<script>
+  document.getElementById("monitor_tab").classList.add("active");
+</script>
+
+<div class="tab-content" id="myTabContent">
+  <div
+    class="tab-pane fade show active"
+    id="monitor"
+    role="tabpanel"
+    aria-labelledby="monitor_tab"
+  >
+    {% from 'input.html' import ValueInputerUP, ValueInputer, TextInputer %} {%
+    include 'app/simulator/components/simulate_monitoring_form.html' %}
+
+    <div class="alert alert-dark" style="margin-top: 20px">
+      <h3>Notes:</h3>
+      <ol>
+        <li>
+          The simulation is to observe the input source with EP/WXT for a fixed
+          cadence of once per 3 orbits (~97min*3=291min), with 20 min exposure
+          per observation. This is roughly consistent with the observing
+          strategy of EP in its all-sky survey mode. Considering the large FoV
+          of EP/WXT, almost all the sources in the night sky can be monitored
+          regularly with this strategy.
+        </li>
+        <li>
+          For the first observation, the simulated source is detected in the
+          center of FoV. While for the rest observations, the source positions
+          are random, which can be found in the header of the event file, with
+          the keywords “XSOURCE” and “YSOURCE”.
+        </li>
+        <li>
+          The output spectra, as well as the arf file, are in the Type II
+          format.
+        </li>
+        <li>
+          The output light curve is a FITS file with multiple extensions. Each
+          extension contains the light curve of each single observation in the
+          default 0.5-4 keV band. The final extension contains the long-term
+          light curve, in which the fluxes (converted from the WXT count rates)
+          are in the energy band defined in the user-input interface.
+        </li>
+        <li>
+          The output image file is also a FITS file with multiple extensions,
+          with each extension containing the image for each single observation.
+          The last extension contains a stacked image for all the observations.
+        </li>
+        <li>
+          The template of the TDE light curve is generated based on a rising
+          period of 10 days and a plateau of 15 days, followed by the power law
+          evolution model with an index of -5/3. The other light curves are
+          taken from real observations by Swift (SGRB181123B, LGRB200303A,
+          LGRB210822A), RXTE (3C273, NGC4051), and MAXI (Algol, GX339-4,
+          Herx-1).
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+{% endblock %}

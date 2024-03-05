@@ -1,0 +1,606 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px;">
+    <ol class="breadcrumb">
+        {{ render_breadcrumb_item('main.index', _('Home')) }}
+        <li class="breadcrumb-item">Observation Data Detail</li>
+        
+        
+    </ol>
+</nav>
+<div class="card w-100">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Observation: <span class="badge badge-secondary"
+                style="padding:10px; margin-left: 10px;">{{obs.obs_id}}</span> <span class="badge badge-info"
+                style="padding:10px; margin-left: 10px;">{{wxt_detection.detnam}}</span><span class="badge badge-warning"
+                style="padding:10px; margin-left: 10px;">{{version}}</span></div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <table class="table table-bordered table-hover table-sm">
+                    <tr>
+                        <th>Pointing RA</th>
+                        <td>{{wxt_detection.pnt_ra|round(3,"floor")}}</td>
+                    </tr>
+                    <tr>
+                        <th>Pointing Dec</th>
+                        <td>{{wxt_detection.pnt_dec|round(3,"floor")}}</td>
+                    </tr>
+                    <tr>
+                        <th>Instrument</th>
+                        <td>{{obs.instrument}}</td>
+                    </tr>
+                    <tr>
+                        <th>Start Time</th>
+                        <td>{{obs.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+                    </tr>
+                    <tr>
+                        <th>End Time</th>
+                        <td>{{obs.obs_end.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+                    </tr>
+                    <tr>
+                        <th>Observation Type</th>
+                        <td>{{obs.obs_type}}</td>
+                    </tr>
+                    <tr>
+                        <th>Object Name</th>
+                        <td>{{obs.object_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Object RA</th>
+                        <td>{{obs.obj_ra|round(3,"floor")}}</td>
+                    </tr>
+                    <tr>
+                        <th>Object Dec</th>
+                        <td>{{obs.obj_dec|round(3,"floor")}}</td>
+                    </tr>
+                    <tr>
+                        <th>PI</th>
+                        <td>{{obs.pi}}</td>
+                    </tr>
+                    <tr>
+                        <th>Exposure Time</th>
+                        <td>{{"%d"%wxt_detection.exposure_time}}</td>
+                    </tr>
+                    <tr>
+                        <th>Processing Time</th>
+                        <td>{{wxt_detection.process_time}}</td>
+                    </tr>
+                    <tr>
+                        <th>Archive Time</th>
+                        <td>{{wxt_detection.archive_time}}</td>
+                    </tr>
+                    <tr>
+                        <th>Publish Time</th>
+                        <td>{{wxt_detection.publish_time}}</td>
+                    </tr>
+                    <tr>
+                        <th>Trig Time</th>
+                        <td>{{wxt_detection.trig_time}}</td>
+                    </tr>
+                    <tr>
+                        <th>Proc Ver</th>
+                        <td>{{wxt_detection.proc_ver}}</td>
+                    </tr>
+                    <tr>
+                        <th>CALDB Ver</th>
+                        <td>{{wxt_detection.caldb_ver}}</td>
+                    </tr>
+                    <tr>
+                        <th>Soft Ver</th>
+                        <td>{{wxt_detection.soft_ver}}</td>
+                    </tr>
+                    {# <tr>
+                        <th>Seqp Num</th>
+                        <td>{{obs.seqp_num}}</td>
+                    </tr>
+                    <tr>
+                        <th>Exposure Mode</th>
+                        <td>{{obs.exposure_mode}}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>{{obs.status}}</td>
+                    </tr>#}
+                </table>
+            </div>
+            <div class="col-4">
+                <div class="card w-100" style="margin-bottom: 20px;">
+                    <div class="card-header bg-light">
+                        <div style="color: #004386;font-weight: bold; font-size: 16px;">Image</div>
+                    </div>
+                    <div class="card-body">
+
+                        <figure class="figure">
+                            <figcaption class="figure-caption" style="font-weight: bold; line-height: 30px;">Click to check the raw data</figcaption>
+                            <a href="{{url_for('data_center.show_image', obs_id=obs.obs_id,cmos_id=wxt_detection.detnam)}}"
+                                target="_blank">
+                                <img
+                                    src="{{url_for('data_center.get_quick_look_image', obs_id=obs.obs_id,cmos_id=wxt_detection.detnam,version=wxt_detection.version)}}"
+                                    class="figure-img img-fluid rounded">
+                                </a>
+
+                        </figure>
+
+                    </div>
+                </div>
+                <div class="card w-100" style="margin-bottom: 10px;">
+                    <div class="card-header bg-light">
+                        <div style="color: #004386;font-weight: bold; font-size: 14px;">Get Data Files</div>
+                    </div>
+                    <div class="card-body">
+                        <a type="button" class="btn ep_openBtn btn-block" href="{{url_for('data_center.download_lv1', obsid=obs.obs_id,cmosid=wxt_detection.detnam,version=wxt_detection.version)}}">Download level1 data</a>
+                        <a type="button" class="btn ep_openBtn btn-block" href="{{url_for('data_center.download_lv2', obsid=obs.obs_id,cmosid=wxt_detection.detnam,version=wxt_detection.version)}}">Download Level2-3 Data</a>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card w-100" style="margin-top: 20px;">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Sources in the observation <span class="badge badge-secondary" style="padding:10px; margin-left: 10px;">{{obs.obs_id}}</span> <span class="badge badge-info" style="padding:10px; margin-left: 10px;">{{wxt_detection.detnam}}</span> </div>
+    </div>
+    <div class="card-body">
+        <nav class="nav nav-tabs ep-sourcelist-nav" style="margin: 0px;">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active show" id="nav-source-list-tab" data-toggle="tab"
+                    href="#nav-source-list-tabpanel" role="tab" aria-controls="nav-source-list-tabpanel">
+                    <div class="ep-tabButton" aria-pressed="true">Source List
+                        <span class="badge">{{sourceObs|length}}</span></div>
+                </a>
+                <a class="nav-item nav-link" id="nav-source-explorer-tab" data-toggle="tab"
+                    href="#nav-source-explorer-tabpanel" role="tab" aria-controls="nav-source-explorer-tabpanel">
+                    <div class="ep-tabButton" aria-pressed="true"
+                        id="source_explorer_tab">Explorer
+            </div>
+                </a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent-1" style="background-color: #ddd; padding: 20px;">
+            <div class="tab-pane fade show active" id="nav-source-list-tabpanel" role="tabpanel"
+                aria-labelledby="nav-source-list-tab">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="source_table" style="background-color: #fff;">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>Source Name</th>
+                                <th>Version</th>
+                                <th>Light Curve</th>
+                                <th>Spectrum</th>
+                                <th>RA</th>
+                                <th>Dec</th>
+                                <th>Pos Err</th>
+
+                                <th>X</th>
+                                <th>Y</th>
+                                <th>Pixels in Source Region</th>
+                                <th>Net Source Counts</th>
+                                <th>Background Counts</th>
+                                <th>Net Rate</th>
+                     3          <th>Expousre map value</th>
+                                <th>Source Significance</th>
+                                <th>S/G classifier </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for row in sourceObs%}
+                            <tr>
+                                <td><a class="btn btn-secondary btn-sm"
+                                        href="{{url_for('data_center.source_candidate_detail',sourceId=row.source_id,wxtdetectionId=row.wxt_detection.id)}}">ep{{row.wxt_detection.obs_id}}wxt{{row.detnam[4:6]}}s{{row.index_in_det}}</a>
+                                </td>
+                                <td>{{row.wxt_detection.version}}</td>
+                                <td><i class="fas fa-chart-area fa-lg thumb"
+                                        imgsrc="{{url_for('data_center.get_quick_look_light_curve', obs_id=row.wxt_detection.observation.obs_id,cmos_id=row.detnam,index_in_det=row.index_in_det,version=row.wxt_detection.version)}}">
+                                        <figure class="figure">
+                                            <figcaption class="figure-caption" hidden> Light
+                                                Curve</figcaption>
+
+
+                                        </figure>
+                                    </i></td>
+                                <td><i class="far fa-chart-bar fa-lg thumb"
+                                        imgsrc="{{url_for('data_center.get_quick_look_spectrum', obs_id=row.wxt_detection.observation.obs_id,cmos_id=row.detnam,index_in_det=row.index_in_det,version=row.wxt_detection.version)}}">
+                                        <figure class="figure">
+                                            <figcaption class="figure-caption" hidden>
+                                                Spectrum</figcaption>
+
+
+                                        </figure>
+                                    </i></td>
+                                <td>{{row.ra| round(3, 'floor')}}</td>
+                                <!-- <td>{{row.x_err}}</td> -->
+                                <td>{{row.dec| round(3, 'floor')}}</td>
+                                <!-- <td>{{row.y_err}}</td> -->
+                                <td>{{row.pos_err| round(5, 'floor')}}</td>
+                                <td>{{row.x| round(3, 'floor')}}</td>
+                                <td>{{row.y| round(3, 'floor')}}</td>
+                                <td>{{row.npix_source}}</td>
+                                <td>{{row.net_counts| round(2, 'floor')}}</td>
+                                <td>{{row.bkg_counts| round(2, 'floor')}}</td>
+                                <td>{{row.net_rate| round(3, 'floor')}}</td>
+                                <td>{{"%d"%row.exp_time}}</td>
+                                <td>{{row.src_significance| round(2, 'floor')}}</td>
+                                <td>{{row.class_star| round(2, 'floor')}}</td>
+
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-source-explorer-tabpanel" role="tabpanel"
+                aria-labelledby="nav-source-explorer-tab">
+                <div id="aladin-lite-div">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card w-100" style="margin-top: 20px;">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Related Observations</div>
+    </div>
+    <div class="card-body" >
+        <nav class="nav nav-tabs ep-sourcelist-nav" style="margin: 0px;">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active show" id="nav-related-obs-list-tab" data-toggle="tab"
+                    href="#nav-related-obs-list-tabpanel" role="tab" aria-controls="nav-related-obs-list-tabpanel">
+                    <div class="ep-tabButton" aria-pressed="true">Related Detections
+                        <span class="badge">{{related_detections|length}}</span></div>
+                </a>
+                {# <a class="nav-item nav-link" id="nav-related-obs-explorer-tab" data-toggle="tab"
+                    href="#nav-related-obs-explorer-tabpanel" role="tab"
+                    aria-controls="nav-related-obs-explorer-tabpanel">
+                    <button type="button" class="btn btn-outline-secondary" aria-pressed="true">Explorer
+                    </button>
+                </a>
+                #}
+
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent-2" style="background-color: #ddd; padding: 20px;">
+            <div class="tab-pane fade show active" id="nav-related-obs-list-tabpanel" role="tabpanel"
+                aria-labelledby="nav-related-obs-list-tab">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="related_obs_table" style=" background-color: #fff;">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>Obs ID/CMOS</th>
+                                <!-- <th>CMOS</th> -->
+                                <th>Pointing RA</th>
+                                <th>Pointing Dec</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Exposure Time</th>
+                                <th>PI</th>
+                                <th>Quick Look</th>
+                                <th>Option</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for row in related_detections %}
+
+                            <tr>
+                                <td>
+                                    {% if not row.observation.private or current_user.id==row.observation.pi.user_id %}
+                                    <a type="button" class="btn btn-secondary btn-block btn-sm"
+                                        href="{{url_for('data_center.observation_detail', obs_id=row.obs_id,cmos_id=row.detnam)}}">{{row.observation.obs_id}}
+                                        {{row.detnam}}</a>
+
+                                </td>
+                                {% else%}
+                                <a type="button" class="btn btn-outline-secondary btn-block btn-sm"
+                                    disabled>{{row.observation.obs_id}} {{row.detnam}}</a>
+
+                                </td>
+                                {% endif %}
+
+
+                                <td>{{row.pnt_ra| round(3, 'floor')}}</td>
+                                <td>{{row.pnt_dec| round(3, 'floor')}}</td>
+                                <td>{{row.observation.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+                                <td>{{row.observation.obs_end.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+                                <td>{{"%d"%row.exposure_time }}</td>
+
+                                <td>{{row.observation.pi.name}}</td>
+                                <td>
+                                    {# {% if not row.observation.private or current_user.id==row.observation.pi.user_id
+                                    %} #}
+
+
+                                    <i class="fas fa-image fa-lg thumb"
+                                        imgsrc="{{url_for('data_center.get_quick_look_image',obs_id=row.obs_id, cmos_id=row.detnam,version=row.version)}}">
+                                        <figure class="figure">
+                                            <figcaption class="figure-caption" hidden>{{row.obs_id}} {{row.detnam}}
+                                                Image</figcaption>
+
+                                        </figure>
+                                    </i>
+                                    {#
+                                    {% else%}
+                                    <i class="fas fa-image fa-lg" style="color:grey"></i>
+                                    {% endif %}
+                                    #}
+
+                                </td>
+                                <td>
+                                    {% if not row.observation.private or current_user.id==row.observation.pi.user_id %}
+
+                                   
+                                        <a type="button" class="btn ep_darkBtn btn-sm"
+                                          href="{{url_for('data_center.download_lv1', obsid=row.obs_id,cmosid=row.detnam,version=row.version)}}">Download level1 data</a>
+                                          <a type="button" class="btn ep_darkBtn btn-sm"
+                                          href="{{url_for('data_center.download_lv2', obsid=row.obs_id,cmosid=row.detnam,version=row.version)}}">Download Level2-3 Data</a>
+                                      
+                                    </td>
+                                </td>
+                                {% else%}
+
+                                <a type="button" class="btn ep_darkBtn btn-sm" href="#"
+                                    disabled>Download</a>
+
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="nav-related-obs-explorer-tabpanel" role="tabpanel"
+                aria-labelledby="nav-related-obs-explorer-tab">
+
+                <div id="aladin-lite-div">
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<!-- 旧版本的链接-->
+<div class="card w-100" style="margin-bottom: 10px;">
+    <div class="card-header bg-light">
+        <div style="color: #004386;font-weight: bold; font-size: 14px;">All Data Versions</div>
+    </div>
+    <div class="card-body" id="old_versions">
+    </div>
+    <script>
+        $.get("{{url_for('.sy01_observation_detail_api',obs_id=obs.obs_id,cmos_id=wxt_detection.detnam)}}",(response)=>{
+                    // Loop through all versions to create buttons
+            $.each(response.all_versions, function(key, value) {
+                var btn = $('<a>')
+                btn.attr('type','button')
+                btn.addClass('btn').addClass('ep_openBtn ')
+                btn.css('margin-right',10)
+                btn.text(key).attr('href', value);
+                $('#old_versions').append(btn);
+            });
+
+        })
+    </script>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="image-modal-div" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="model-body">
+                <img id="image-model" src="" class="rounded mx-auto d-block img-fluid" alt="Responsive image">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Download</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // define custom draw function
+    function drawFunction(source, canvasCtx, viewParams) {
+        canvasCtx.beginPath();
+        canvasCtx.arc(
+            source.x,
+            source.y,
+            source.data["size"] * 1,
+            0,
+            2 * Math.PI,
+            false
+        );
+        canvasCtx.closePath();
+        canvasCtx.strokeStyle = "#FFD700";
+        canvasCtx.lineWidth = 3;
+        (canvasCtx.globalAlpha = 0.7), canvasCtx.stroke();
+        var fov = Math.max(viewParams["fov"][0], viewParams["fov"][1]);
+
+        canvasCtx.globalAlpha = 0.9;
+        canvasCtx.globalAlpha = 1;
+        var xShift = 20;
+        canvasCtx.font = "15px Arial";
+        canvasCtx.fillStyle = "#eee";
+        canvasCtx.fillText(source.data["source_name"], source.x + xShift, source.y - 4);
+        // object type is displayed only if fov<2°
+        if (fov > 2) {
+            return;
+        }
+    };
+
+    //在天球上添加暂现源，payload是源信息，listname是图层名字，用于表示暂现源类型
+    function addSource(payload, listname) {
+        var sourceList = [];
+        for (var target in payload) {
+            var source = this.A.source(
+                payload[target].ra,
+                payload[target].dec,
+                {
+                    size: 6.5,
+                    source_name: payload[target].source_name,
+                    // chinese_name: payload[target].suggested_chinese_name
+                }
+            );
+            // console.log(source);
+            sourceList.push(source);
+        }
+        //添加之前先把已有图层清干净
+        if (this.cat != null) {
+            // this.aladin.removeCatalog(this.cat);
+           aladin.removeLayers();
+        }
+
+        this.cat = this.A.catalog({
+            // shape: c, labelColumn: 'name', displayLabel: true, labelColor: '#fff', labelFont: '14px sans-serif'
+            name: listname,
+            onClick: this.showTransientDetails,
+            shape: this.drawFunction
+            // source
+        });
+        // add sources to the new layer
+        this.cat.addSources(sourceList);
+        aladin.addCatalog(this.cat);
+
+        //add WXT footprint
+        var overlay1 = A.graphicOverlay({ color: 'green', lineWidth: 1 });
+        aladin.addOverlay(overlay1);
+        var payload = [
+            {% for row in related_detections %}
+            A.polygon({{row.fov_new.tostring()}}),
+            {% endfor %}
+        ];
+        // console.log(payload);
+        overlay1.addFootprints(payload);
+
+        var overlay = A.graphicOverlay({ color: '#ee2345', lineWidth: 3 });
+        aladin.addOverlay(overlay);
+        overlay.add(A.polygon({{fov_object.tostring()}}));
+
+
+
+        // overlay.add(A.circle({{ wxt_detection.pnt_ra }}, {{ wxt_detection.pnt_dec }}, 6.6, { color: 'green' }));
+    };
+
+    $(document).ready(function () {
+        $('#aladin-lite-div').width($('#nav-tabContent-1').width());
+        $('#aladin-lite-div').height(700);
+        $('#source_table').DataTable();
+        $('#related_obs_table').DataTable(
+            {
+                //跟数组下标一样，第一列从0开始，这里表格初始化时，第四列默认降序
+                "order": [[5, "desc"]]
+            }
+        );
+        $('.dataTables_length').addClass('bs-select');
+
+    });
+
+    let aladin;
+    let   obs_id_hips = "{{obs.obs_id}}";
+      A.init.then(() => {
+        aladin = A.aladin("#aladin-lite-div", {
+          survey: "CDS/P/DSS2/color",
+
+          fov: 360,
+          fullScreen: false,
+          cooFrame: "galactic",
+        //   showReticle: true,
+        //   reticleSize: 64 // change reticle size
+        });
+
+        aladin.setBaseImageLayer(
+        aladin.createImageSurvey(
+        "RASS",
+        "ROSAT All Sky Survey (RASS) - 0.1-2.4 keV",
+        'https://ep.bao.ac.cn/leia/static/hips/RASS/ov-gso_P_RASS/',
+        "galactic",
+        3,
+        4 imgFormat: "jpeg", colormap: "rainbow" }
+      )
+    );
+
+    aladin.setOverlayImageLayer(
+        aladin.createImageSurvey(
+          obs_id_hips,
+          obs_id_hips,
+          "https://ep.bao.ac.cn/leia/hips/"+obs_id_hips,
+
+          "equatorial",
+          3,
+          {
+            imgFormat: "png",
+            colormap: "rainbow",
+          }
+        ),
+        obs_id_hips
+      );
+        aladin.setProjection("AIT");
+
+
+      });
+
+
+
+    $("#source_explorer_tab").click(function () {
+        var payload = [
+            {% for row in sourceObs %}
+            {
+            "source_name": "s{{row.index_in_det}}",
+            "ra": {{row.ra}},
+            "dec": {{row.dec}},
+        },
+        {% endfor %}
+        ];
+    addSource(payload, "sources");
+    aladin.gotoRaDec({{ wxt_detection.pnt_ra }}, {{ wxt_detection.pnt_dec }});
+    });
+
+    // $(".figure").click(function () {
+    //     var img = $(this).find('img');
+    //     var caption = $(this).find('figcaption')
+    //     console.log(caption);
+    //     $("#imageModalTitle").text(caption.text());
+    //     // console.log(img.attr("src"));
+    //     $("#image-model").attr("src", img.attr("src"));
+
+    //     $("#image-modal-div").modal('show');
+
+    // });
+
+    $(".thumb").click(function () {
+        var caption = $(this).find('figcaption')
+
+        $("#imageModalTitle").text(caption.text());
+        var imagesrc = $(this).attr('imgsrc');
+        $("#image-model").attr("src", imagesrc);
+
+        $("#image-modal-div").modal('show');
+
+    });
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,284 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+    <nav aria-label="breadcrumb" style="margin-bottom: 10px;">
+      <ol class="breadcrumb">
+        {{ render_breadcrumb_item('main.index', _('Home')) }}
+        {{ render_breadcrumb_item('data_center.observation_data', _('Observation Data (Simulation Data)')) }}
+        <li class="breadcrumb-item">Observation Detail</li>
+      </ol>
+    </nav>
+
+    <div class="card w-100">
+      <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">{{_('Observation Data Search (Simulation Data)')}}</div>
+      </div>
+      <div class="card-body ep_datasearch_card">
+        <form action="{{url_for('data_center.observation_data')}}" method="POST" >
+          {{form.hidden_tag()}}
+          <div class="row">
+            <div class="col-md-12">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    {{form.object_name.label(class="bmd-label-floating ep_objsearch_label")}}</span>
+                </div>
+                {{form.object_name(class="form-control",id="object_name")}}
+                <div class="input-group-append">
+                  <button class="btn btn-secondary" type="button"  id="resolve" >Name Resolver</button>
+               
+                </div>
+              
+
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                {{form.ra.label(class="bmd-label-floating ep_objsearch_label")}}
+              </span>
+            </div>
+                {{form.ra(class="form-control",id="ra", placeholder="in Degrees")}}
+                <div class="input-group-append">
+                  <span class="input-group-text">degrees</span>
+                </div>
+              </div>
+              
+            </div>
+            <div class="col-md-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                {{form.dec.label(class="bmd-label-floating ep_objsearch_label")}}
+              </span>
+            </div>
+                {{form.dec(class="form-control",id="dec", placeholder="in Degrees")}}
+                <div class="input-group-append">
+                  <span class="input-group-text">degrees</span>
+                </div>
+              </div>
+              
+            </div>
+            <div class="col-md-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                  {{form.radius.label(class="bmd-label-floating ep_objsearch_label")}}
+                  </span>
+                </div>
+                {{form.radius(class="form-control",id="radius", placeholder="in Degrees")}}
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="obs_id">
+                {{form.obs_id.label(class="bmd-label-floating ep_objsearch_label")}}
+              </span>
+              </div>
+                {{form.obs_id(class="form-control",id="obs_id")}}
+              </div>
+            </div>
+          
+            <div class="col-md-6">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="start_datetime">
+                
+                {{form.start_datetime.label(class="bmd-label-floating ep_objsearch_label")}}
+                </span>
+                </div>
+               
+
+                {{form.start_datetime(class="form-control", placeholder=" yyyy-mm-dd hh:mm:ss", id="start_datetime")}}
+           
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class4"input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="end_datetime">
+                                {{form.end_datetime.label(class="bmd-label-floating ep_objsearch_label")}}
+                  </span>
+                </div>
+              
+                {{form.end_datetime(class="form-control",placeholder=" yyyy-mm-dd hh:mm:ss",id="end_datetime")}}
+    
+              </div>
+            </div>  
+
+           
+           
+
+       
+            <!-- <div class="row"> -->
+      
+              <div class="col-md-12">
+                <div class="input-group mb-3 ep-checkbox-line">
+                  <div class="input-group-prepend">
+                    <label>Instruments:</label></div>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" id="instrument_option_wxt" name="instrument1" value="wxt" checked> WXT
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" id="instrument_option_fxt" name="instrument2" value="fxt"> FXT
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 text-center">
+                {{form.submit(class="btn ep_openBtn", style="padding:7px 30px; margin-top:20px;")}}
+              </div>
+          </div>
+        </form>
+        
+        <div class="alert alert-success ep-sourcelist-nav" role="alert">
+        {{hint}}
+      </div>
+
+      {% if obs|length >0 %}
+
+      <!-- <h4>
+        <span class="badge badge-secondary">
+          Observation Records
+        </span>
+      </h4> -->
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered table-striped" id="obs_table">
+          <!-- <caption><h6>Query Results</h6></caption> -->
+          <thead class="table-secondary">
+            <tr>
+              <th>Obs ID/CMOS</th>
+              <!-- <th>CMOS</th> -->
+              <th>Pointing RA</th>
+              <th>Pointing Dec</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Exposure Time</th>
+              <th>PI</th>
+              <th>Quick Look</th>
+              <th>Option</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {% for key,value in obs.iterrows() %}
+
+            <tr>
+              <td>
+                {% if not value.private or current_user.id==value.user_id %}
+                <a href="{{url_for('data_center.observation_detail', obs_id=value.obs_id,cmos_id=value.detnam)}}"><div class="btn btn-secondary btn-block btn-sm">{{value.obs_id}} {{value.detnam}}</div></a>
+                 
+              </td>
+              {% else%}
+              <a type="button" class="btn btn-outline-secondary btn-block btn-sm"  disabled>{{value.obs_id}} {{value.detnam}}</a>
+     
+
+            </td>
+              {% endif %}
+           
+              <td>{{value.pnt_ra| round(3, 'floor')}}</td>
+              <td>{{value.pnt_dec| round(3, 'floor')}}</td>
+              <td>{{value.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+              <td>{{value.obs_end.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+              {% if value.exposure_time=='NaN' %}
+              <td>{{value.exposure_time| round(2, 'floor') }}</td>
+              {% else %}
+              <td>NaN</td>
+              {% endif%}
+              <td>{{value.user_name}}</td>
+              <td>
+                {#{% if not value.private or current_user.id==value.user_id %}#}
+                
+                <i class="fas fa-image fa-lg thumb"
+                  imgsrc="{{url_for('data_center.get_quick_look_image',obs_id=value.obs_id, cmos_id=value.detnam,version=value.version)}}">
+                  <figure class="figure">
+                    <figcaption class="figure-caption" hidden>{{value.obs_id}} {{value.detnam}} Image</figcaption>
+
+                  </figure>
+                </i>
+                
+                {#{% else%}
+                <i class="fas fa-image fa-lg" style="color:grey"></i>
+                {% endif %}#}
+
+              </td>
+              <td>
+                {% if not value.private or current_user.id==value.user_id %}
+                <a type="button" class="btn ep_darkBtn btn-sm"
+                  href="{{url_for('data_center.download_lv1', obsid=value.obs_id,cmosid=value.detnam,version=value.version)}}">Download level1 data</a>
+                  <a type="button" class="btn ep_darkBtn btn-sm"
+                  href="{{url_for('data_center.download_lv2', obsid=value.obs_id,cmosid=value.detnam,version=value.version)}}">Download Level2-3 Data</a>
+              {% else%}
+              <a type="button" class="btn ep_darkBtn btn-sm"  disabled>Download</a>
+              {% endif %}
+            </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% endif %}
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="image-modal-div" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="model-body">
+        
+        <img id="image-model" src="" class="rounded mx-auto d-block img-fluid" alt="Responsive image">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $(document).ready(function () {
+    $('#obs_table').DataTable({
+              //跟数组下标一样，第一列从0开始，这里表格初始化时，第四列默认降序
+                "order": [[ 5, "desc" ]]
+              });
+    $('.dataTables_length').addClass('bs-select');
+  });
+
+  $(".thumb").click(function () {
+
+    var caption = $(this).find('figcaption')
+    var imagesrc = $(this).attr('imgsrc');
+
+    $("#imageModalTitle").text(caption.text());
+     // set wcs display to degrees
+    // JS9.imageOpts.wcsunits = "degrees";
+    //     // one call to load files into display 0:
+    // JS9.Preload(imagesrc);
+
+    $("#image-model").attr("src", imagesrc);
+
+    $("#image-modal-div").modal('show');
+  });
+
+
+
+</script>
+
+{% include "app/data_center/components/resolve.html" %}
+{% endblock %}

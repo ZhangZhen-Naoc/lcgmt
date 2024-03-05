@@ -1,0 +1,49 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Carousel') }}{% endblock %}
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {{ render_breadcrumb_item('main.index', _('Home')) }}
+            {{ render_breadcrumb_item('sysadmin.index', _('Dashboard')) }}
+            {{ render_breadcrumb_item('cms.index', _('Content Management')) }}
+            {{ render_breadcrumb_item('cms.list_carousel', _('Carousel')) }}
+        </ol>
+    </nav>
+    <div class="page-header">
+        <h1>{{ _('Carousel') }} <small class="text-muted">{{ pagination.total }}</small> <a class="btn btn-outline-info btn-sm" href="{{ url_for('cms.edit_carousel') }}"><span class="oi oi-grid-two-up" aria-hidden="true"></span>  {{_('New Carousel')}} </a></h1>
+    </div>
+    {% if items %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{_('ID')}}</th>
+            <th>{{_('Title')}}</th>
+            <th>{{_('Article Category')}}</th>
+            <th>{{_('Order')}}</th>
+            <th>{{_('Operation')}}</th>
+        </tr>
+        </thead>
+        {% for car in items %}
+       <tr>
+            <td>{{ car.id }}</td>
+            <td>{{ car.title }}</td>
+            <td>{{ _('Home') if None==car.category else car.category }}</td>
+            <td>{{ car.order }}</td>
+            <td>
+                <a class="btn btn-outline-info btn-sm " href="{{url_for('cms.edit_carousel', id=car.id)}}">{{_('Edit')}}</a>
+                <form class="inline" action="{{ url_for('cms.delete_carousel', id=car.id) }}" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="submit" onclick="return confirm('{{_('Are you sure?')}}');" class="btn btn-outline-danger btn-sm" value="{{_('Delete')}}">
+                </form>
+           </td>
+       </tr>
+        {% endfor %}
+    </table>
+        <div class="page-footer">{{ render_pagination(pagination) }}</div>
+    {% else %}
+        <div class="tip"><h5>{{_('No Item.')}}</h5></div>
+    {% endif %}
+{% endblock %}

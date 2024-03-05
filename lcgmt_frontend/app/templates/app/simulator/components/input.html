@@ -1,0 +1,23 @@
+<div class="card">
+  <div class="card-header">
+    <h4 style="color: #003366; font-weight: bold">Input Summary</h4>
+  </div>
+  <div class="card-body">
+    <dl class="row">
+      {% for k,v in result.get_input().items() %}
+      <dt class="col-sm-3">
+        {% if name.get(k,k).title() == 'Nh'%}
+        nH
+        {%elif name.get(k,k).title() == 'Ra(J2000)'%}
+        RA(J2000)
+        {%else%}
+        {{name.get(k,k).title().replace('_',' ')}}
+        {%endif%}
+      </dt>
+      <dd class="col-sm-3">
+        {{v}} {{unit.get(k,"")}}
+      </dd>
+      {%endfor%}
+    </div>
+  </div>
+</div>

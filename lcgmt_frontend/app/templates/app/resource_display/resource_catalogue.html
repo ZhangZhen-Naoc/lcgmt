@@ -1,0 +1,88 @@
+{% extends 'app/resource-display-base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
+{% block title %}{{_('Resources List')}}{% endblock %}
+
+{% block content %}
+<script>
+     $(function(){
+        $('.datasetcatalogue-openButton').click(function(){
+            if ($(this).text()=="收起分类"){
+                $(this).text("展开分类");
+            }
+            else{
+                $(this).text("收起分类");
+            }
+            $('.datasetcatalogue-classificationBox').toggle();
+            $('.datasetcatalogue-classificationBox-BG2').toggle();
+        });
+        var tag_id=request.args.get('tag');
+        alert(tag_id);
+     });
+     function changeTagStatus(){
+
+     }
+
+</script>
+<div class="container-fluid" style="padding: 0px;">
+    <div class="main-container">
+        <div class="datasetcatalogue-classification" id="tags" style="padding: 0px;">
+            <div class="datasetcatalogue-titleLine">
+                <div class="datasetcatalogue-title">所有分类</div>
+                <div class="datasetcatalogue-openButton">收起分类</div>
+            </div>
+            {% for type in tag_types %}
+            <div class="{%if tag_types.index(type) % 2 == 0 %} datasetcatalogue-classificationBox {% else %} datasetcatalogue-classificationBox-BG2 {% endif %}">
+                <div class="row" style="margin: 0px; padding: 0px;">
+                    <div class="datasetcatalogue-secTitle col-sm-2">{{type.type_zh}}
+                        <span class="badge datasetcatalogue-badge-lg ">({{type.count}})</span>
+                    </div>
+                    <div class="col-sm-9">
+                        {% for tag in tags[type.id] %}
+                        <div class="datasetcatalogue-tagBlock" id="tag_{{tag.id}}"><a href="{{url_for('.resource_catalogue',tag=tag.id)}}">{{tag.tag_zh}}
+                            <span class="badge datasetcatalogue-badge-lg">({{tag.count}})</span></a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="datasetcatalogue-datasetList">
+            <div class="row" id="datasetList" style="margin: 0px; padding: 0px;">
+                {% for resource in resources %}
+                <div class="datasetcatalogue-datasetcard-outline col-sm-4">
+                    <div class="datasetcatalogue-datasetcard">
+                        <div class="datasetcatalogue-datasetcard-titleLine">
+                            <div class="datasetcatalogue-datasetcard-title"><a href="{{url_for('.show_resouhce',id=resource.id)}}">{{resource.title_zh}}</a></div>
+                            <div class="datasetcatalogue-datasetcard-time">
+                                {%if resource.publicated %}
+                                {{resource.publicated.strftime('%Y-%m-%d %H:%M:%S')}}
+                                {%endif%}
+                            </div>
+                        </div>
+                        <div class="datasetcatalogue-datasetcard-creator">{% if resource.publisher %}{{resource_publisher[resource.id]}}{% endif %}</div>
+                        <div class="datasetcatalogue-datasetcard-body">
+                            <div class="datasetcatalogue-datasetcard-infoLine">
+                                <div class="datasetcatalogue-datasetcard-doi">DOI: {{resource.doi}}</div>
+                            </div>
+                            <div class="datasetcatalogue-datasetcard-intro">
+                                {#{{resource.description_zh|truncate(length=120, leeway=0)}}#}
+                                {{resource.description_zh}}
+                            </div>
+                            <div class="datasetcatalogue-datasetcard-tagLine">
+                                {%for tag in resource_tags[resource.id]%}
+                                <div class="datasetcatalogue-datasetcard-tag"><a
+                                        href="{{url_for('.resource_catalogue',tag=tag.id)}}">{{tag.tag_zh}}</a></div>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

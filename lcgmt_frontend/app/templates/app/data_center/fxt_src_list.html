@@ -1,0 +1,124 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px;">
+    <ol class="breadcrumb">
+    {% block bread %}
+    {{ render_breadcrumb_item('main.index', _('Home')) }}
+    {{ render_breadcrumb_item('data_center.fxt_obs_list', _('FXT Transient Candidate List')) }}
+    {% endblock %}
+    </ol>
+</nav>
+<div class="card w-100">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">{{_('FXT Transient Candidate Search')}}</div>
+    </div>
+    {% include "app/data_center/components/src_obs_search_form.html"  %}
+   
+
+   {# <div class="tab-content" id="nav-tabContent" style="background-color: #ddd; margin: 0px 25px 20px 25px; padding-top: 10px;">
+        <div class="tab-pane fade show active" id="nav-source-list-tabpanel" role="tabpanel"
+        aria-labelledby="nav-source-list-tab">
+        <div class="table-responsive" >
+            {% block sources_table %}
+            {% endblock %}
+            
+        </div>
+        </div>
+    </div>
+    #}
+
+    <div id="spinner-div">
+        Loading...
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+</div>
+
+
+<div class="card w-100" style="margin-top: 20px">
+  
+    <div class="card-header bg-light ep-cardheader">
+      <div class="card-header-title">Candidate List <span id="items"></span>
+        <div style="float:right">
+
+
+          <button class="btn ep_openBtn btn-sm" id="download_list"  >Export CSV</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+    <div id="result_tab" style="z-index: 50; width: 100%"></div>
+    
+  </div>
+</div>
+<script>
+        
+        // 获取表单元素和 submit 按钮元素
+    var myForm = document.getElementById("src_search_form");
+    var submitBtn = myForm.querySelector('[type="submit"]');
+
+    // 重写表单 submit 事件
+    myForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // 阻止表单默认提交行为
+        // 在这里编写表单提交前需要执行的代码
+        $("#spinner-div").show();
+        // 利用 AJAX 技术发送表单数据
+        $.ajax({
+            url:"{{url_for('.fxt_src_list_api')}}",
+            data: { 
+                'start_datetime':myForm.start_datetime.value,
+                'end_datetime':myForm.end_datetime.value
+            },
+            "success": renderTable
+        });
+
+        return false; // 防止表单再次提交
+    });
+    
+    // 渲染表格
+    function renderTable(data) {
+        var table = new Tabulator("#result_tab", {
+            data: data,
+            selectable: 1,
+            pagination: "local",
+            paginationSize: 15,
+            paginationCounter: "rows",
+            columns: [
+         5     { title: "Name", field: "fxt_name", formatter: "link",formatterParams:{url:(item)=>{return item.getData()['src_detail']},target:"_blank"} },
+               { title: "Obs", field: "name" },
+               // { title: "Detection ID", field: "detection_id" },
+               // { title: "Source ID", field: "src_id" },
+               { title: "RA", field: "ra" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }}, 
+               { title: "RA_ERR", field: "ra_err" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }}, 
+               { title: "DEC", field: "dec" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+               { title: "DEC_ERR", field: "dec_err" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+               { title: "RA_Match", field: "ra_match" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+               { title: "DEC_Match", field: "dec_match" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+               { title: "flux", field: "flux" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+               { title: "rate", field: "rate" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+               { title: "SNR", field: "snr" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+               { title: "Hardness", field: "hardness" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+               { title: "Name_Match", field: "name_match" },
+               { title: "Version", field: "version" },
+
+                { title: "Exposure Time", field: "exposure_time" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+            ]
+        });
+
+    // table.on("rowSelected", function(row) {
+    //         showRecords(row.getData().records);
+    // });
+    $("#spinner-div").hide(); //Request is complete so hide spinner
+    }
+ 
+    
+
+    
+
+</script>
+{% endblock %}

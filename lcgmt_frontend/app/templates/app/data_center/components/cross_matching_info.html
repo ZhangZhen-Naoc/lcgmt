@@ -1,0 +1,42 @@
+
+<div class="card w-100">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">Cross Matching Information</div>
+    </div>
+<div class="card-header bg-light">
+        
+    <div style="color: #004386; font-weight: bold; font-size: 16px">
+        Multi-wavelength Skymap
+    <span> </span>
+    <a
+        target="_blank"
+        class="btn btn-info"
+        href="https://sky.esa.int/esasky/?target={{sourceInDetection.ra}}%20{{sourceInDetection.dec}}&hips=DSS2+color&fov=0.2&cooframe=J2000&sci=true&lang=zh"
+        >ESA Sky</a
+    >
+    <a
+        target="_blank"
+        class="btn btn-info"
+        href="https://asas-sn.osu.edu/variables?ra={{sourceInDetection.ra}}&dec={{sourceInDetection.dec}}&radius=3&vmag_min=&vmag_max=&amplitude_min=&amplitude_max=&period_min=&period_max=&lksl_min=&lksl_max=&class_prob_min=&class_prob_max=&parallax_over_err_min=&parallax_over_err_max=&name=&references[]=I&references[]=II&references[]=III&references[]=IV&references[]=V&references[]=IX&sort_by=raj2000&sort_order=asc&show_non_periodic=true&show_without_class=true&asassn_discov_only=false&"
+        >ASAS-SN</a
+    >
+    </div>
+</div>
+
+<div class="card-body" id="with-aladin">
+    <div class="row">
+    <div class="col">
+        <span class="badge badge-light"><h6>Catalog Legend:</h6></span>
+        <span class="badge badge-danger"><h6>Error Circle (10 arcmins)</h6></span>
+        <span class="badge badge-warning"><h6>EP Reference</h6></span>
+        <span class="badge badge-success"><h6>2RXS</h6></span>
+        <span class="badge badge-primary"><h6>SIMBAD</h6></span>
+        <span class="badge badge-primary" style="background-color: purple"><h6>SWIFT 2SXPS</h6></span>
+        <span class="badge badge-info"><h6>MAXI</h6></span>
+        <span class="badge badge-primary" style="background-color: #03dac5"><h6>AllWISE</h6></span>
+        <span class="badge badge-primary" style="background-color: brown"><h6>Dark Energy Survey</h6></span>
+    </div>
+    </div>
+    <div id="aladin-lite-div"></div>
+</div>
+</div>

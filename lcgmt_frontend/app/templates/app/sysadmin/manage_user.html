@@ -1,0 +1,107 @@
+{% extends 'app/sysadmin/index.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}{{_('Manage Users')}}{% endblock %}
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {{ render_breadcrumb_item('main.index', _('Home')) }}
+            {{ render_breadcrumb_item('sysadmin.index', _('Dashboard')) }}
+            {{ render_breadcrumb_item('sysadmin.manage_user', _('Manage User')) }}
+        </ol>
+    </nav>
+    <div class="page-header">
+        <h1>Users <small class="text-muted">{{ pagination.total }}</small></h1>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">{{_('Filter')}} </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.args.get('filter', 'all') == 'all' %}active{% endif %}"
+                   href="{{ url_for('sysadmin.manage_user', filter='verified') }}">{{_('Approved')}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.args.get('filter') == 'unverified' %}active{% endif %}"
+                   href="{{ url_for('sysadmin.manage_user', filter='unverified') }}">{{_('Unverified')}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.args.get('filter') == 'denied' %}active{% endif %}"
+                   href="{{ url_for('sysadmin.manage_user', filter='denied') }}">{{_('Denied')}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.args.get('filter') == 'blocked' %}active{% endif %}"
+                   href="{{ url_for('sysadmin.manage_user', filter='blocked') }}">{{_('Blocked')}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.args.get('filter') == 'administrator' %}active{% endif %}"
+                   href="{{ url_for('sysadmin.manage_user', filter='manager') }}">{{_('System Manager')}}</a>
+            </li>
+            <li class="nav-item">
+            <form class="form-inline my-2 my-lg-0" action="{{ url_for('sysadmin.search_user') }}">
+                <input class="form-control-sm mr-sm-2" name="q" type="search" placeholder="{{_('Search')}}" aria-label="{{_('Search')}}">
+                <button class="btn btn-sm btn-secondary my-2 my-sm-0 indexNavbarSearchBtn" type="submit">{{_('Search')}}</button>
+            </form>
+            </li>
+        </ul>
+    </div>
+    <br>
+    {% if users %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th style="text-align: center;width:70px">Avatars</th>
+                <th style="text-align: center">Name</th>
+                <th style="text-align: center;width:100px">Role</th>
+                <th style="text-align: center">Email</th>
+                <th style="text-align: center; width:100px">Research Topics</th>
+                <!-- <th>Date</th> -->
+                <th style="text-align: center">Actions</th>
+            </tr>
+            </thead>
+            {% for user in users %}
+                <tr>
+                    <td><a href="{{ url_for('sysadmin.edit_profile_admin', user_id=user.id) }}"><img src="{{ url_for('main.get_avatar', filename=user.avatar_s) }}"></a></td>
+                    <td><a class="btn {% if (user.roles | count) ==0 %}btn-warning{%else%}btn-info{%endif%}" href="{{ url_for('sysadmin.edit_profile_admin', user_id=user.id) }}">{{ user.name }}</a></td>
+                    <td style="width:100px">[{{ user.roles | join(',' | safe) }}]</td>
+                    <td class="{{ 'text-success' if user.email_confirmed else 'text-danger' }}">{{ user.email }}</td>
+                    <td style="width:100px">{{ user.research_field }}</td>
+                  {# <td>{{ moment(user.member_since,local=True).format('LL') }}</td>#} 
+                    <td>
+                   {# {% if not user.is_admin %} #}
+                        {% if not user.checked %}
+                            <form class="inline" action="{{ url_for('sysadmin.passverified_user', user_id=user.id) }}" method="post">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="submit" onclick="return confirm('{{_('Are you sure?')}}');" class="btn btn-secondary btn-sm" value="Approve">
+                            </form>
+                        {% endif %}
+                            <form class="inline" action="{{ url_for('sysadmin.notpassverified_user', user_id=user.id) }}" method="post">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="submit" onclick="return confirm('{{_('Are you sure?')}};" class="btn btn-warning btn-sm" value="Deny">
+                            </form>
+                        {% if user.active %}
+                            <form class="inline" action="{{ url_for('sysadmin.block_user', user_id=user.id) }}"
+                                  method="post">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="submit" onclick="return confirm('{{_('Are you sure?')}}');" class="btn btn-warning btn-sm" value="Block">
+                            </form>
+                        {% else %}
+                            <form class="inline" action="{{ url_for('sysadmin.unblock_user', user_id=user.id) }}"
+                                  method="post">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="submit" onclick="return confirm('{{_('Are you sure?')}}');" class="btn btn-secondary btn-sm" value="Unblock">
+                            </form>
+                    {#  {% endif %} #}
+                    {% endif %}
+                        {% if current_user.is_admin %}
+                            <a class="btn btn-secondary btn-sm text-white" href="{{ url_for('sysadmin.edit_profile_admin', user_id=user.id) }}">{{_('Edit')}}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="page-footer">{{ render_pagination(pagination) }}</div>
+    {% else %}
+        <div class="tip"><h5>{{_('No users.')}}</h5></div>
+    {% endif %}
+{% endblock %}

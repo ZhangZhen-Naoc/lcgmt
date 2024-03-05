@@ -1,0 +1,45 @@
+{% extends 'app/resource-display-base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
+{% block title %}{{_('Resources List')}}{% endblock %}
+
+{% block content %}
+<div class="main-container registry-container">
+    <div class="index-headline-titleLine" style="text-align: center;">
+        <div class="index-headline-title">论文数据目录</div>
+    </div>
+
+    <div class="registry-papercard-outline" id="pds">
+        {% for p in paperdatas %}
+        <div class="registry-papercard">
+            <div class="registry-papercard-titleLine">
+                <div class="registry-papercard-title">{{p.title_en}}</div>
+                <div>{{paperdata_authors_dict[p.id]}}</div>
+            </div>
+            <div class="registry-papercard-body clearfix">
+                <div class="registry-papercard-intro">
+                    <div>{% if p.page_en %}
+                            {{p.page_en}}
+                        {% else %}
+                            {{p.description_en}}
+                        {% endif %}
+                    </div>
+                </div>
+                <a href="{{url_for('.paperdata',id=p.id)}}"
+                   class="btn float-right registry-btn">数据详情</a>
+            </div>
+            <div class="card-footer text-muted">Updated on {{p.updated}}</div>
+            {% if papers[p.id] %}
+                Paper Title: {{papers[p.id].title}}<br/>
+                Publication: {{papers[p.id].pub_raw}}<br/>
+                Bibcode: {{papers[p.id].bibcode}}<br/>
+                DOI: {%if papers[p.id].doi%}{{papers[p.id].doi| join(',')}}{% endif %}<br/>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
+

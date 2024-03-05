@@ -1,0 +1,218 @@
+{% extends 'app/base.html' %} {% block title %}EP Transient Advocates Application{% endblock %} {% block content %}
+<div class="container-fluid" style="margin: 0px; padding: 0px; font-family: 微软雅黑, Arial, Helvetica, sans-serif;">
+  <div class="card w-100" style="border: 0px">
+    <div class="card-body ep-newsView">
+      <div id="article_body" class="ep_article">
+        <h3 class="ep_article_title">Call for EP Transient Advocates</h3>
+
+        <div class="articleContent">
+
+            <p><strong>Application Deadline: 2023-12-15</strong></p>
+          </div>
+          <hr />
+          
+
+          <form id="form" method="POST" enctype=multipart/form-data action="{{ url_for('cms.ta_apply')}}">
+            {{ form.csrf_token() }}
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">Chinese Name <a style="color:red;"> *</a></label>
+                <div class="input-group col-sm-10">{{ form.name(class="form-control name_input",id="name") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">Position <a style="color:red;"> *</a></label>
+                <div class="input-group col-sm-10">{{ form.position(class="form-control title_input",id="position") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">Institute <a style="color:red;"> *</a></label>
+                <div class="input-group col-sm-10">{{ form.institute(class="form-control institute_input",id="institute") }}</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Email <a style="color:red;"> *</a></label>
+                <div class="input-group col-sm-10">{{ form.email(class="form-control email_input",id="email") }}</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Phone <a style="color:red;"> *</a></label>
+                <div class="input-group col-sm-10">{{ form.telephone(class="form-control telephone_input",id="telephone") }}</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Science Topical Panei <a style="color:red;"> *</a></label>
+                <div class="input-group col-sm-10">{{ form.stp(class="form-control stp_input",id="stp") }}</div>
+              </div>
+            </div>
+
+           
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">Your STP Referer's Chinese Name (only if you are an associate stp member)</label>
+                <div class="input-group col-sm-10">{{ form.co_stp_name(class="form-control co_stp_name_input",id="co_stp_name") }}</div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="">Remark (Less than 200 words)</label>
+                <div class="input-group col-sm-10">{{ form.remark(class="form-control remark_input",id="remark") }}</div>
+              </div>
+            </div>
+            <div class="col-md-12 text-center">{{ form.submit(class="btn ep_openBtn", value='Submit' ) }}</div>
+            <br />
+            <br />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+  $("select").select2({});
+
+  $("form").submit(function (e) {
+    // alert("submit");
+    var inte_count = 0;
+    var error_msg = "";
+    if ($("#agntde").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("agntde", "一");
+    }
+    if ($("#fet").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("fet", "二");
+    }
+    if ($("#mma").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("mma", "三");
+    }
+    if ($("#cso").is(":checked")) {
+      inte_count++;
+      error_msg += CheckPaperInput("cso", "四");
+    }
+    if ($("#os").is(":checked")) {
+      inte_count++;
+      if ($("#os_type").val().length <= 0) {
+        error_msg += "如果选择工作组五，请填写具体的研究方向。\r\n";
+      }
+      error_msg += CheckPaperInput("os", "五");
+    }
+    if ($("#fuoa").is(":checked")) {
+      if ($("#fuoa_intro").val().length <= 0) {
+        error_msg += "如果选择工作组六，请介绍可配合EP开展观测的其他波段的观测设备或资源。\r\n";
+      }
+      error_msg += CheckPaperInput("fuoa", "六");
+    }
+    if (inte_count > 2 || inte_count == 0) {
+      error_msg += "请正确选择有意加入的领域工作组，1-5 需选一至两个， 6 无限制。\r\n";
+    }
+    var file_input = $("#application_file").get(0).files[0];
+    if (!file_input)
+    {
+      error_msg += "请上传《EP科学领域工作组中方正式成员申请表》。\r\n";
+    }
+
+    if (error_msg.length > 0) {
+      e.preventDefault();
+      alert(error_msg);
+    }
+  });
+
+
+    //选择文件后更新Button内容
+  $("input[type='file']").change(function (event) {
+    let filename = event.currentTarget.files[0].name;
+    $(this)
+      .siblings("label")
+      .text(() => {
+        return filename;
+      });
+  });
+
+  function CheckPaperInput(element, index) {
+    var message = "";
+
+    if (
+      ($("#" + element + "_p1_title").val().length > 0 &&
+        $("#" + element + "_p1_journal").val().length > 0 &&
+        $("#" + element + "_p1_year").val().length > 0 &&
+        $("#" + element + "_p1_rank").val().length > 0) ||
+      ($("#" + element + "_p1_title").val().length == 0 &&
+        $("#" + element + "_p1_journal").val().length == 0 &&
+        $("#" + element + "_p1_year").val().length == 0 &&
+        $("#" + element + "_p1_rank").val().length == 0)
+    ) {
+      message += "";
+    } else {
+      message += "请在工作组" + index + "处完整填写第一篇代表性论著。\r\n";
+    }
+    if (
+      ($("#" + element + "_p2_title").val().length > 0 &&
+        $("#" + element + "_p2_journal").val().length > 0 &&
+        $("#" + element + "_p2_year").val().length > 0 &&
+        $("#" + element + "_p2_rank").val().length > 0) ||
+      ($("#" + element + "_p2_title").val().length == 0 &&
+        $("#" + element + "_p2_journal").val().length == 0 &&
+        $("#" + element + "_p2_year").val().length == 0 &&
+        $("#" + element + "_p2_rank").val().length == 0)
+    ) {
+      message += "";
+    } else {
+      message += "请在工作组" + index + "处完整填写第二篇代表性论著。\r\n";
+    }
+    if (
+      ($("#" + element + "_p3_title").val().length > 0 &&
+        $("#" + element + "_p3_journal").val().length > 0 &&
+        $("#" + element + "_p3_year").val().length > 0 &&
+        $("#" + element + "_p3_rank").val().length > 0) ||
+      ($("#" + element + "_p3_title").val().length == 0 &&
+        $("#" + element + "_p3_journal").val().length == 0 &&
+        $("#" + element + "_p3_year").val().length == 0 &&
+        $("#" + element + "_p3_rank").val().length == 0)
+    ) {
+      message += "";
+    } else {
+      message += "请在工作组" + index + "处完整填写第三篇代表性论著。\r\n";
+    }
+
+    return message;
+  }
+
+  function isInteger(obj) {
+    return typeof obj === "number" && obj % 1 === 0;
+  }
+
+  function CheckCollapse(element) {
+    if ($("#" + element).is(":checked") == true) {
+      $("#collapse_" + element).collapse("show");
+    } else {
+      $("#collapse_" + element).collapse("hide");
+    }
+  }
+
+  $(document).ready(function () {
+    CheckCollapse("os");
+    CheckCollapse("cso");
+    CheckCollapse("fet");
+    CheckCollapse("agntde");
+    CheckCollapse("mma");
+    CheckCollapse("fuoa");
+  });
+</script>
+
+{% endblock %}

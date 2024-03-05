@@ -1,0 +1,186 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %} {% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px">
+  
+</nav>
+
+<div class="card w-100">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">{{sourceInDetection.name}}</div>
+  </div>
+  <div class="card-body ep_datasearch_card">
+    {# 第一行：源基本信息和源快视图 #} 
+    <div class="row">
+      {% include 'app/data_center/components/fxt_alert_basic_info.html' %} 
+      {% include 'app/data_center/components/fxt_alert_quick_look.html' %}
+    </div>
+    <div id="spinner-div">
+      Loading...
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    
+
+  <div class="row" style="margin-top: 20px">
+    
+    <div class="col-md-12">
+      <div class="card w-100">
+        <div class="card-header bg-light">
+          <div style="color: #004386; font-weight: bold; font-size: 16px">Quick Looks</div>
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            {% for name,src in quicklooks.items() %}
+            <li class="nav-item">
+              <a class="nav-link {% if loop.index==1 %} active {% endif %}" id="{{name}}-tab" data-toggle="tab" href="#{{name}}" role="tab" aria-controls="{{name}}" aria-selected="true">{{name}}</a>
+            </li>
+            {%endfor %}
+                    
+          </ul>
+        </div>
+        <div class="card-body" >
+          <!-- Tab panel content div-->
+          <div class="tab-content" id="myTabContent">
+            {% for name,src in quicklooks.items() %}
+            <div class="tab-pane fade {% if loop.index==1 %} show active {% endif %}" id="{{name}}" role="tabpanel" aria-labelledby="{{name}}-tab">        
+                <img class="figure-img img-fluid rounded" src="{{src}}"/>
+            </div>
+            {%endfor %}
+
+                  
+          </div>   
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+
+    
+    <div class="row" style="margin-top: 20px">
+      <div class="col-md-12">
+        {# 第二行：Aladin显示证认信息、第三行：包含这个位置的观测 #} 
+        {% include 'app/data_center/components/cross_matching_info.html' %}
+        {% include 'app/data_center/components/observations_at_this_location.html' %}
+        
+      </div>
+    </div>
+
+   {# {%if upperlimit %} 
+
+      <div class="card w-100" id="spectrum-container">
+        <div class="card-header bg-light">
+          <h4>{%if not sourceInDetection.transient_candidate%} X-ray Upper Limit {%endif%}</h4>
+        </div>
+        <div class="card-body">
+          {% set counterpart=upperlimit%} 
+          {% for catalogue,rows in counterpart.items()%} 
+            {% include 'app/data_center/components/counterpart.html'%} 
+          {%endfor%}
+        </div>
+      </div>
+    {%endif%} 
+    #}
+    {# X射线对应体信息，用到source的xray_counterpart #}
+    {# 
+      {%if sourceInDetection.transient_candidate and xray_counterpart %} 
+
+        <div class="card w-100" id="spectrum-container">
+          <div class="card-header bg-light">
+            <h4>{%if not sourceInDetection.transient_candidate%} X-ray counter part {%else%} X-ray Upper Limit {%endif%}</h4>
+          </div>
+          <div class="card-body">
+            {% set counterpart=xray_counterpart%} 
+            {% for catalogue,rows in counterpart.items()%} 
+              {% include 'app/data_center/components/counterpart.html'%} 
+            {%endfor%}
+          </div>
+        </div>
+      {%endif%} 
+    #}
+    {# 光学对应体信息，用到source的other_counterpart
+      <div class="card w-100" id="spectrum-container">
+        <div class="card-header bg-light">
+          <h4>Optical Counterpart</h4>
+        </div>
+        <div class="card-body">
+          {% if other_counterpart is not none%} {% set counterpart=other_counterpart%} {% for catalogue,rows in counterpart.items()%} {{catalogue}} {%
+          include 'app/data_center/components/counterpart.html' %} {%endfor%} {% endif %}
+        </div>
+      </div>
+    #} 
+    
+    {# 第四行：长期光变 #}
+    {#
+    <div class="card w-100" id="spectrum-container">
+        <div class="card-header bg-light">
+          <div class="card-header-title" style="color: #004386; font-weight: bold; font-size: 16px">
+            Long Term Light Curve
+          </div>
+        </div>
+        <div class="card-body">
+          {% include 'app/data_center/components/longterm_lc.html' %}
+        </div>
+    </div>
+    #}
+    {# 第五行：相关观测，用到 sourceObs #} 
+    {% include 'app/data_center/components/related_observations_for_source.html' %} 
+    {# 第六行：Alerts #}
+    {% include 'app/data_center/components/alerts.html' %}
+    {% include 'app/data_center/components/grbs.html' %}
+    {#
+      <a
+        type="button"
+        target="_blank"
+        class="btn ep_openBtn align-self-end"
+        style="padding: 5px 10px"
+        href="https://ep.bao.ac.cn/leia/mwr/api?cats=optical:optical_gaiadr3&cats=optical:optical_panstarrsdr1&cats=optical:optical_sdssdr14_photoobj&cats=optical:optical_hoststars_of_exoplanets&ra={{source.ra}}&dec={{source.dec}}&radius=180&scale=1&prob_threshold=0.7"
+        >Check the Source in Other Wavelength</a
+      >
+    #} 
+    
+   
+    {#
+      {% include 'app/data_center/components/lc.html' %} {% include 'app/data_center/components/spectrum.html'%}
+    #}
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="image-modal-div" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="model-body">
+        <img id="image-model" src="" class="rounded mx-auto d-block img-fluid" alt="Responsive image" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Download</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $("#obs_table").DataTable({
+    //跟数组下标一样，第一列从0开始，这里表格初始化时，第四列默认降序
+    order: [[5, "desc"]],
+  });
+  $(".dataTables_length").addClass("bs-select");
+
+  $(".thumb").click(function () {
+    var caption = $(this).find("figcaption");
+
+    $("#imageModalTitle").text(caption.text());
+    var imagesrc = $(this).attr("imgsrc");
+    $("#image-model").attr("src", imagesrc);
+
+    $("#image-modal-div").modal("show");
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+{% from 'bootstrap/nav.html' import render_nav_item %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    {% block head %}
+    <title>{% block title %}{% endblock %} | MMDCS</title>
+    {% endblock head %}
+    {% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='open-iconic/font/css/open-iconic-bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='2') }}">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css">
+    <link href="{{ url_for('static', filename='css/select2.min.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/select2-bootstrap.css') }}" rel="stylesheet">
+    {% endblock styles %}
+    {% block scripts %}
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap-datetimepicker/js/bootstrap-datetimepicker.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js', v='2') }}"></script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
+    <script type="text/javascript">
+        var prx='{{get_subsite()}}';
+        var csrf_token = "{{ csrf_tokel() }}";
+        {% if current_user.is_authenticated %}
+            var is_authenticated = true;
+        {% else %}
+            var is_authenticated = false;
+        {% endif %}
+        $(function(){
+            if($(".index-SecNav").css("width").replace(/[^-\d\.]/g, '')>768){
+                $(".dropdown").mouseover(function() {
+                    $(".dropdown").removeClass("show");
+                    $(this).addClass("show");
+                    $(".dropdown-toggle").attr("aria-expanded","false");
+                    $(this).children(".dropdown-toggle").attr("aria-expanded","true");
+                    $(".dropdown-menu").removeClass("show");
+                    $(this).children(".dropdown-menu").addClass("show");
+                });
+                $(".dropdown").not($(this).children(".dropdown-menu").mouseenter()).mouseleave(function() {
+                        $(".dropdown").removeClass("show");
+                        $(".dropdown-toggle").attr("aria-expanded","false");
+                        $(".dropdown-menu").removeClass("show");
+                });
+            }
+        });
+
+
+
+
+    </script>
+    {% endblock %}
+</hesd>
+<body>
+{% block navbar %}
+<nav class="navbar navbar-expand navbar-dark topNav-bg index-topNav">
+    <div class="container-fluid index-navbar-container">
+        <div class="row" style="margin: 0px;width: 100%;">
+            <a class="navbar-brand" href="https://www.escience.org.cn/"><img
+                    src="https://nadc.china-vo.org/u/img/index-img/new-header-logo.png" width="260" alt=".."
+                    style="margin-left: 20px;"></a>
+            <a class="nav-link index-topNav-link">
+                <div class="nav-item index-topNav-item" id="navUserid"></div>
+            </a>
+            <a class="nav-link index-topNav-link" href="https://nadc.china-vo.org/dashboard">
+                <div class="nav-item index-topNav-item" id="navLogin">登录</div>
+            </a>
+            <a class="nav-link index-topNav-link" href="https://nadc.china-vo.org/j_spring_security_logout">
+                <div class="nav-item index-topNav-item" id="navLogout">退出</div>
+            </a>
+            <a class="nav-link index-topNav-link" href="https://passport.escience.cn/regist.jsp">
+                <div class="nav-item index-topNav-item" id="navRegist">注册</div>
+            </a>
+            <a class="nav-link index-topNav-link" onclick='this.href=getlangurl();' href="#">
+                <div class="nav-item index-topNav-item" id="navLanguage">English</div>
+            </a>
+
+            <div class="search-container col-md-4 ml-auto">
+                <form id="essearchform" action="https://nadc.china-vo.org/essearch">
+                    <div class="nonindex-search-box input-group">
+                        <div class="input-group-prepend">
+                            <select class="custom-select index-search-button custom-select-searchselect"
+                                    name="endpoint">
+                                <option value="" selected id="headerSearchAll">全站</option>
+                                <option value="astrocloud_cms,explore_cms,psp_cms,astrodict_cms"
+                                        id="headerSearchArticle">新闻文章
+                                </option>
+                                <option value="metadata" id="headerSearchMetadata">元数据</option>
+                                <option value="meeting" id="headerSearchMeeting">会议信息</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="fuzziness" id="fuzziness" value="1"/>
+                        <input type="text" class="form-control index-search-input" id="headerSearchKeyword"
+                               placeholder="请输入检索关键字" aria-label="searchcontent" aria-describedby="button-addon2"
+                               name="keyword">
+                        <div class="input-group-append">
+                            <span class="input-group-text btn-outline-secondary index-search-button" id="headerSearch"
+                                  onclick="$('#essearchform').submit();">搜索</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white index-SecNav">
+    <div class="container-fluid index-navbar-container">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <a class="navbar-brand" href="https://nadc.china-vo.org/"><img
+                src="https://nadc.china-vo.org/u/img/index-img/NADCLogoTransHorizontal.png" width="300" alt=".."></a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <a class="nav-link" href="https://telescope.china-vo.org/">
+                    <li class="nav-item SecNav-item" id="navTele">申请观测</li>
+                </a>
+                <li class="nav-item SecNav-item dropdown" id="navData">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-data" role="button"
+                       aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">科学数据</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown-data">
+                        <a class="dropdown-item" href="https://nadc.china-vo.org/data/">
+                            <div id="navDataQuery">数据检索</div>
+                        </a>
+                        <a class="dropdown-item" href="https://nadc.china-vo.org/article/20200518150050">
+                            <div id="navDataSubmission">数据汇交</div>
+                        </a>
+                        <a class="dropdown-item" href="https://nadc.china-vo.org/article/20200521231135">
+                            <div id="savDataset">数据目录</div>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item SecNav-item dropdown" id="navService"><a class="nav-link dropdown-toggle" href="#"
+                                                                             id="navbarDropdown-service" role="button"
+                                                                             aria-haspopup="true" aria-expanded="false"
+                                                                             data-toggle="dropdown">专题服务</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown-service">
+                        <a class="dropdown-item" href="https://nadc.china-vo.org/meetings">
+                            <div id="navMeetings">天文会议系统</div>
+                        </a>
+                        <a class="dropdown-item" href="https://nadc.china-vo.org/article/20200519170135">
+                            <div id="navPaperdata">论文数据贮藏库</div>
+                        </a>
+                        <a class="dropdown-item" href="https://nadc.china-vo.org/astrodict/">
+                            <div id="navDictionary">天文学名词</div>
+                        </a>
+                        <a class="dropdown-item" href="https://nadc.china-vo.org/article/20200518151543">
+                            <div id="navTool">软件工具</div>
+                        </a>
+                    </div>
+                </li>
+                <a class="nav-link" id="cloudLink" href="https://nadc.china-vo.org/article/20200518151727">
+                    <li class="nav-item SecNav-item" id="navCloud">云资源</li>
+                </a>
+                <li class="nav-item SecNav-item dropdown" id="navPublic">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-public" role="button"
+                       aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">公众频道</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown-public">
+                        <a class="dropdown-item" href="https://nadc.china-vo.org/wwt/">
+                            <div id="navWWT">万维望远镜</div>
+                        </a>
+                        <a class="dropdown-item" href="https://nadc.china-vo.org/psp0">
+                            <div id="navPSP">公众超新星搜寻</div>
+                        </a>
+                        <a class="dropdown-item" href="https://sky.esa.int/?lang=zh">
+                            <div id="navESASky">ESASky</div>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="https://nadc.china-vo.org/article/20200518113359">
+                            <div id="navEpoChannel">科普专题</div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% endblock %}
+<div class="container-fluid">
+    <div class="main-container headline-container">
+        <div class="row index-headline-row" style="margin: 0px;">
+
+            <div class="container-fluid main-mmdcs-container">
+                {% for message in get_flashed_messages(with_categories=True) %}
+                <div class="alert alert-{{ message[0] }}">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message[1] | safe}}
+                </div>
+                {% endfor %}
+
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block footer %}
+<footer class="nadcFooter">
+    <div class="container-fluid foot-container">
+        <div class="row">
+            <div class="col-sm-4" style="border-right: 1px dashed #aaa;">
+                <div class="footerCard">
+                    <a href="https://nadc.china-vo.org/article/20200518145543"><p class="footerCenterLG"
+                                                                                  id="FOOaboutus">关于我们</p></a>
+                    <a href="https://nadc.china-vo.org/article/20200522111747"><p class="footerCenterLG" id="FOOhelp">
+                        用户帮助</p></a>
+                    <a href="https://nadc.china-vo.org/article/20200519142843"><p class="footerCenterLG"
+                                                                                  id="FOOcontact">联系我们</p></a>
+                    <a href="https://nadc.china-vo.org/article/20200518145906"><p class="footerCenterLG"
+                                                                                  id="FOOacknowledgement">致谢</p></a>
+                </div>
+            </div>
+            <div class="col-sm-4" style="text-align: center;brrder-right: 1px dashed #aaa;">
+                <div class="footerCard"><img src="https://nadc.china-vo.org/u/img/index-img/China-VO_weChat.jpg"
+                                             style="height:100px; border-radius: 10px; margin-bottom: 5px;" alt="..">
+                    <p class="footerCenter" id="FOOattention">欢迎关注</p>
+                    <p class="footerCenter" id="FOOChinaVOWeChat">虚拟天文台微信公众号</p>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="footerCard">
+                    <p class="footerTitle" id="FOOContactMethod">联系方式</p>
+                    <p class="footerP" id="FOOAddress">地址：北京市朝阳区大屯路甲20号</p>
+                    <p class="footerP" id="FOOPostCode">邮编：100101</p>
+                    <p class="footerP" id="FOOPhone">电话：010-64807973</p>
+                    <p class="footerP" id="FOOEmails">邮箱：support(at)china-vo.org</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="row"
+                 style="margin-top: 30px; color: #222; text-align: center; font-weight:normal; font-size: 12px; line-height: 26px;">
+                <div class="col-sm-12"><a href="http://www.beian.qiit.gov.cn/">京ICP备05002854号-4</a> 文保网安备案号1101050056
+                </div>
+                <div class="col-sm-12" id="FOOcopyright">版权所有 ©中国科学院国家天文台</div>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+{% block tail %}{% endblock %}
+<!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//analytics.escience.org.cn/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', '23']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+
+
+</script>
+<!-- End Piwik Code -->
+</body>
+</html>

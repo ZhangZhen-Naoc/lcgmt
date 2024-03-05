@@ -1,0 +1,342 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+    <nav aria-label="breadcrumb" style="margin-bottom: 10px;">
+      <ol class="breadcrumb">
+        {{ render_breadcrumb_item('main.index', _('Home')) }}
+        {{ render_breadcrumb_item('data_center.source_list', _('Source List')) }}
+      </ol>
+    </nav>
+    <div class="card w-100">
+      <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">{{_('Query Source')}}</div>
+      </div>
+      <div class="card-body ep_datasearch_card" id='main-content'>
+        <form action="{{url_for('data_center.source_list')}}" method="POST">
+            {{form.hidden_tag()}}
+            <div class="row">
+              <div class="col-md-12">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                    {{form.object_name.label(class="bmd-label-floating ep_objsearch_label")}}
+                    
+                  </span>
+                </div>
+                    {{form.object_name(class="form-control",id="object_name")}}
+                    <div class="input-group-append">
+                      <button class="btn btn-secondary" type="button"  id="resolve" >Name Resolver</button>
+                    </div>
+                    
+                    
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                  {{form.ra.label(class="bmd-label-floating ep_objsearch_label")}}
+                </span>
+              </div>
+                  {{form.ra(class="form-control",id="ra", placeholder="in Degrees")}}
+              </div>
+            </div>
+              
+            <div class="col-md-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                  {{form.dec.label(class="bmd-label-floating ep_objsearch_label")}}
+                </span>
+              </div>
+                  {{form.dec(class="form-control",id="dec",placeholder="in Degrees")}}
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                  {{form.radius.label(class="bmd-label-floating ep_objsearch_label")}}</span>
+                </div>
+                  {{form.radius(class="form-control",id="radius",placeholder="in Degrees")}}
+                </div>
+              </div>
+              
+              {#  
+                <div class="col-md-12">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="obs_id">
+                    {{form.obs_id.label(class="bmd-label-floating ep_objsearch_label")}}</span>
+                  </div>
+                    {{form.obs_id(class="form-control",id="obs_id")}}
+                  </div>
+                </div>
+                #}
+                <div class="col-md-12">
+                  <div class="input-group mb-3 ep-checkbox-line">
+                    <div class="input-group-prepend">
+    <label>Instruments:</label></div>
+                      <label class="checkbox-inline">
+                        <input type="checkbox" id="instrument_option_wxt" name="instrument1" value="wxt" checked> WXT
+                      </label>
+                      <label class="checkbox-inline">
+                        <input type="checkbox" id="instrument_option_fxt" name="instrument2" value="fxt"> FXT
+                      </label>
+                    </div>
+                  </div>
+  
+            </div>
+            {#  <div class="row">
+               <div class="col-4">
+                <div class="form-group">
+                  {{form.start_date.label(class="bmd-label-floating")}}
+                  {{form.start_date(class="form-control",id="start_date")}}
+                  <small id="start_date" class="form-text text-muted mb-4">
+                    yyyy-mm-dd
+                  </small>
+                </div>
+               
+              </div>
+              <div class="col-4">
+                
+                <div class="form-group">
+                  {{form.end_date.label(class="bmd-label-floating")}}
+                  {{form.end_date(class="form-control",id="end_date")}}
+                  <small id="end_date" class="form-text text-muted mb-4">
+                    yyyy-mm-dd
+                  </small>
+                </div>
+               
+              </div>
+             
+              <div class="col-4">
+                <div class="row">
+                  <div class="col-5"><label class=" ep-checkbox-inline">Instruments</label></div>
+                  <div class="col-7">
+  
+                    <label class="checkbox-inline ep-checkbox-inline">
+  
+                      <input type="checkbox" id="instrument_option_wxt" name="instrument1" value="wxt" checked> WXT
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" id="instrument_option_fxt" name="instrument2" value="fxt"> FXT
+                    </label>
+                  </div>
+                </div>
+              </div>
+            #}
+              <div class="col-md-12 text-center">
+                {{form.submit(class="btn ep_openBtn", style="padding:7px 30px; margin:10px auto;")}}
+              </div>
+  
+          </form>
+</div>
+        {% if sources is defined %}
+        <div class="alert alert-success ep-datasearch-alert" role="alert">
+          {{hint}}
+        </div>
+        {% endif %}
+        <nav class="nav nav-tabs ep-sourcelist-nav" style="margin-top:20px;">
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active show" id="nav-source-list-tab" data-toggle="tab"
+              href="#nav-source-list-tabpanel" role="tab" aria-controls="nav-source-list-tabpanel">
+              <div class="ep-tabButton" aria-pressed="true">Source List
+                <span class="badge">{{sources|length}}</span></div>
+            </a>
+            <!-- <a class="nav-item nav-link" id="nav-source-explorer-tab" data-toggle="tab"
+              href="#nav-source-explorer-tabpanel" role="tab" aria-controls="nav-source-explorer-tabpanel">
+              <div class="ep-tabButton" aria-pressed="true">Explorer
+              </div>
+            </a> -->
+
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent" style="background-color: #ddd; margin: 0px 25px 20px 25px; padding-top: 10px;">
+          <div class="tab-pane fade show active" id="nav-source-list-tabpanel" role="tabpanel"
+            aria-labelledby="nav-source-list-tab">
+            <div class="table-responsive" >
+              <table class="table table-hover table-bordered table-striped" id="source_table" style="background-color: #fff;">
+                              
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Source Name</th>
+                        <th>Light Curve</th>
+                        <th>Spectrum</th>
+                        <th>RA</th>
+                        <th>Dec</th>
+                        <th>Pos Err</th>
+                        {% if separations is defined%} 
+                        <th>Separation</th>
+                        {% endif %}
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Exposure Time</th>
+                        <th>PI</th>
+                        {#
+                        <th>X</th>
+                        <th>Y</th>
+                        <!-- <th>Pixels in Source Region</th> -->
+                        <th>Net Source Counts</th>
+                        <th>Background Counts</th>
+                        <th>Net Rate</th>
+                        <th>Expousre map value</th>
+                        <th>Source Significance</th>
+                        <th>S/G classifier </th>#}
+              
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for row in sources %}
+                    <tr>
+                        <td>
+                          
+                          <a class="btn btn-secondary btn-sm"
+                                href="{{url_for('data_center.source_detail',sourceId=row.id, wxtdetectionId=row.wxt_detections[0].wxt_detection.id)}}">{{row.source_name}}</a>
+                        </td>
+                        <td><i class="fas fa-chart-area fa-lg thumb" imgsrc="{{url_for('data_center.get_quick_look_light_curve', obs_id=row.wxt_detections[0].wxt_detection.obs_id,cmos_id=row.wxt_detections[0].detnam,index_in_det=row.wxt_detections[0].index_in_det,version=row.wxt_detection.version)}}"><figure class="figure">
+                            <figcaption class="figure-caption" hidden>{{row.source_name}} Light Curve</figcaption>
+                            
+                            
+
+                        </figure>
+                    </i></td>
+                        <td><i class="far fa-chart-bar fa-lg thumb" imgsrc="{{url_for('data_center.get_quick_look_spectrum', obs_id=row.wxt_detections[0].wxt_detection.obs_id,cmos_id=row.wxt_detections[0].detnam,index_in_det=row.wxt_detections[0].index_in_det,version=row.wxt_detection.version)}}"><figure class="figure">
+                            <figcaption class="figure-caption" hidden>{{row.source_name}} Spectrum</figcaption>
+                          
+
+                        </figure></i></td>
+                        <td>{{row.ra| round(4, 'floor')}}</td>
+                        <!-- <td>{{row.x_err}}</td> -->
+                        <td>{{row.dec| round(4, 'floor')}}</td>
+                        <!-- <td>{{row.y_err}}</td> -->
+                        <td>{{row.pos_err| round(5, 'floor')}}</td>
+                        {% if separations is defined%} 
+                        <td>
+                          
+                          {{separations[row.id]| round(4, 'floor')}} arcsec
+                        </td>
+                        {% endif %}
+                        <td>{{row.wxt_detections[0].wxt_detection.observation.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+                        <td>{{row.wxt_detections[0].sxt_detection.observation.obs_end.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+                        <td>{{row.wxt_detections[0].wxt_detection.exposure_time|round(2,"floor")}}</td>
+                   
+                        <td>{{row.wxt_detections[0].wxt_detection.observation.pi.name}}</td>
+                        <!-- <td>{{row.wxt_detections[0].npix_source}}</td> -->
+                        {#<td>{{row.wxt_detections[0].x| round(3, 'floor')}}</td>
+                        <td>{{row.wxt_detections[0].y| round(3, 'floor')}}</td>
+                        <td>{{row.wxt_detections[0].net_counts| round(2, 'floor')}}</td>
+                        <td>{{row.wxt_detections[0].bkg_counts| round(2, 'floor')}}</td>
+                        <td>{{row.wxt_detections[0].net_rate| round(3, 'floor')}}</td>
+                        <td>{{"%d"%row.wxt_detections[0].exp_time}}</td>
+                        <td>{{row.wxt_detections[0].src_significance| round(2, 'floor')}}</td>
+                        <td>{{row.wxt_detections[0].class_star| round(2, 'floor')}}</td>#}
+                        
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+          </div>
+          <!-- <div class="tab-pane fade" id="nav-source-explorer-tabpanel" role="tabpanel"
+            aria-labelledby="nav-source-explorer-tab">
+            <div id="aladin-lite-div">
+            </div>
+          </div> -->
+
+
+
+        </div>
+      </div>
+    </div>
+
+  <!-- Modal -->
+<div class="modal fade" hd="image-modal-div" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="model-body">
+          <img id="image-model" src="" class="rounded mx-auto d-block img-fluid" alt="Responsive image">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Download</button>
+      </div>
+    </div>
+  </div>
+</div>
+  <script>
+    $(document).ready(function () {
+      $('#alahin-lite-div').width($('#main-content').width());
+      $('#aladin-lite-div').height(700);
+      $('#source_table').DataTable({
+              //跟数组下标一样，第一列从0开始，这里表格初始化时，第四列默认降序
+                "order": [[ 6, "desc" ]]
+              });
+      $('.dataTables_length').addClass('bs-select');
+
+    });
+
+    var aladin = A.aladin('#aladin-lite-div',
+      // {fov:1, target: 'M81'}
+      {
+        // survey: 'http://hips.china-vo.org/m/CDS_P_allWISE_color', // set initial image survey
+        survey: "P/DSS2/color",
+        cooFrame: "j2000d",
+        fov: 150, // initial field of view in degrees
+        target: '{{ra}} {{dec}}', // initial target
+        reticleColor: '#ff89ff', // change reticle color
+        reticleSize: 64 // change reticle size
+      }
+
+    );
+
+    $(".thumb").click(function () {
+        var caption = $(this).find('figcaption')
+        $("#imageModalTitle").text(caption.text());
+        // console.log(img.attr("src"));
+        var imagesrc = $(this).attr('imgsrc');
+        
+      
+
+        $("#image-model").attr("src",imagesrc);
+        
+        $("#image-modal-div").modal('show');
+
+    });
+
+    // var getQuickLookLC = function(){
+    //   $.ajax({            
+		//                 type: "GET",
+		//                 contentType:"application/json",
+		//                 dataType: "text",
+		//                 url: "http://registry.china-vo.org:1234/api/resource",
+		//                 data: json_data,             
+		//                 success: function (result) {                  
+		//                 			console.log(result);
+		//                     		if (result.status == 200) {
+		//                         		console.log("SUCCESS");
+		//                     		}
+		//                 		},                
+		//                 error: function(e) {
+		//                     console.log(e);
+		//                 }
+
+	  //           	});      
+
+    // }
+
+  </script>
+
+{% include "app/data_center/components/resolve.html" %}
+  {% endblock %}

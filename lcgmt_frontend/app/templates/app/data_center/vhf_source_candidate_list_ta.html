@@ -1,0 +1,474 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px;">
+    <ol class="breadcrumb">
+    {% block bread %}
+    {{ render_breadcrumb_item('main.index', _('Home')) }}
+    {{ render_breadcrumb_item('data_center.bd_source_candidate_list_ta_get', _('VHF Alert and Data Quick Tool')) }}
+    {% endblock %}
+    </ol>
+</nav>
+<div id="spinner-div">
+    Loading...
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+<div class="card w-100">
+    <div class="card-header bg-light ep-cardheader">
+        <div class="card-header-title">{{_('VHF Alert and Data Search')}}</div>
+    </div>
+    {% include "app/data_center/components/src_obs_search_form.html"  %}
+</div>
+
+
+<div class="card w-100" style="margin-top: 20px">
+  
+    <div class="card-header bg-light ep-cardheader">
+      <div class="card-header-title">VHF Alert List <span id="items"></span>
+        <div style="float:right">
+          <button class="btn ep_openBtn btn-sm" id="download_list"  >Export CSV</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+    
+    <div id="bd_table" style="z-index: 50; width: 100%"></div>
+    <div id="ta_table" style="z-index: 50; width: 100%"></div>
+    
+  
+  </div>
+</div>
+
+<div class="card w-100" style="margin-top: 20px">
+  
+    <div class="card-header bg-light ep-cardheader">
+      <div class="card-header-title">VHF Data List <span id="items"></span>
+        <div style="float:right">
+          <button class="btn ep_openBtn btn-sm" id="download_list"  >Export CSV</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+    
+    <div id="bd_table" style="z-index: 50; width: 100%"></div>
+    <div id="ta_table_data" style="z-index: 50; width: 100%"></div>
+    
+  
+  </div>
+</div>
+<div class="card w-100" style="margin-top: 20px">
+  
+    <div class="card-header bg-light ep-cardheader">
+      <div class="card-header-title">Identification Records <span id="items"></span>
+        <div style="float:right">
+          <button class="btn ep_openBtn btn-sm" id="download_list"  >Export CSV</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+        {% include 'app/data_center/components/ta_record.html' %}
+   
+    
+  
+  </div>
+</div>
+
+   
+<script>
+    
+    function reportOnline()
+    {
+        
+        $.post('{{url_for('.ta_enter')}}',data={"channel":"vhf"})
+        setTimeout("reportOnline()", 1000*10) // 10s报告一次在线
+    }
+    reportOnline()
+
+
+    var data = []
+    {% for row in sources %}
+    
+    {% set row_id = row.id|string %}
+    {% set so_id = infoList[row_id]['so_id']%}
+    data.push({
+        "id":"{{row.id}}",
+        "src_name":"{{row.name}}",
+        "obs_id":"{{row.detection.obs_id}}",
+        "detnam":"{{row.detnam}}",
+
+        "version": "{{row.detection.version}}",
+        "obs_time":"{{row.detection.observation.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}",
+        "trig_time":{% if row.detection.trig_time %}
+        "{{row.detection.trig_time.strftime('%Y-%m-%d %H:%M:%S')}}"
+        {% else %}""{% endif %},
+        "ra":{{"%.3f"%row.ra}},
+        "dec":{{"%.3f"%row.dec}},
+        "pos_err":{{"%.3f"%(row.pos_err*60)}},
+        {% if so_id in comments %}    
+        "type":"{{comments[so_id]['type']}}",
+        "classification":"{{comments[so_id]['classification']}}",
+        "simbad_name":"{{comments[so_id]['simbad_name']}}",
+        "comments":`{{comments[so_id]['comments']}}`,
+        {% else %}
+        "type":'',
+        "classification":'',
+        "simbad_name":'',
+        "comments":'',
+        {% endif %}
+        "ai_classification":"{{row.ai_classification}}",
+        "ai_prob":"{{row.ai_prob}}",
+        
+        "known_flux":{% if row.ref_flux != row.ref_flux %}null{% else %}{{"%.2e"%row.ref_flux if row.ref_flux else 'null'}}{% endif %},
+        "records": "{{url_for('.ta_records',src_id=so_id)}}",//ta records 中的src id是来自sourceobservation表
+        // reference 表记录
+    
+        {% if infoList[row_id]['ep_ref_ra'] %}
+            "r_ra": {{"%.3f"%(infoList[row_id]['ep_ref_ra'])}},
+            "r_dec": {{"%.3f"%(infoList[row_id]['ep_ref_dec'])}},
+            "r_sep":null,
+        {% else %}
+            "r_ra": null,
+            "r_dec": null,
+            "r_sep":null,
+        {% endif %}
+        //历史统计相关记录
+        "ratio_flux":null,
+        "frac_flux":null,
+        "so_id":{{so_id}}
+    })
+    {% endfor %}
+
+
+
+    var data_wxt = []
+    {% for row in vhfDataObs %}
+    {% set row_id = row.source.id|string+'_'+row.wxt_detection.id|string %}
+    data_wxt.push({
+        "id":"{{row.id}}",
+        "src_name":"{{row.name}}",
+        "version": "{{row.wxt_detection.version}}",
+        "obs_time":"{{row.wxt_detection.observation.obs_start.strftime('%Y-%m-%d %H:%M:%S')}}",
+        "ra":{{"%.3f"%row.ra}},
+        "dec":{{"%.3f"%row.dec}},
+        "pos_err":{{"%.3f"%(row.pos_err*60)}},
+        "flux":{{"%.2e"%row.flux}},
+        {% if row.id in vhfDataComments %}
+        "type":"{{vhfDataComments[row.id]['type']}}",
+        "classification":"{{vhfDataComments[row.id]['classification']}}",
+        "simbad_name":"{{vhfDataComments[row.id]['simbad_name']}}",
+        "comments":`{{vhfDataComments[row.id]['comments']}}`,
+        {% else %}
+        "type":'',
+        "classification":'',
+        "simbad_name":'',
+        "comments":'',
+        {% endif %}
+        "url": `{{url_for('.source_candidate_detail',sourceId=row.source_id,wxtdetectionId=row.wxt_detection_id)}}`,
+        "known_flux":{% if row.ref_flux != row.ref_flux %}null{% else %}{{"%.2e"%row.ref_flux if row.ref_flux else 'null'}}{% endif %},
+        "records": "{{url_for('.ta_records',src_id=row.id)}}",
+        // reference 表记录
+        {% if vhfDataInfoList[row_id]['ep_ref_ra'] %}
+            "r_ra": {{"%.3f"%(vhfDataInfoList[row_id]['ep_ref_ra'])}},
+            "r_dec": {{"%.3f"%(vhfDataInfoList[row_id]['ep_ref_dec'])}},
+            "r_sep":{{"%.2f"%(vhfDataInfoList[row_id]['ep_ref_sep'])}},
+        {% else %}
+            "r_ra": null,
+            "r_dec": null,
+            "r_sep":null,
+        {% endif %}
+
+        //历史统计相关记录
+        "ratio_flux":null,
+        "frac_flux":null,
+        "so_id":{{row.id}}
+
+
+    })
+    {% endfor %}
+
+
+
+    var table = new Tabulator("#ta_table", {
+        // data: mergeSameObsId(res),
+        data:data,
+        selectable: 1,
+        dataTree: true,
+        index:"id",
+        //   height: 520,
+        pagination: "local",
+        paginationSize: 15,
+     
+        paginationCounter: "rows",
+        layout: "fitDataFill",
+        initialSort: [{ column: "obs_time", dir: "desc" }],
+        columns: [
+        {
+              formatter: "rownum",
+              hozAlign: "center",
+        },
+        { title: "OBS ID", field: "obs_id", sorter: "string" },
+        { title: "CMOS ID", field: "detnam", sorter: "string" },
+
+    
+        {
+        title: "",
+        formatter: detailIcon,
+        width: 50,
+        hozAlign: "center",
+        tooltip: "Show Detail",
+
+        cellClick: function (e, cell) {
+            showVhfAlertDetailPage(cell.getRow().getData().obs_id, cell.getRow().getData().detnam);
+        },
+        download: false,
+        },
+        {title: "Version", field: "version", sorter:"string"},
+        {title: "Obs Time (UT)", field: "obs_time", sorter:"string"},
+        {title: "Trig Time (UT)", field: "trig_time", sorter:"string"},
+
+        {title: "RA(J2000)", field: "ra", sorter:"number"},
+        {title: "Dec(J2000)", field: "dec", sorter:"number"},
+        // {title: "Pos_E", field: "pos_err", sorter:"number"},
+        {
+            title: "Type", 
+            field: "type", 
+            sorter:"string", 
+            editor:"list",
+            editorParams:{
+                values:trasient_type_values, clearable:true
+            }, 
+            headerFilter:true, 
+            headerFilterParams:{
+                values:trasient_type_values, 
+                clearable:true
+            }
+        },
+        {title: "Classification", field: "classification", sorter:"string", headerFilter: "input",editor:"input"},
+        {title: "Common Name", field: "simbad_name", sorter:"string", headerFilter: "input",editor:"input"},
+        {title: "Comments", field: "comments", sorter:"string", headerFilter: "input",editor:"textarea",formatter:"textarea"},
+        {title: "Ref Flux", field: "known_flux", sorter:"number", headerFilter: "number",editor:"number"},
+        {
+                title: "",
+                formatter: submitIdentificationIcon,
+                width: 50,
+                hozAlign: "center",
+                tooltip: "Submit Identification",
+
+                cellClick: function (e, cell) {
+                  submitIdentification(cell.getRow().getData());
+                },
+                download: false,
+        },
+       
+        {title: "Ref RA(J2000)", field: "r_ra", sorter:"number"},
+        {title: "Ref Dec(J2000)", field: "r_dec", sorter:"number"},
+        {title: "Sep", field: "r_sep", sorter:"number"},
+        // {title: "Ratio_Flux",field:"ratio_flux",sorter:"number"},
+        // {title: "Frac_Flux",field:"frac_flux",sorter:"number"},
+        // {title: "AI_Classification", field: "ai_classification", sorter:"string", headerFilter: "input"},
+        // {title: "AI_Prob", field: "ai_prob"},
+        
+        ],
+        
+    });
+
+    function showVhfAlertDetailPage(obs_id, cmos_id) {
+      var baseUrl = "{{url_for('data_center.vhf_detection_detail', obs_id='obs_id_ph',cmos_id='cmos_id_ph')}}";
+      var targetUrl = baseUrl.replace("obs_id_ph", obs_id).replace("cmos_id_ph", cmos_id);
+      window.open(targetUrl, "_blank").focus();
+    }
+
+
+    function submitIdentificationIcon(cell, formatterParams, onRendered)
+    {
+      return '<i class="fas fa-save"></i>';
+    }
+
+  
+
+    function submitIdentification(data)
+    {
+        $("#spinner-div").show();
+        src_id = data.so_id //获取的是对应的sourceobservtion中的id
+        src_type = data['type']
+        simbad_name =  data['simbad_name']
+        classification = data['classification']
+        comments = data['comments']
+        ref_flux = data['known_flux']
+
+        console.log(src_id)
+        // 如果填入了known_source/burst，必须有simbad_name
+        if ((src_type=="known_source" || src_type=="burst") && !simbad_name){
+            return
+        }
+
+        $.ajax({
+            url:'{{url_for(".ta_update_alert")}}',
+            type:"POST",
+            data:{
+                src_id,
+                "type": src_type,
+                classification,
+                simbad_name,
+                comments,
+                ref_flux,
+                instrument:"wxt"
+            },
+            success:function(result){
+                alert("Submit Identificaiton Success.")
+                $("#spinner-div").hide(); 
+
+            },
+            error: function(xhr,status,error){
+                
+            }
+        });
+    }
+
+
+    table.on("rowSelected", function(row) {
+            showRecords(row.getData().records);
+    })
+    // table.setFilter("type", "!=", "known_source"); 
+
+    var table_data = new Tabulator("#ta_table_data", {
+        // data: mergeSameObsId(res),
+        data:data_wxt,
+        selectable: 1,
+        dataTree: true,
+        index:"id",
+        //   height: 520,
+        pagination: "local",
+        paginationSize: 15,
+        //   groupBy: "email",
+        //   paginationSizeSelector: [3, 6, 8, 10],
+        //   movableColumns: true,
+        paginationCounter: "rows",
+        layout: "fitDataFill",
+        initialSort: [{ column: "obs_time", dir: "desc" }],
+        columns: [
+        {
+            title: "Source ID", field: "src_name", sorter:"string",
+            formatter: "link",
+            formatterParams:{
+                
+                url: (cell)=>{
+                    return cell.getData()['url']
+                },
+                target:"_blank",
+            },
+            
+        },
+        {title: "Version", field: "version", sorter:"string"},
+        {title: "Obs Time (UT)", field: "obs_time", sorter:"string"},
+        {title: "RA(J2000)", field: "ra", sorter:"number"},
+        {title: "Dec(J2000)", field: "dec", sorter:"number"},
+        {title: "Pos_E", field: "pos_err", sorter:"number"},
+        {title: "Esti_Flux", field: "flux", sorter:"number"},
+        {
+            title: "Type", 
+            field: "type", 
+            sorter:"string", 
+            editor:"list",
+            editorParams:{
+                values:type_values, clearable:true
+            }, 
+            headerFilter:true, 
+            headerFilterParams:{
+                values:type_values, 
+                clearable:true
+            }
+        },
+        {title: "Classification", field: "classification", sorter:"string", headerFilter: "input",editor:"input"},
+        {title: "Common Name", field: "simbad_name", sorter:"string", headerFilter: "input",editor:"input"},
+        {title: "Comments", field: "comments", sorter:"string", headerFilter: "input",editor:"textarea",formatter:"textarea"},
+        {title: "Ref Flux", field: "known_flux", sorter:"number", headerFilter: "number",editor:"number"},
+        {
+                title: "",
+                formatter: submitIdentificationIcon,
+                width: 50,
+                hozAlign: "center",
+                tooltip: "Submit Identification",
+
+                cellClick: function (e, cell) {
+                  submitIdentification(cell.getRow().getData());
+                },
+                download: false,
+        },
+        {title: "Ref RA(J2000)", field: "r_ra", sorter:"number"},
+        {title: "Ref Dec(J2000)", field: "r_dec", sorter:"number"},
+        {title: "Sep", field: "r_sep", sorter:"number"},
+        {title: "Ratio_Flux",field:"ratio_flux",sorter:"number"},
+        {title: "Frac_Flux",field:"frac_flux",sorter:"number"},
+        {title: "AI_Classification", field: "ai_classification", sorter:"string", headerFilter: "input"},
+        {title: "AI_Prob", field: "ai_prob"},
+        
+        ],
+        
+    });
+  
+    table_data.on("rowSelected", function(row) {
+            showRecords(row.getData().records);
+    })
+
+  
+
+    // 监听 submit 按钮点击事件，间接触发表单提交
+    
+    // 渲染表格
+    // function renderTable(data) {
+    //     var table = new Tabulator("#bd_table", {
+    //         data: data,
+    //         selectable: 1,
+    //         columns: [
+    //            // { title: "ID", field: "id" },
+    //            // { title: "Detection ID", field: "detection_id" },
+    //            // { title: "Source ID", field: "src_id" },
+    //            { title: "Name", field: "name", formatter: "link",formatterParams:{url:(item)=>{return item.getData()['src_detail']},target:"_blank"}},
+    //            { title: "S_Time", field: "obs_start" },
+    //            { title: "T_Time", field: "trigtime" },
+
+    //             { title: "RA", field: "ra" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }}, 
+    //             { title: "DEC", field: "dec" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+    //             { title: "Position Error", field: "pos_err" ,sorter:"number", formatter: "money", formatterParams: { symbol: "", precision: 3 }},
+    //             {
+    //                 title: "Type", 
+    //                 field: "type", 
+    //                 sorter:"string", 
+    //                 editor:"list",
+    //                 editorParams:{
+    //                     values:type_values, clearable:true
+    //                 }, 
+    //                 headerFilter:true, 
+    //                 headerFilterParams:{
+    //                     values:type_values, 
+    //                     clearable:true
+    //                 }
+    //             },
+    //             {title: "Classification", field: "classification", sorter:"string", headerFilter: "input",editor:"input"},
+    //             {title: "Common Name", field: "simbad_name", sorter:"string", headerFilter: "input",editor:"input"},
+    //             {title: "Comments", field: "comments", sorter:"string", headerFilter: "input",editor:"textarea",formatter:"textarea"},
+    //             {title: "Ref Flux", field: "known_flux", sorter:"number", headerFilter: "number",editor:"number"},
+    //             { title: "X", field: "x" ,sorter:"number"},
+    //             { title: "Y", field: "y" ,sorter:"number"},
+    //             { title: "Variance", field: "var" ,sorter:"number"},
+    //             { title: "Net Rate", field: "net_rate" ,sorter:"number"},
+    //             { title: "HR", field: "hr" ,sorter:"number"},
+    //             { title: "Significance", field: "src_significance",sorter:"number" }
+    //         ]
+    //     });
+
+    
+  
+
+    
+
+    
+
+</script>
+{% endblock %}

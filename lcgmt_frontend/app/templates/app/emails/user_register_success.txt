@@ -1,0 +1,15 @@
+{{_('Hello')}} {{ user.name }},
+
+{{_('Welcome to')}} EP TDIC!
+
+{{_('Thanks for your attention. You just completed the registration process! ')}}
+
+{{_('Please visit the link below to verify your email address:')}}
+
+    {{ url_for('user.confirm', token=token, _external=True) }}
+
+{{_('System administrators will check you profile later. When you passed the review, you will be able to use the system normally.')}}
+
+{{_('You can visit your home page from this link:')}}{{ url_for('user.index', _external=True) }}
+
+{{_('(Please do not reply to this notification, this inbox is not monitored.)')}}

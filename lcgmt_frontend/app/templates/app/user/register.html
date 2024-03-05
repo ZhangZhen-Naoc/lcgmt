@@ -1,0 +1,36 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{% block title %}{{_('Register')}}{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card mb-3 w-100 bg-light">
+                    <div class="card-header"><h4>{{_('Welcome to EP TDIC!')}}</h4></div>
+                    <div class="card-body">
+                        {{ render_form(form, form_type='horizontal', horizontal_columns=('lg', 3, 10)) }}
+                        <hr>
+                        <p>{{_('Already have an account?')}} <a href="{{ url_for('.login') }}">{{_('Click here to log in.')}}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+$(function(){
+    check_elem_on('blur', 'email', check_email, 'email');
+    check_elem_on('blur', 'name', check_name, 'name');
+    check_pass_level('password');
+    check_elem_on('blur', 'password2', check_passwords, ['password','password2']);
+
+    html="<img id=\"verifycode\" onclick=\"this.src='{{url_for('user.verify_code')}}?'+new Date().time\" src=\"{{url_for('user.verify_code')}}\" />"
+    $('#verify_code').after(html);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,337 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+        <nav aria-label="breadcrumb" style="margin-bottom: 10px;">
+            <ol class="breadcrumb">
+                {{ render_breadcrumb_item('main.index', _('Home')) }}
+                {{ render_breadcrumb_item('data_center.source_list', _('Source List')) }}
+                {{ render_breadcrumb_item('data_center.source_detail', _('Source Detail')) }}
+            </ol>
+        </nav>
+
+        <div class="card w-100">
+            <div class="card-header bg-light ep-cardheader">
+                <div class="card-header-title">Source Name: <span class="badge badge-secondary" style="padding:10px; margin-left: 10px;">{{source.source_name}}</span>
+                    
+                </div>
+                
+            </div>
+            <div class="card-body ep_datasearch_card" style="padding-top: 15px;">
+                
+                
+                <div class="row">
+                    <div class="col-md-5">
+                            <table class="table table-bordered table-hover table-sm">
+                                <!-- <caption><h6>Query Results</h6></caption> -->
+                                <tr>
+                                    <th>RA</th>
+                                    <td>{{source.ra| round(4, 'floor')}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Dec</th>
+                                    <td>{{source.dec| round(4, 'floor')}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Pos Err</th>
+                                    <td>{{source.pos_err| round(5, 'floor')}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Abs Flux</th>
+                                    <td>{{source.absflux}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Flux</th>
+                                    <td>{{source.flux}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Luminosity</th>
+                                    <td>{{source.luminosity}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Counts</th>
+                                    <td>{{source.wxt_detections[0].net_counts| round(3, 'floor')}}</td>
+                                </tr>
+                                <tr>
+                                    <th>SNR</th>
+                                    <td>{{source.snr}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Type</th>
+                                    <td>{{source.type}}</td>
+                                </tr>
+
+                            </table>
+                    </div>
+
+                    <div class="col-md-7">
+                        <div class="card w-100">
+                            <div class="card-header bg-light">
+                                <div style="color: #004386;font-weight: bold; font-size: 16px;">Source Location</div>
+                            </div>
+
+
+                            <div class="card-body" id="with-aladin">
+                                <div id="aladin-lite-div">
+
+                                </div>
+                                <div class="row">
+
+                                    <!-- <div class="col-6">
+                                        <figure class="figure">
+                                            <figcaption class="figure-caption">Light Curve</figcaption>
+                                            <a href="{{url_for('data_center.source_lc',obs_id=sourceInDetection.wxt_detection.observation.obs_id,cmos_id=sourceInDetection.detnam,index_in_det=sourceInDetection.index_in_det)}}" target="_blank" rel>
+                                                <img src="{{url_for('data_center.get_quick_look_light_curve',obs_id=sourceInDetection.wxt_detection.observation.obs_id,cmos_id=sourceInDetection.detnam,index_in_det=sourceInDetection.index_in_det)}}"
+                                                class="figure-img img-fluid img-thumbnail rounded">
+                                                </a> 
+                                        </figure>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <figure class="figure">
+                                            <figcaption class="figure-caption">Spectrum</figcaption>
+                                            <img src="{{url_for('data_center.get_quick_look_spectrum',obs_id=sourceInDetection.wxt_detection.observation.obs_id,cmos_id=sourceInDetection.detnam,index_in_det=sourceInDetection.index_in_det)}}"
+                                                class="figure-img img-fluid img-thumbnail rounded">
+                                        </figure>
+                                    </div> -->
+                                </div>
+                                <!-- <div class="table-responsive table-bordered">
+                                    <table class="table table-hover table-sm">
+                                        <tr>
+                                            <th>X</th>
+                                            <td>{{source.ra}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Y</th>
+                                            <td>{{source.dec}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pixels in Source Region</th>
+                                            <td>{{source.pos_err}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Det Name</th>
+                                            <td>{{source.absflux}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Net Source Counts</th>
+                                            <td>{{source.flux}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Background Counts</th>
+                                            <td>{{source.luminosity}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Expousre map value</th>
+                                            <td>{{source.counts}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Source Significance</th>
+                                            <td>{{source.snr}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Classifter Output</th>
+                                            <td>{{source.type}}</td>
+                                        </tr>
+        
+                                    </table>
+                                </div> -->
+                                <!-- <div id="aladin-lite-div">
+
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div type="button" class="btn ep_openBtn" style="padding: 5px 10px;" >Check the Source in MWR</div>
+                <div style="clear: both;"></div>
+            </div>
+        </div>
+     
+{% include 'app/data_center/components/lc.html' %}
+{% include 'app/data_center/components/spectrum.html' %}
+
+        <div class="card w-100" style="margin-top: 20px;">
+            <div class="card-header bg-light ep-cardheader">
+                <div class="card-header-title">Observations contain the source <span class="badge badge-secondary" style="padding:10px;">{{source.source_name}}</div>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="obs_table">
+    
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>OBS ID</th>
+                                <th>CMOS</th>
+                                <th>Quick Look</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Exposure Time</th>
+                                <th>PI</th>
+
+                                <th>X</th>
+                                <th>Y</th>
+                                <th>Pixels in Source Region</th>
+                                <th>Net Source Counts</th>
+                                <th>Background Counts</th>
+                                <th>Expousre map value</th>
+                                <th>Source Significance</th>
+                                <th>Classifter Output</th>
+                                <th>Observation Type</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for row in sourceObs%}
+                            <tr>
+                                <td>
+                                    {% if not row.wxt_detection.observation.private or row.wxt_detection.observation.pi
+                                    == current_user %}
+                                    <a type="button" class="btn btn-secondary btn-sm"
+                                        href="{{url_for('data_center.observation_detail',obs_id=row.wxt_detection.observation.obs_id, cmos_id=row.detnam)}}">{{row.wxt_detection.observation.obs_id}}
+                                    </a>
+                                    {% else %}
+                                    <a type="button" class="btn btn-outline-secondary btn-sm"
+                                        href="{{url_for('data_center.observation_detail',obs_id=row.wxt_detection.observation.obs_id, cmos_id=row.detnam)}}"
+                                        disabled>
+                                        {{row.wxt_detection.observation.obs_id}}
+                                    </a>
+                                    {% endif %}
+                                </td>
+                                <td>{{row.detnam}}</td>
+                                <td>
+                                    {% if not row.wxt_detection.observation.private or row.wxt_detection.observation.pi
+                                    == current_user %}
+                                    <i class="fas fa-image fa-lg thumb"
+                                        imgsrc="{{url_for('data_center.get_quick_look_image',obs_id=row.wxt_detection.observation.obs_id, cmos_id=row.detnam, version=row.version)}}">
+                                        <figure class="figure">
+                                            <figcaption class="figure-caption" hidden>
+                                                {{row.wxt_detection.observation.obs_id}} {{row.detnam}} Image
+                                            </figcaption>
+                                            
+                                        </figure>
+                                    </i>
+                                    {% else %}
+                                    <i class="fas fa-image fa-lg " style="color:grey"></i>
+
+                                    {% endif %}
+                                </td>
+                                <td>{{row.wxt_detection.observation.obs_start}}</td>
+                                <td>{{row.wxt_detection.observation.obs_end}}</td>
+                                <td>{{row.wxt_detection.exposure_time| round(3, 'floor') }}</td>
+
+                                <td>{{row.wxt_detection.observation.pi.name}}</td>
+
+
+                                <td>{{row.x | round(3, 'floor')}}</td>
+                                <!-- <td>{{row.x_err}}</td> -->
+                                <td>{{row.y | round(3, 'floor')}}</td>
+                                <!-- <td>{{row.y_err}}</td> -->
+                                <td>{{row.npix_source}}</td>
+
+                                <td>{{row.net_counts | round(2, 'floor')}}</td>
+                                <td>{{row.bkg_counts | round(2, 'floor')}}</td>
+                                <!-- <td>{{row.net_rate}}</td> -->
+                                <td>{{"%d"%row.exp_time }}</td>
+                                <td>{{row.src_significance | round(2, 'floor')}}</td>
+                                <td>{{row.class_star | round(2, 'floor')}}</td>
+                                <td>{{row.wxt_detection.observation.obs_type}}</td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+        </div>
+<!-- Modal -->
+<div class="modal fade" id="image-modal-div" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="model-body">
+                <img id="image-model" src="" class="rounded mx-auto d-block img-fluid" alt="Responsive image">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Download</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#aladin-lite-div').width($('#with-aladin').width());
+        $('#aladin-lite-div').height(250);
+
+    });
+
+    $('#obs_table').DataTable({
+              //跟数组下标一样，第一列从0开始，这里表格初始化时，第四列默认降序
+                "order": [[ 5, "desc" ]]
+              });
+    $('.dataTables_length').addClass('bs-select');
+
+    let aladin;
+      A.init.then((2 => {
+  
+
+        aladin = A.aladin("#aladin-lite-div", {
+            survey: "CDS/P/DSS2/color",
+          fov: 1,
+          fullScreen: false,
+          cooFrame: "j2000d",
+        target: '{{source.ra}} {{source.dec}}', // initial target
+        //   showSimbadPointerControl: true,
+        });
+        aladin.setProjection("AIT");
+
+      });
+
+    // $(".figure").click(function () {
+    //     var img = $(this).find('img');
+    //     var caption = $(this).find('figcaption')
+    //     console.log(caption);
+    //     $("#imageModalTitle").text(caption.text());
+    //     // console.log(img.attr("src"));
+    //     $("#image-model").attr("src", img.attr("src"));
+
+    //     $("#image-modal-div").modal('show');
+
+    // });
+
+    $(".thumb").click(function () {
+        var caption = $(this).find('figcaption')
+
+        $("#imageModalTitle").text(caption.text());
+        var imagesrc = $(this).attr('imgsrc');
+        $("#image-model").attr("src", imagesrc);
+
+        $("#image-modal-div").modal('show');
+
+    });
+
+
+</script>
+
+{% endblock %}

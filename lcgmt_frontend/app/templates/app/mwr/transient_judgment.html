@@ -1,0 +1,95 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% from 'input.html' import ValueInputer %}{% from 'input.html' import ValueInputerUP %} {% block title %}{{ _('Time Domain
+Astronomical Information Center') }}{% endblock %} {% block content %}
+
+<div class="w-100">
+  <form id="mwrForm" method="post" action="{{url_for('.index')}}" class="needs-validation" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-header bg-light ep-cardheader">
+            <div class="card-header-title">{{_('1: Choose catalogues:')}}</div>
+          </div>
+5         <div class="card-body">
+            <div class="row row-cols-1 row-cols-md-2">
+              {% for wavelength, items in catalogues|groupby("wavelength")|sort(reverse=true) %}
+              <div class="card" style="margin: 10px">
+                <div class="card-header">
+                  <h6 class="table-title-sm">{{ wavelength|capitalize }}</h6>
+                </div>
+                <ul class="list-group list-group-flush">
+                  {% for item in items %}
+                  <li class="list-group-item" style="border: 0px">
+                    <div class="form-check">
+                      {% if item.enable %}
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value="{{item.wavelength}}:{{item.table_name}}"
+                        id="{{item.table_name}}"
+                        name="cats"
+                      />
+                      {% else %}
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value="{{item.wavelength}}:{{item.table_name}}"
+                        id="{{item.table_name}}"
+                        name="cats"
+                        disabled
+                      />
+                      {% endif %}
+                      <label class="form-check-label" for="{{item.table_name}}"> {{ item.name}} </label>
+                    </div>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-header bg-light ep-cardheader">
+            <div class="card-header-title">{{_('2: Input query details:')}}</div>
+          </div>
+          <div class="card-body">
+            <div class="card-deck">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="table-title-sm">{{ _('Cone Query') }}</h6>
+                </div>
+
+                <div class="card-body">
+                  {{ ValueInputer('ra','degree',80.9621,label_class="ep_objsearch_label",tooltip='J2000') }} {{
+                  ValueZnputer('dec','degree',17.4155,label_class="ep_objsearch_label",tooltip='J2000') }} {{
+                  ValueInputer('radius','arcsec',600,label_class="ep_objsearch_label", max=3600) }} {{
+                  ValueInputer('flux','erg/s/cm²',1e-11,label_class="ep_objsearch_label",tooltip="The estimated flux of transient candidate, for
+                  xmatching probability calculation") }} {{ ValueInputer('scale','',1.5,label_class="ep_objsearch_label", tooltip="The extend scale of
+                  xmatching radius",max=5) }} {{ ValueInputer('prob_threshold','',0.0,label_class="ep_objsearch_label", tooltip="Returned
+                  probabilities of results should above the threshold",max=1) }}
+                  <input name="transient_judgment" id="transient_judgment" value="true" hidden />
+                  <div style="text-align: center; margin-top: 20px">
+                    <button class="btn ep_openBtn" type="submit">{{_('Submit Query')}}</button>
+                  </div>
+                </div>
+              </div>
+
+              {#%include "app/mwr/components/match_full_table_form.html"%#}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+  // 初始化tooltip
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
+{% endblock %}

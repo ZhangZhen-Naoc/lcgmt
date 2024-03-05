@@ -1,0 +1,281 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %} {% block content %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{ render_breadcrumb_item('data_center.beidou_detection_list_access', _('WXT Beidou Detection List'))
+    }} {{ render_breadcrumb_item('data_center.beidou_detection_detail', _('WXT Beidou Detection Detail')) }}
+  </ol>
+</nav>
+
+<div class="card w-100">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">Beidou Alert: 
+      <span class="badge badge-secondary"
+                style="padding:10px; margin-left: 10px;">{{bedou_detection.obs_id}}</span> <span class="badge badge-info"
+                style="padding:10px; margin-left: 10px;">{{bedou_detection.detnam}}</span>
+     </div>
+    </div>
+  </div>
+  <div class="card-body ep_datasearch_card">
+    {# 第一行：源基本信息和源快视图 #} 
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table table-bordered table-hover">
+          <!-- <caption><h6>Query Results</h6></caption> -->
+          <tr>
+            <th>RA, Dec</th>
+            <td>{{beidou_source_observation.ra| round(3, 'floor')}}, {{beidou_source_observation.dec| round(3, 'floor')}}</td>
+          </tr>
+      
+          <tr>
+            <th>RA (HMS), Dec (DMS)</th>
+            <td>{{beidou_source_observation.ra_hms}},{{beidou_source_observation.dec_dms}}</td>
+          </tr>
+          <tr>
+            <th>Observation Time</th>
+            <td>{{bedou_detection.obs_start}}</td>
+          </tr>
+          <tr>
+            <th>X</th>
+            <td>{{beidou_source_observation.x}}</td>
+          </tr>
+          <tr>
+            <th>Net Rate</th>
+            <td>{{beidou_source_observation.net_rate}}</td>
+          </tr>
+          <tr>
+            <th>Significance</th>
+            <td>{{beidou_source_observation.src_significance}}</td>
+          </tr>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <table class="table table-bordered table-hover">
+            <tr>
+              <th>Galactic l, b</th>
+              <td>{{beidou_source_observation.galactic_l| round(3, 'floor')}}, {{beidou_source_observation.galactic_b| round(3, 'floor')}}</td>
+            </tr>
+          <tr>
+            <th>Pos Err (Arcmin)</th>
+            <td>{{(beidou_source_observation.pos_err*60)| round(3, 'floor')}}</td>
+          </tr>
+          <tr>
+            <th>Trigger Time</th>
+            <td>{{bedou_detection.trig_time}}</td>
+          </tr>
+          <tr>
+            <th>Y</th>
+            <td>{{beidou_source_observation.y}}</td>
+          </tr>
+          <tr>
+            <th>Variance</th>
+            <td>{{beidou_source_observation.var}}</td>
+          </tr>
+          <tr>
+            <th>HR</th>
+            <td>{{beidou_source_observation.hr}}</td>
+          </tr>
+        </table>
+        </div>
+ 
+    </div>
+
+    {% if current_user.can('TA_TOOLS')%}
+    {% if not so.issue %}
+  <a
+    type="button"
+    class="btn ep_openBtn"
+    target="_blank"
+    style="padding: 5px 10px"
+    id="create_issue"
+  >
+    Open an issue in Redmine</a> {% else %} <a
+    type="button"
+    class="btn ep_openBtn"
+    target="_blank"
+    style="padding: 5px 10px"
+    href="{{url_for('data_center.issue',src_obs_id=so.id, instrument='WXT')}}"
+  >Check Issue {{so.issue.issue_id}} in redmine</a> {% endif %}
+  
+{#
+  <!-- 相关issue-->
+  <div style="margin-top: 10px; margin-bottom: 10px">
+    <span>Ivsues of related observation </span>
+    <select id="issue-selector" class="form-control">
+      {% for row in sos %} {% if row.issue and row != so %}
+      <option value="{{row.id}}">{{row.name}}</option>
+      {% endif %} {% endfor %}
+    </select>
+    {% for row in sourceObs %} {% if row.issue and row != so %}
+    <div style="margin-top: 10px" id="issue-{{row.id}}" class="issue-pannel">
+      <a type="button" class="btn btn-info" target="_blank" href="{{url_for('data_center.issue',src_obs_id=row.id,instrument='WXT')}}">
+        Issue {{row.issue.issue_id}}
+      </a>
+      {% if so.issue %} {% if not row.issue.isRelatedTo(so.issue)%}
+      <a
+        type="button"
+        class="btn btn-info"
+        target="_blank"
+        href="{{url_for('data_center.relate_issue',issue1_id=so.issue.issue_id,issue2_id=row.issue.issue_id)}}"
+      >
+        Relate to issue {{row.issue.issue_id}}
+      </a>
+      {% else %}
+      <a
+        type="button"
+        class="btn btn-outline-danger"
+        target="_blank"
+        href="{{url_for('data_center.unrelate_issue',issue1_id=so.issue.issue_id,issue2_id=row.issue.issue_id)}}"
+      >
+        Unrelate from {{row.issue.issue_id}}
+      </a>
+      {% endif%} {% endif %}
+    </div>
+    {% endif %} {% endfor %}
+   
+    <script>
+      $().ready(function () {
+        $("#issue-selector").change(function () {
+          id = $(this).val();
+          $(".issue-pannel").hide();
+          $(`#issue-${id}`).show();
+        });
+        $("#issue-selector").change();
+      });
+    </script>
+  </div>
+  #}
+  {% endif %}
+    <div id="spinner-div">
+      Loading...
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+   {# 第二行：历史证认信息
+    <div class="row" style="margin-top: 20px">
+      <div class="col-md-12">
+      <div class="card w-100" id="spectrum-container">
+        <div class="card-header bg-light">
+          Identification  Records
+        </div>
+      
+        <div class="card-body">
+          {% include 'app/data_center/components/ta_record.html' %}
+          <script>
+            showRecords("{{url_for('.ta_records',src_id=beidou_source_observation.id)}}")
+          </script>
+        </div>
+      </div>
+    </div>
+    </div>
+    #}
+    <div class="row" style="margin-top: 20px">
+      <div class="col-md-12">
+        {# 第二行：Aladin显示证认信息、第三行：包含这个位置的观测 #} 
+        {% set sourceInDetection=beidou_source_observation %}
+        {% include 'app/data_center/components/cross_matching_info.html' %}
+        {% include 'app/data_center/components/observations_at_this_location.html' %}
+      </div>
+    </div>
+
+   
+    
+ 
+    {# 第四行：长期光变 #}
+    <div class="card w-100" id="lc-container">
+        <div class="card-header bg-light">
+          <div class="card-header-title" style="color: #004386; font-weight: bold; font-size: 16px">
+            Long Term Light Curve
+          </div>
+        </div>
+        <div class="card-body">
+          {% set ra=beidou_source_observation.ra %}
+          {% set dec=beidou_source_observation.dec %}
+          {% include 'app/data_center/components/longterm_lc.html' %}
+        </div>
+    </div>
+    {# 第五行：相关观测，用到 sourceObs 
+    
+    {% include 'app/data_center/components/related_observations_for_source.html' %} 
+    #} 
+    {# 第六行：Alerts #}
+    {% include 'app/data_center/components/alerts.html' %}
+    {% include 'app/data_center/components/grbs.html' %}
+ 
+    
+   
+   
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="image-modal-div" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="model-body">
+        <img id="image-model" src="" class="rounded mx-auto d-block img-fluid" alt="Responsive image" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Download</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $("#obs_table").DataTable({
+    //跟数组下标一样，第一列从0开始，这里表格初始化时，第四列默认降序
+    order: [[5, "desc"]],
+  });
+  $(".dataTables_length").addClass("bs-select");
+
+  $(".thumb").click(function () {
+    var caption = $(this).find("figcaption");
+
+    $("#imageModalTitle").text(caption.text());
+    var imagesrc = $(this).attr("imgsrc");
+    $("#image-model").attr("src", imagesrc);
+
+    $("#image-modal-div").modal("show");
+  });
+
+  $("#create_issue").click(funttion(e) {
+                e.preventDefault();
+
+                // 构建数据对象
+                var data = {
+                    src_obs_id: {{so.id}},
+                    ra: {{beidou_source_observation.ra}},
+                    dec: {{beidou_source_observation.dec}},
+                    name: "{{bedou_detection.obs_id}}{{bedou_detection.detnam}}",
+                    posErr: {{beidou_source_observation.pos_err*60}},
+                    flux: {{(beidou_source_observation.flux)}},
+                    instrument: 'WXT',
+                    alertTime: "{{bedou_detection.trig_time}}"
+                };
+
+                // 执行 AJAX POST 请求
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url_for('data_center.issue_post') }}",
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    success: function(response) {
+                        // 处理成功的响应
+                        location.reload();
+                    },
+                    error: function(error) {
+                        // 处理错误
+                        console.error(error);
+                    }
+                });
+            });
+</script>
+
+{% endblock %}

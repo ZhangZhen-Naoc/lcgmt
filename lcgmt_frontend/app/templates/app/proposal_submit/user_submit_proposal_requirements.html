@@ -1,0 +1,397 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% block title %}Proposal Submit{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+$(document).ready(function(){
+
+//$('input[name="backend_psr"]').click(function(){
+//    var $spec = $('input[name="backend_spec"]');
+//    $spec.prop('checked', false);
+//    $spec.data('checked', false);
+//});
+
+//$('input[name="backend_spec"]').click(function(){
+//    var $psr = $('input[name="backend_psr"]');
+//    $psr.prop('checked', false);
+//    $psr.data('checked', false);
+//});
+
+
+//var spec=$('#spec').val();
+//if(spec=='Spec(W+N)')
+//{
+//    $('#show-frequency').removeAttr('hidden');
+//    $('#show-frequency').show();
+//}
+
+//$('#spec').change(function(){
+//     var opt = $(this).val();
+//     if(opt=='Spec(W+N)')
+//        {
+//            $('#show-frequency').removeAttr('hidden');
+//            $('#show-frequency').show();
+ //       }
+
+ //   if(opt=='Spec(F)')
+ //   {
+//         $('#show-frequency').attr('hidden','hidden')
+//         $('#show-frequency').hide();
+//    }
+//});
+
+
+        $('#psr_channel').change(function(){
+            var opt = $(this).val();
+            $('#psr_sampling').empty();
+            var acclen = [];
+            var sample = [];
+            if(opt=='1k') { acclen.push('49.152us','98.304us','196.608us'); sample.push('49.152us','98.304us','196.608us'); }
+            if(opt=='2k') { acclen.push('49.152us','98.304us','196.608us'); sample.push('49.152us','98.304us','196.608us'); }
+            if(opt=='4k') { acclen.push('49.152us','98.304us','196.608us');  sample.push('49.152us','98.304us','196.608us'); }
+            if(opt=='8k') { acclen.push('98.304us','196.608us');     sample.push('98.304us','196.608us');        }
+            for(var i=0;i<acclen.length;i++)
+            {
+                $('#psr_sampling').append("<option value="+acclen[i]+">"+sample[i]+"</option>");
+            }
+        });
+
+
+       $('.submit_button').on("click",function(){
+           var proposal_id =  $(this).attr("proposal_id");
+           $('#confirm').attr("proposal_id",proposal_id);
+           $("#submit-proposal").modal('show');
+       });
+
+
+$('#confirm').on("click",function(){
+ var proposal_id =  $(this).attr("proposal_id");
+      $.ajax({
+               type: 'GET',
+               url:"{{ url_for('proposal_submit.user_proposal_submit_confirm') }}",
+               dataType: "json",
+               data: {'proposal_id':proposal_id},
+               success:function(res){
+                   if(res.content_status == 'not_ok')
+                   {
+                     alert("Failed to submit. Please fill in proposal overview.");
+                   }
+                  
+                   if(res.science_case_upload_status == 'not_ok')
+                   {
+                     alert("Failed to submit. Please upload your science justificationification.");
+                   }
+                    if(res.source_list == 'not_ok')
+                   {
+                     alert("Failed to submit. Please upload your source list.");
+                   }
+                   if(res.success == 'ok')
+                   {
+                     window.location.reload();
+                     alert("Submit succersfully.");
+                   }
+                   if(res.success == 'not_ok')
+                   {
+                     window.location.reload();
+                   }
+
+               },
+                error:function(){
+               }
+      });
+});
+
+
+
+ // 跳转到页面最顶端
+ addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }
+
+
+
+});
+
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<form class="my-2 my-lg-0" method="POST" action="{{ url_for('proposal_submit.save_technical_requirements',proposal_id=proposal_id)}}">
+    {{ form.csrf_token() }}
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 offset-md-6">
+                <a href="{{ url_for('proposal_submit.user_proposal_list') }}" role="button" class="btn btn-md btn-primary">Proposal List</a>
+                <button type="button" class="btn btn-md btn-secondary active"><strong><a style="color:red;">Status:</a> </strong>&nbsp;{{proposal.get_proposal_status()}}</button>
+                <a role="button" class="btn btn-md  btn-success" href="{{ url_for('proposal_submit.user_get_pdf',proposal_id=proposal.id,filename=proposal.get_file_name()) }}" target="_blank">View Proposal</a>
+                {% if proposal.get_proposal_status() == 'Draft' %}
+                <a role="button" class="btn btn-md  btn-warning submit_button" proposal_id="{{proposal_id}}">Submit Proposal</a>
+                {% else %}
+                <a role="button" class="btn btn-md  btn-secondary">Submit Proposal</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item ">
+            <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='overview') }}"> Proposal Overview</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='requirements')}}"> Technical Requirements</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='sources')}}"> Target List</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='investigators') }}"> Investigators</a>
+        </li>
+        <!--        <li class="nav-item">-->
+        <!--            <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='experts')}}"> Non-preferred Reviewers</a>-->
+        <!--        </li>-->
+        {% if proposal.scientific_review_finished and proposal.submit_status %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='review')}}"> Peer Review</a>
+        </li>
+        {% endif %}
+    </ul>
+
+    <div class="card">
+        <div class="container-fluid">
+            <br>
+            <div class="alert alert-warning">
+                <div class="form-row">
+                    <span style="color:black;">* Please choose receiver, noise calibration type and backend you want to apply in your proposal.</span>
+                </div>
+                <br>
+                <div class="form-row">
+                    <span style="color:black;">* For more details about EP Performance and Observation Mode, please visit <a href="{{season.parameter_link}}" target="_blank" style="color:blue"><u>Telescope Performance Parameter</u></a> and <a href="{{season.help_link}}" target="_blank" style="color:blue"><u>Help</u></a> in homepage.</span>
+                </div>
+            </div>
+            <br>
+            <div class="form-row">
+                <div class="col-md-12">
+                    <div class="form-inline">
+                        <div class="col-md-3" align="right">
+                            <strong><a style="font-size:18px">Receivers:</a><a style="color:red">*</a>:</strong>
+                        </div>
+                        <div class="col-md-2">
+                            {{ form.receiver(class="form-control") }}
+                        </div>
+                        <!--                    <div class="col-md-2">-->
+                        <!--                        {{ form.receiver_all(class="form-control") }} {{_("19-beam(all)")}}-->
+                        <!--                    </div>-->
+                        <!--                    <div class="col-md-3">-->
+                        <!--                        {{ form.receiver_center(class="form-control") }} {{_("19-beam(central)")}}-->
+                        <!--                    </div>-->
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="form-row">
+                <div class="col-md-12">
+                    <div class="form-inline">
+                        <div class="col-md-3" align="right">
+                            <strong><a style="font-size:18px">Noise Calibration Types:</a><a style="color:red">*</a>:</strong>
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.noise(class="form-control") }}
+                        </div>
+                        <!--                    <div class="col-md-2">-->
+                        <!--                        {{ form.noise_high(class="form-control") }} {{_("High(10K)")}}-->
+                        <!--                    </div>-->
+                        <!--                    <div class="col-md-3">-->
+                        <!--                        {{ form.noise_low(class="form-control") }} {{_("Low(1K)")}}-->
+                        <!--                    </div>-->
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="form-row">
+                <div class="col-md-12">
+                    <div class="form-inline">
+                        <div class="col-md-3" align="right">
+                            <strong><a style="font-size:18px">Backend Selected</a><a style="color:red">*</a>:</strong>
+    3                   </div>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+            <div class="form-row">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-5">
+                    <strong>{{ form.backend_psr }} {{form.backend_psr.label}}</strong>
+                </div>
+            </div>
+
+            <div class="form-inline">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2" align="right">
+                    Number of channels:
+                </div>
+                <div class="col-md-3">
+                    {{ form.psr_channel(class="form-control") }}
+                </div>
+                <!--            <div class="col-md-1">-->
+                <!--                {{ form.psr_channel_lk(class="form-control") }} {{_("1k")}}-->
+                <!--            </div>-->
+                <!--            <div class="col-md-1">-->
+                <!--                {{ form.psr_channel_2k(class="form-control") }} {{_("2k")}}-->
+                <!--            </div>-->
+                <!--            <div class="col-md-1">-->
+                <!--                {{ form.psr_channel_4k(class="form-control") }} {{_("4k")}}-->
+                <!--            </div>-->
+                <!--            <div class="col-md-1">-->
+                <!--                {{ form.psr_channel_8k(class="form-control") }} {{_("8k")}}-->
+                <!--            </div>-->
+            </div>
+            <br>
+            <div class="form-inline">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2" align="right">
+                    Bandwidth:
+                </div>
+                <div class="col-md-1">
+                    500 MHz
+                </div>
+            </div>
+            <br>
+            <div class="form-inline">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2" align="right">
+                    Sampling time:
+                </div>
+
+                <div class="col-md-3">
+                    {{ form.psr_sampling(class="form-control") }}
+                </div>
+
+                <!--            <div class="col-md-1">-->
+                <!--                {{ form.psr_sampling_49152us(class="form-control") }} {{_("49.152us")}}-->
+                <!--            </div>-->
+                <!--            <div class="col-md-1">-->
+                <!--                {{ form.psr_sampling_98304us(class="form-control") }} {{_("98.304us")}}-->
+                <!--            </div>-->
+                <!--            <div class="col-md-1">-->
+                <!--                {{ form.psr_sampling_196608us(class="form-control") }} {{_("196.608us")}}-->
+                <!--            </div>-->
+            </div>
+
+
+            <br>
+            <div class="form-row">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-5">
+                    <strong>{{ form.backend_spec }} {{form.backend_spec.label}}</strong>
+                </div>
+            </div>
+
+
+            <div class="form-inline">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2" align="right">
+                    Backend:
+                </div>
+                <div class="col-md-2">
+                    {{ form.spec(class="form-control") }} &nbsp;&nbsp;&nbsp;
+
+                </div>
+      
+            </div>
+            <br>
+            <div class="form-inline">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2" align="right">
+                    Sampling time:
+                </div>
+                <div class="col-md-2">
+                    {{ form.spec_sampling(class="form-control") }}
+                </div>
+                <!--            <div class="col-md-1">-->
+                <!--                {{ form.spec_sampling_01s(class="form-control") }} {{_("0.1s")}}-->
+                <!--            </div>-->
+                <!--            <div class="col-md-1">-->
+                <!--                {{ form.spec_sampling_05s(class="form-control") }} {{_("0.5s")}}-->
+                <!--            </div>-->
+                <!--            <div class="col-md-1">-->
+                <!--                {{ form.spec_sampling_1s(class="form-control") }} {{_("1s")}}-->
+                <!--            </div>-->
+            </div>
+            <br>
+            <div hidden="hidden" id="show-frequency">
+                <div class="form-inline">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2" align="right">
+                        Center frequency (MHz):
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.spec_frequency(class="form-control",size='30',placeholder='Correct to Two Decimal Places',onkeyup="this.value=value.replace(/[^\d\.]/g,'')") }}
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+        </div>
+
+        <br>
+        <div class="container-fluid" align="center">
+            {{ form.submit(class="btn btn-lg btn-info",value='Save Technical Requirements') }}
+            <br>
+            <br>
+            <br>
+        </div>
+    </div>
+
+</form>
+
+
+<!-- CONFIRM to submit -->
+<div class="modal fade bd-example-modal-lg" id="submit-proposal" tabindex="-1" role="dialog" aria-labelledby="pro" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pro">Confirm to submit this proposal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="form-row">
+                        <strong>I have finished my proposal, and confirm to submit it.</strong>
+                        <br>
+                        <i style="color:red">(After submission, you can not modify your proposal again.)</i>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal" id="confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endif %}
+{% endblock %}
+

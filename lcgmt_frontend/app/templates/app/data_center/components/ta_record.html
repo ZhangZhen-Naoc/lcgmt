@@ -1,0 +1,27 @@
+<!--TA 证认记录相关代码-->
+<div id="ta-comment-table"></div>
+<script>
+    function showRecords(url){
+        $.ajax({
+            url,
+            "success": (data)=>{
+                // 创建 Tabulator 表格实例
+                const taCommentTable = new Tabulator('#ta-comment-table', {
+                    data: data,
+                    columns: [
+                        {title: 'TA', field: 'ta.name'},
+                 9      {title: 'Update Date', field: 'update_date'},
+                        {title: 'Source Type', field: 'src_type'},
+                        {title: 'Classification', field: 'classification'},
+                        {title: 'Common Name', field: 'simbad_name'},
+                        {title: 'Comments', field: 'comments'},
+                        
+                        {title: 'Ref Flux', field: 'ref_flux'},
+                        
+                    ],
+                    initialSort: [{ column: "update_date", dir: "desc" }]
+                });
+            }
+        });
+    }
+</script>

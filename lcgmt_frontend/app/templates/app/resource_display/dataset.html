@@ -1,0 +1,411 @@
+{% extends 'app/resource-display-base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
+{% block title %}{{_('Data Resource')}}{% endblock %}
+
+{% block content %}
+<script>
+        function displayTableInfo(data) {
+            $('#tabledata').empty();
+            var html = "";
+            $.each(data, function (i, n) {
+                html += '<tr>';
+                html += '<th scope="row">' + n.column_name + '</th>';
+                html += '<td>' + n.datatype + '</td>';
+                html += '<td>' + n.unit + '</td>';
+                html += '<td>' + n.ucd + '</td>';
+                html += '<td>' + n.description_zh + '</td>';
+                html += '</tr>';
+            });
+            $('#tabledata').append(html);
+        }
+        function get_columns(table_id){
+            var data = {"table_id": table_id};
+            $.post('/data_browse/get_table_columns',data, function (columns) {
+                 console.log(columns);
+                 displayTableInfo(columns);
+            });
+        }
+
+
+</script>
+<div class="container-fluid">
+    <div class="main-container">
+        <div class="row" style="margin: 0px;">
+            <div class="dataset-mainpart-left col-sm-8">
+                <div class="dataset-headline-titleLine">
+                    <div class="row" style="margin: 0px;">
+                        <div class="dataset-headline-title col-sm-8" id="title">{{resource.title_zh}}</div>
+
+                        <div class="dataset-headline-date col-sm-4 ml-auto" id="updated"> {%if resource.publicated %}
+                            {{resource.publicated.strftime('%Y-%m-%d %H:%M:%S')}}
+                            {%endif%}
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12" style="padding: 0px;">
+                        <div class="dataset-attribute-creater" id="authors">作者：{{author_names|join(', ') }}</div>
+                    </div>
+                </div>
+
+                <div class="dataset-headline-body">
+                    <div class="row" style="margin: 0px;">
+                        <div class="dataset-attribute-info col-sm-8" id="description">{{resource.description_zh}}</div>
+
+                        <div class="col-sm-4">
+                            <div class="dataset-attribute-doi" id="doi">DOI:{{resource.doi}}</div>
+
+                            <div id="referenceurl">
+                                <div class="dataset-attribute-website"><a href='{{resource.url}}'>主页</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dataset-main-card-titleLine">
+                    <div class="dataset-main-card-title"><span class="dataset-span">&diams;</span>数据简介<span
+                            class="dataset-span">&diams;</span></div>
+                </div>
+
+                <div class="dataset-main-card">
+                    <div class="row" style="margin: 0px;">
+                        <div class="col-sm-2">
+                            <div class="dataset-dataintro-name">VO标识符</div>
+                        </div>
+
+                        <div class="dataset-dataintro-info col-sm-9" id="ivo">
+                            {{resource.identifier}}
+                        </div>
+
+                        <div class="col-sm-2" id="titile-en-title">
+                            <div class="dataset-dataintro-name">英文名称</div>
+                        </div>
+
+                        <div class="dataset-dataintro-info col-sm-9" id="title_en">{{resource.title_en}}</div>
+
+                        <div class="col-sm-2">
+                            <div class="dataset-dataintro-name">数据格式</div>
+                        </div>
+
+                        <div class="dataset-dataintro-info col-sm-9" id="formats">{{format|join(' , ')}}</div>
+
+                        <div class="col-sm-2">
+                            <div class="dataset-dataintro-name">数据量</div>
+                        </div>
+
+                        <div class="dataset-dataintro-info col-sm-9" id="data_amount">
+                            {{data_volume.tables}}个表、{{data_volume.rows}}行、{{data_volume.size}}MB
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="dataset-dataintro-name">共享方式</div>
+                        </div>
+
+                        <div class="dataset-dataintro-info col-sm-9" id="sharemode">{{resource.share_method}}</div>
+
+                        <div class="col-sm-3">
+                            <div class="dataset-subtitleBlock">&middot; 数据访问 &middot;</div>
+                        </div>
+
+                        <div class="col-sm-9">
+                            <div class="dataset-Divider" style="margin-top: 25px;">&nbsp;</div>
+                        </div>
+                        <!--
+                        <div class="col-sm-6" id="registry-url">
+                        <div class="dataset-dataaccess-btn">服务注册信息</div>
+                        </div>
+                        -->
+
+                        <div class="col-sm-6" id="query-url">
+                            <div class="dataset-dataaccess-btn"><a href='{{query_url.access_url}}'>数据检索</a></div>
+                        </div>
+
+                        <div class="col-sm-6" id="access-url">
+                            <div class="dataset-dataaccess-btn"><a href='{{download_url.access_url}}'>数据文件下载</a></div>
+                        </div>
+
+                        <!--                        <div class="col-sm-6" id="mirror-url">-->
+                        <!--                            <div class="dataset-dataaccess-btn"><a href='{{capabilities.mirror_url}}'>数据镜像</a></div>-->
+                        <!--                        </div>-->
+                    </div>
+                </div>
+                {% if tables%}
+                <div class="dataset-main-card-titleLine" id="data_structure_title">
+                    <div class="dataset-main-card-title"><span class="dataset-span">&diams;</span>数据结构<span
+                            class="dataset-span">&diams;</span></div>
+                </div>
+
+                <div class="dataset-main-card" id="data_structure">
+                    <div class="row" style="margin: 0px;">
+                        <div class="col-sm-12" id="tables">
+                            {% for table in tables %}
+                            <div class="dataset-tagBlock dataset-tagBlock-active" onclick="get_columns({{table.id}});">
+                                {{table.name_zh}}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="dataset-Divider" style="margin-top: 25px;"></div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="dataset-dataintro-name">数据表行数</div>
+                        </div>
+
+                        <div class="dataset-dataintro-info col-sm-9" id="tabledata-rows">{{tables[0].nrows}}</div>
+                        <!--<div class="col-sm-2">
+                        <div class="dataset-dataintro-name">数据量</div>
+                        </div>
+
+                        <div class="dataset-dataintro-info col-sm-9" id="tabledata-amount"></div>
+                        -->
+
+                        <div class="col-sm-3">
+                            <div class="dataset-subtitleBlock">&middot; 表结构 &middot;</div>
+                        </div>
+
+                        <div class="col-sm-9">
+                            <div class="dataset-Divider" style="margin-top: 25px;">&nbsp;</div>
+                        </div>
+
+                        <div class="dataset-table-div">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">列名</th>
+                                    <th scope="col">数据类型</th>
+                                    <th scope="col">单位</th>
+                                    <th scope="col">UCD</th>
+                                    <th scope="col">说明</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tabledata">
+                                {% for column in columns %}
+                                <tr>
+                                    <th scope="row">{{column.column_name}}</th>
+                                    <td>{{column.datatype}}</td>
+                                    <td>{%if column.unit%}{{column.unit}}{%endif%}</td>
+                                    <td>{%if column.ucd%}{{column.ucd}}{%endif%}</td>
+                                    <td>{%if column.description_zh%}{{column.description_zh}}{%endif%}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <!--                <div class="dataset-main-card-titleLine" id="related_dataset_title">-->
+                <!--                    <div class="dataset-main-card-title"><span class="dataset-span">&diams;</span>相关数据集<span-->
+                <!--                            class="dataset-span">&diams;</span></div>-->
+                <!--                </div>-->
+
+                <!--                <div class="dataset-main-card">-->
+                <!--                    <ul id="parentset">-->
+                <!--                    </ul>-3>
+
+                <!--                    <ul id="previousset">-->
+                <!--                    </ul>-->
+
+                <!--                    <ul id="related_dataset">&lt;!&ndash;           <div class="dataset-attribute-name">子数据集</div>-->
+                <!--<div id="subset"> </div>--><!--           <div class="dataset-subtitleBlock-grey"> 数据集名称1（访问）</div>
+          <div class="dataset-subtitleBlock-grey"> 长长长长长长长长长长长长数据集名称2（访问）</div>
+          <div class="dataset-subtitleBlock-grey"> 数据集名称3（访问）</div> --><!--           <div class="dataset-attribute-name">父数据集</div>
+ --><!--           <div class="dataset-subtitleBlock-grey"> 长长长长长长长长长长长长数据集名称2（访问）</div>
+          <div class="dataset-subtitleBlock-grey"> 数据集名称3（访问）</div> --><!--           <div class="dataset-attribute-name">同装置数据集</div>
+ --><!--           <div class="dataset-subtitleBlock-grey"> 长长长长长长数据集名称2（访问）</div>
+          <div class="dataset-subtitleBlock-grey"> 数据集名称3（访问）</div> -->
+                <!--                    </ul>-->
+                <!--                </div>-->
+                {% if papers %}
+                <div class="dataset-main-card-titleLine" id="related_paper">
+                    <div class="dataset-main-card-title"><span class="dataset-span">&diams;</span>相关论文<span
+                            class="dataset-span">&diams;</span></div>
+                </div>
+
+                <div class="dataset-main-card">
+                    <ul id="source">
+                        <!--<div class="dataset-attribute-name"><span class="dataset-span">♦</span>期刊论文<span class="dataset-span">♦</span></div>-->
+                        {% for paper in papers %}
+                        <div class="dataset-attribute-info">{{paper.title}}</div>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                <!--<div class="dataset-main-card-titleLine">
+                <div class="dataset-main-card-title">最新进展</div>
+                </div>
+
+                <div class="dataset-main-card">
+                <div class="dataset-attribute-name">小标题</div>
+
+                <div class="dataset-attribute-info">新闻1</div>
+
+                <div class="dataset-attribute-info">新闻2</div>
+
+                <div class="dataset-attribute-name">小标题2</div>
+
+                <div class="dataset-attribute-info">新闻3</div>
+                </div>--></div>
+
+            <div class="dataset-mainpart-right col-sm-4">
+                <div class="dataset-main-card-titleLine" style="margin-top: 0px;">
+                    <div class="dataset-main-card-title"><span class="dataset-span">&diams;</span>数据标签<span
+                            class="dataset-span">&diams;</span></div>
+                </div>
+
+                <div class="dataset-small-card" style="padding: 10px 0px;">
+                    <div class="row" id="tags" style="margin: 0px;">
+                        {% for tag_type in tag_types %}
+                        <div class="col-auto">
+                            <div class="dataset-tag-name">{{tag_type.type_zh}}</div>
+                        </div>
+                        <div class="col-sm-7">
+                            {% for tag in tags if tag.type == tag_type.id %}
+                            <div class="dataset-tagBlock">{{tav.tag_zh}}</div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if old_versions %}
+                <div class="dataset-main-card-titleLine" id="previous_title">
+                    <div class="dataset-main-card-title"><span class="dataset-span">&diams;</span>历史版本<span
+                            class="dataset-span">&diams;</span></div>
+                </div>
+
+                <div class="dataset-small-card" id="previous_dataset">
+                    {% for version in old_versions %}
+                    <div class="dataset-subtitleBlock-grey"><a href="{{url_for('.show_resource', id=version.reid)}}">{{old_version_resources[version.relid]}}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="dataset-main-card-titleLine" id="footprint_title">
+                    <div class="dataset-main-card-title"><span class="dataset-span">&diams;</span>FOOTPRINT<span
+                            class="dataset-span">&diams;</span></div>
+                </div>
+
+                <div class="dataset-small-card" id="footprint_img"><img alt="" class="footprint-img img-fluid"
+                                                                        id="footprint" src="{{resource.footprint[0]}}"/>
+                </div>
+                <!-- <div class="dataset-main-card-titleLine">
+                <div class="dataset-main-card-title"><span class="dataset-span">♦</span>数据引用<span class="dataset-span">♦</span></div>
+                </div>
+                <div class="dataset-small-card">
+                <div class="dataset-subtitleBlock-grey">BibTeX</div>
+                <div class="dataset-subtitleBlock-grey"> DOI：10.12149/101015</div></div>-->
+
+                <div class="dataset-main-card-titleLine" id="data_usage">
+                    <div class="dataset-main-card-title"><span class="dataset-span">&diams;</span>数据使用说明<span
+                            class="dataset-span">&diams;</span></div>
+                </div>
+
+                <div class="dataset-small-card" id="data_usage_card" style="padding: 10px;">
+                    {% if resource.acknowledgement_zh%}
+                    <div class="dataset-attribute-name" id="acknowledgement_title">Standard acknowledgement</div>
+
+                    <div class="dataset-attribute-content" id="acknowledgement">
+                        {{resource.acknowledgement_zh}}
+                    </div>
+                    {% endif %}
+                    {% if rights%}
+                    <div class="dataset-attribute-name" id="license_title">License</div>
+
+                    {% for right in rights %}
+                    <div class="dataset-attribute-info" id="license"><a href="{{right.url_zh}}">{{right.title_zh}}</a>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="dataset-main-card-titleLine">
+                    <div class="dataset-main-card-title"><span class="dataset-span">&diams;</span>联系方式<span
+                            class="dataset-span">&diams;</span></div>
+                </div>
+
+                <div class="dataset-small-card">
+                    <div class="row" style="margin: 0px; line-height: 30px;">
+                        <div class="col-sm-4">
+                            <div class="dataset-dataintro-name">作者</div>
+                        </div>
+
+                        <div class="col-sm-7">
+                            <div class="dataset-dataintro-info" id="author_name">{%if authors %}{{authors[0].name_zh}}{% endif %}</div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="dataset-dataintro-name">邮件</div>
+                        </div>
+
+                        <div class="col-sm-7">
+                            <div class="dataset-dataintro-info" id="author_email">{%if authors %}{{authors[0].email}}{% endif %}</div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="dataset-dataintro-name">机构</div>
+                        </div>
+
+                        <div class="col-sm-7">
+                            <div class="dataset-dataintro-info" id="author_affiliation">{%if authors %}{{authors[0].affiliation_zh}}{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dataset-main-card-titleLine">
+                    <div class="dataset-main-card-title"><span class="dataset-span">&diams;</span>联系NADC<span
+                            class="dataset-span">&diams;</span></div>
+                </div>
+
+                <div class="dataset-small-card">
+                    <div class="row" style="margin: 0px; line-height: 30px;"><!--<div class="col-auto">
+<div class="dataset-dataintro-name">联系人</div>
+</div>
+<div class="col-sm-7">
+<div class="dataset-dataintro-info">姓名</div>
+</div>-->
+                        <div class="col-sm-4">
+                            <div class="dataset-dataintro-name">邮件</div>
+                        </div>
+
+                        <div class="col-sm-7">
+                            <div class="dataset-dataintro-info">support(at)china-vo.org</div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="dataset-dataintro-name">电话</div>
+                        </div>
+
+                        <div class="col-sm-7">
+                            <div class="dataset-dataintro-info">+86-10-64807973</div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="dataset-dataintro-name">机构</div>
+                        </div>
+
+                        <div class="col-sm-7">
+                            <div class="dataset-dataintro-info">国家天文科学数据中心</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p>
+            <audio controls="controls" style="display: none;">&nbsp;</audio>
+        </p>
+
+        <p>
+            <audio controls="controls" style="display: none;">&nbsp;</audio>
+        </p>
+
+        <p>
+            <audio controls="controls" style="display: none;">&nbsp;</audio>
+        </p>
+    </div>
+</div>
+{% endblock %}

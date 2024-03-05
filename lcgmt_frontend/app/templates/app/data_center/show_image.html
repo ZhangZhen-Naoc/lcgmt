@@ -1,0 +1,111 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/pagination.html' import render_pagination %} {% from 'bootstrap/nav.html' import
+render_breadcrumb_item %} {% block styles %} {{ super() }} {#<link
+  type="text/css"
+  rel="stylesheet"
+  href="{{ url_for('static', filename='js9/js9-allinone.css', v='2') }}"
+/>#}
+
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='js9-1.1/js9support.css', v='2') }}" />
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='js9-1.1/js9.css', v='2') }}" />
+
+<script type="text/javascript" src="/data/u-data/js9-1.1/js9support.min.js"></script>
+<script type="text/javascript" src="/data/u-data/js9-1.1/fitsy.min.js"></script>
+<script type="text/javascript" src="/data/u-data/js9-1.1/js9.min.js"></script>
+<script type="text/javascript" src="/data/u-data/js9-1.1/js9plugins.js"></script>
+
+{% endblock %} {% block scripts %} {{ super() }}
+<script src="{{ url_for('static', filename='js9-1.1/js9support.min.js', v='3') }}"></script>
+<script src="{{ url_for('static', filename='js9-1.1/fitsy.min.js', v='3') }}"></script>
+<script src="{{ url_for('static', filename='js9-1.1/js9.min.js', v='3') }}"></script>
+<script src="{{ url_for('static', filename='js9-1.1/js9plugins.js', v='3') }}"></script>
+
+{% endblock %} {% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %} {% block content %}
+<div class="row">
+  <div class="col">
+    <div class="card w-100">
+      <div class="card-header bg-light">
+        <h5>{{_('Image:')}} <span class="badge badge-primary">{{obsid}}</span> <span class="badge badge-info">{{cmosid}}</span></h5>
+      </div>
+
+      <div class="card-body justify-content-center">
+        <div class="row justify-content-md-center">
+          <div class="col-6">
+            <button type="button" class="btn btn-primary btn-raised" id="test_btn">Show X-Ray Sources</button>
+            <div class="JS9Menubar" id="JS9-1024_Menubar" data-width="512px"></div>
+            <div class="JS9Toolbar" id="JS9-1024_Toolbar" data-width="512px"></div>
+            <div class="JS9" id="JS9-1024" data-width="512px" data-height="512px"></div>
+            <div class="JS9Colorbar" id="JS9-1024_Colorbar" data-width="512px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  var image_file_band1 = "{{url_for('data_center.get_obs_image_file',obs_id=obsid, cmos_id=cmosid, band=1)}}";//0.1~0.2kev
+  var image_file_band2 = "{{url_for('data_center.get_obs_image_file',obs_id=obsid, cmos_id=cmosid, band=2)}}";//0.2~0.5kev
+  var image_file_band3 = "{{url_for('data_center.get_obs_image_file',obs_id=obsid, cmos_id=cmosid, band=3)}}";//0.5~1kev
+
+
+
+  function init(){
+
+    // let js9Script = document.createElement("script");
+    // js9Script.setAttribute("src", "{{ url_for('static', filename='js9/js9-allinone.js', v='3') }}");
+    // js9Script.async = true;
+    // js9Script.defer = true;
+    // document.head.appendChild(js9Script);
+    // js9Script.onload = () => {
+      showimage();
+    // }
+
+  }
+
+  function showimage(){
+    if({{showRGBImage}})
+      {
+          JS9.Load(image_file_band1,{scale: "log", colormap: "red"});
+          JS9.Load(image_file_band2,{scale: "log", colormap: "green"});
+          JS9.Load(image_file_band3,{scale: "log", colormap: "blue"});
+          // JS9.SetRGBMode(true);
+      }else{
+          var image_file = "{{url_for('data_center.get_obs_image_file',obs_id=obsid, cmos_id=cmosid, band=0)}}";//0.1~0.2kev
+          // console.log(image_file);
+          JS9.Load(image_file,{scale: "linear", colormap: "standard"});
+          // JS9.SetRGBMode(false);
+      }
+    };
+
+    window.onload = (event) => {
+      init();
+    };
+
+
+
+  $("#test_btn").click(function(){
+    showsource();
+  });
+
+  function showsource(){
+    {% if sourceObs != none%}
+    var boxes = [
+
+      {% for row in sourceObs %}
+
+      {x:{{row.x|int}},y:{{row.y|int}},shape: "box", color: "red",
+          width: 8, height: 6},
+
+     {% endfor %}
+      ];
+      var boxopts = $.extend(true, {}, JS9.Catalogs.opts);
+      JS9.NewShapeLayer("box", boxopts);
+      JS9.AddShapes("box", boxes, {color: "cyan"});
+      {%else%}
+      console.alert("No source in the observation");
+      {% endif %}
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'app/sysadmin/index.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}{{_('Proposal List')}}{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card w-100">
+        <div class="card-header bg-light ep-cardheader">
+            <div class="card-header-title">Statistics of {{season_name}}</div>
+        </div>
+        <div class="card-body ep_datasearch_card" id='main-content'>
+            <div class="container-fluid">
+                <div class="card w-100" id="spectrum-container">
+                    <div class="card-header bg-light">
+                      <span style="color: #004386; font-weight: bold; font-size: 16px">Proposal List</span>  <div style="float:right">
+
+                        {#   <button class="btn ep_openBtn btn-sm" id="open_data_analysis"  >Open Data Analysis Tool</button>#}
+                           <button class="btn ep_openBtn btn-sm" id="download_list"  >Export CSV</button>
+                         </div>
+                    </div>
+                    <div class="card-body">
+                      
+                      <div id="proposal_list_tab" style="z-index: 50; width: 100%"></div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+var result_table;
+var table = new Tabulator("#proposal_list_tab", {
+          data:{{ps_json|safe}},
+          // data: res,
+          selectable: 1,
+          dataTree: true,
+          height: 500,
+          scrollToRowIfVisible: true,
+          layout: "fitDataFill",
+          columns: [
+            { title: "Proposal NO", field: "proposal_no", sorter: "string" },
+            { title: "Proposal Category", field:"proposal_category", sorter:"string"},
+            { title: "PI", field: "pi", sorter: "string" },
+            { title: "Title", field: "title", sorter: "string",width:300 },
+            { title: "Request Time (ks)", field: "request_time", sorter: "string" },
+            { title: "Source Number", field: "source_number", sorter: "string" },
+            { title: "STP", field: "stp", sorter: "string" },
+            { title: "Obs Type", field: "obs_type", sorter: "string" },
+            { title: "Anticipate ToO", field: "is_anti_too", sorter: "string" },
+            { title: "ID", field: "id", sorter: "number" },
+          ],
+        });
+        result_table = table;
+        $("#download_list").click(function(){
+      result_table.download("csv", "proposal_list.csv", {delimiter:","}); 
+     });
+</script>
+{% endblock %}

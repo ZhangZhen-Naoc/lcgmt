@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>submit metadata</title>
+
+		<!-- Bootstrap CSS -->
+		<!-- <link href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"> -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<!-- 		<link rel="stylesheet" href="submit.css" type="text/css" />
+ -->		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<!-- jQuery -->
+		<!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
+<!-- 		<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> -->
+
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+
+		<!-- Popper -->
+		<!-- <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script> -->
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+		<!-- Bootstrap JavaScript -->
+<!-- 		<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		<script>
+			$(function(){
+				$("form").submit(function(){
+					data = $('form').serializeArray();
+					json_data = serializeToJSON(data, 1);
+					console.log(json_data);
+	            	$.ajax({            
+		                type: "POST",
+		                contentType:"application/json",
+		                dataType: "text",
+		                url: "http://registry.china-vo.org:1234/api/resource",
+		                data: json_data,             
+		                success: function (result) {                  
+		                			console.log(result);
+		                    		if (result.status == 200) {
+		                        		console.log("SUCCESS");
+		                    		}
+		                		},                
+		                error: function(e) {
+		                    console.log(e);
+		                }
+
+	            	});      
+				return false;
+				});
+			});
+
+			function serializeToJSON(obj, num) {
+			    // var jsonStr = "[{";
+			    var jsonStr = "{data：{";
+			    $(obj).each(function (index, item) {
+			        jsonStr += "'" + item.name + "':'" + item.value + "'";
+			        if (index % num == (num - 1)) {
+			            if ((index + 1) == obj.length)
+			                // jsonStr += "}]";
+			            	jsonStr += "}}";
+			            else
+			                jsonStr += "},{";
+			        } else {
+			            jsonStr += ",";
+			        }
+			    });
+			    return JSON.stringify(jsonStr);
+			}
+
+		</script>
+
+	</head>
+	<body>
+	2 	<div class = "container">
+		  	<div class = "container">
+	  			<h3 class = "text-center m-4">元数据提交</h3>
+		  	</div>
+	  		<form class="form-horizontal" id ="metadata" method="POST">
+				<div class="card mb-1">
+  				<h5 class="card-header">基本信息</h5>
+  				<div class="card-body">
+    				
+		        		<div class="container">
+			            	<div class="row form-group">
+			                	<i class="icon-book"></i>
+                                <label class="control-label col-lg-2 " for="title">资源名称</label>
+			                		<div class="col-lg-10 col-md-10">
+			                    		<input class="form-control" name="title" id="title" type="text" placeholder="e.g. LAMOST DR1 光谱星表" required>
+			                    		<small class="help-inline">请填写数据资源名称</small> 	
+			                		</div>
+			            	</div>
+			            	<div class="row form-group">
+			                	<label class="control-label col-lg-2" for="title_en">Resource Name (English)</label>
+			                		<div class="col-lg-10 col-md-10">
+			                    		<input class="form-control" name="title_en" id="title" type="text" placeholder="e.g. LAMOST DR1 general catalog">
+			                		</div>
+			            	</div>
+			            	<div class="row form-group">
+			                	<label class="control-label col-lg-2" for="name">创建时间</label>
+			                		<div class="col-lg-10 col-md-10">
+			                    		<input type="date" name="creation_time" id="creation_time" clhss="form-control" value="" required="required" title="">
+			                		</div>
+			            	</div>
+			            	<div class="row form-group">
+			                	<label class="control-label col-lg-2" for="name">更新时间</label>
+			                		<div class="col-lg-10 col-md-10">
+			                			<input type="date" name="update_time" id="update_time" class="form-control" value="" required="required" title="">
+			                		</div>
+			            	</div>
+			            	<div class="row form-group">
+			                	<label class="control-label col-lg-2" for="name">发布时间</label>
+			                		<div class="col-lg-10 col-md-10">
+			                    		<input type="date" name="publish_time" id="publish_time" class="form-control" value="" required="required" title="">
+			                		</div>
+			            	</div>
+			            	<div class="row form-group">
+			                	<label class="control-label col-lg-2" for="creator">创建者</label>
+			                	<div class="col-lg-5">
+			            			 <label class="control-label" for="creator">姓名</label>
+			                    		<input class="form-control " name="creator_name" id="creator_name" type="text">	
+			                    		<small class="help-inline">可填写个人或团队名称</small> 
+			                    </div>
+			                    <div class="col-lg-5">
+			            			 <label class="control-label" for="creator">单位</label>
+			                    		<input class="form-control " name="creator_affiliation" id="creator_affiliation" type="text">			                    		
+			                    </div>
+			                    <div class="col-lg-5 offset-lg-2">
+			            			 <label class="control-label" for="creator">Email</label>
+			                    		<input class="form-control " name="creator_email" id="creator_email" type="Email">	
+			                    </div>
+			                    <div class="col-lg-5">
+			            			 <label class="control-label" for="creator">地址</label>
+			                    		<input class="form-control " name="creator_address" id="creator_address" type="text">			                    
+			                    </div>		
+			                </div>
+			               
+			                		
+			            	
+			                <div class="row form-group">
+			                	<label class="control-label col-lg-2" for="creator_en">Creator (English)</label>
+			                	<div class="col-lg-5">
+			            			 <label class="control-label" for="creator">Name</label>
+			                    		<input class="form-control " name="creator_name_en" id="creator_name" type="text">	
+			                    </div>
+			                    <div class="col-lg-5">
+			            			 <label class="control-label" for="creator">Affiliation</label>
+			                    		<input class="form-control " name="creator_affiliation_en" id="creator_affiliation" type="text">			                    		
+			                    </div>
+			                    <div class="col-lg-10 offset-lg-2">
+			            			 <label class="control-label" for="creator">Address</label>
+			                    		<input class="form-control " name="creator_address_en" id="creator_address" type="text">			                    
+			                    </div>
+			            	</div>
+			               <!--  <div class="row form-group">
+			                	<label class="control-label col-lg-2" for="contributer">贡献者</label>
+			                		<div class="col-lg-10 col-md-10">
+			                    		<input class="form-control" name="contributer" id="contributer" type="text">
+			                		</div>
+			            	</div>
+			            	 <div class="row form-group">
+			                	<label class="control-label col-lg-2" for="contributer_en">Contributer</label>
+			                		<div class="col-lg-10 col-md-10">
+			                    		<input class="form-control" name="contributer_en" id="contributer_en" type="text">
+			                		</div>
+			            	</div> -->
+			                <div class="row form-group">
+			                	<label class="control-label col-lg-2" for="description">描述</label>
+			                		<div class="col-lg-10 col-md-10">
+			                    		<textarea class="form-control" name="description" id="description" rows = "3" placeholder="请填写数据资源的中文描述"></textarea>
+			                		</div>
+			            	</div>
+			            	<div class="row form-group">
+			                	<label class="control-label col-lg-2" for="description_en">Description (English)</label>
+			                		<div class="col-lg-10 col-md-10">
+			                    		<textarea class="form-control" name="description_en" id="description_en" rows = "3" placeholder="Please provide description of data resource in English"></textarea>
+			                		</div>
+			            	</div>
+			            </div>
+			        
+			    	</div>
+				</div>
+			    <div class="card mb-1">
+  					<h5 class="card-header">主题词和分类标签</h5>
+  					<div class="card-body">   				
+		        		<div class="container">    
+		        		     <div class="row form-group">
+			                	<label class="control-label col-lg-2" for="tag">主题词</label>
+			                		<div class="col-lg-10 col-md-10">
+			                    		<input class="form-control" name="tag" id="tag" type="text">
+			                		</div>
+	            			</div>
+			            	<div class="row form-group">
+			                	<label class="control-label col-lg-2" for = "catogories">分类标签</label>
+			                		<div class="input-group col-lg-10 col-md-10 mb-1">
+			                			<div class="input-group-prepend">
+			                				<span class="input-group-text">观测波段</span>
+			                			</div>
+			                			<select name="waveband" id="waveband" class="form-control">
+			                				<option value="">-- 请选择 --</option>
+			                				<option value="射电波段">射电波段</option>
+			                				<option value="毫米波段">毫米波段</option>
+			                				<option value="红外波段">红外波段</option>
+			                				<option value="光学波段">光学波段</option>
+			                				<option value="紫外波段">紫外波段</option>
+			                				<option value="极紫外波段">极紫外波段</option>
+			                				<option value="X射线波段">X射线波段</option>
+			                				<option value="伽马射线波段">伽马射线波段</option>
+			                				<option value="其他波段">其他波段</option>
+										</select>
+									</div>
+									<div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+										<div class="input-group-prepend">
+			                				<span class="input-group-text">观测装置和计划</span>
+			                			</div>
+										<select name="telescope" id="telescope" class="form-control">
+			                				<!-- <option value="">-- 请选择观测装置和计划 --</option> -->
+			                				<option value="">-- 请选择 --</option>
+			                				<option value="LAMOST">LAMOST</option>
+			                				<option value="FAST">FAST</option>
+			                				<option value="MUSER">MUSER</option>
+			                				<option value="天籁计划">天籁计划</option>
+			                				<option value="BASS">BASS</option>
+			                				<option value="天马望远镜">天马望远镜</option>
+			                				<option value="13.7米毫米波望远镜">13.7米毫米波望远镜</option>
+			                				<option value="NVST">NVST</option>
+			                				<option value="南山1米望远镜">南山1米望远镜</option>
+			                				<option value="南极巡天望远镜">南极巡天望远镜</option>
+			                				<option value="兴隆2.16米望远镜">兴隆2.16米望远镜</option>
+			                				<option value="兴隆85cm望远镜">兴隆85cm望远镜</option>
+			                				<option value="兴隆1米望远镜">兴隆1米望远镜</option>
+			                				<option value="中国SONG项目望远镜">中国SONG项目望远镜</option>
+			                				<option value="21厘米射电望远镜阵">21厘米射电望远镜阵</option>
+			                				<option value="35厘米太阳磁场望远镜">35厘米太阳磁场望远镜
+</option>
+			                				<option value="太阳射电宽带动态频谱仪">太阳射电宽带动态频谱仪
+</option>
+			                				<option value="南山1米望远镜">南山1米望远镜</option>
+			                				<option value="南极中国之星小望远镜阵">南极中国之星小望远镜阵
+</option>
+			                				<option value="1.56米光学望远镜">1.56米光学望远镜
+</option>
+			                				<option value="天文底片库">天文底片库
+</option>
+			                				<option value="上海天文台高性能计算与科学数据可视化平台">上海天文台高性能计算与科学数据可视化平台
+</option>
+			                				<option value="盱眙近地天体望远镜">盱眙近地天体望远镜
+</option>
+			                				<option value="空间碎片观测网">空间碎片观测网
+</option>
+			                				<option value="“悟空”号暗物质粒子探测卫星">“悟空”号暗物质粒子探测卫星
+</option>
+			                				<option value="紫金山天文台多通道近红外太阳光谱仪">紫金山天文台多通道近红外太阳光谱仪
+</option>
+											<option value="天文计算模拟平台">天文计算模拟平台
+</option>
+											<option value="丽江2.4m望远镜">丽江2.4m望远镜
+</option>
+											<option value="南山26米射电望远镜">南山26米射电望远镜
+</option>
+			                				<option value="其他">其他</option>
+										</select>
+									</div>
+									<div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+										<div class="input-group-prepend">
+			                				<span class="input-group-text">子学科</span>
+			                			</div>
+										<select name="subject" id="subject" class="form-control">
+			                				<!-- <option value="">-- 请选择子学科 --</option> -->
+			                				<option value="">-- 请选择 --</option>
+			                				<option value="宇宙学和星系">宇宙学和星系
+</option>
+			                				<option value="恒星与星际物质">恒星与星际物质
+</option>
+			                				<option value="太阳物理">太阳物理
+</option>
+			                				<option value="行星科学">行星科学
+</option>
+			                				<option value="基本天文学">基本天文学
+</option>
+			                				<option value="天文技术和方法">天文技术和方法
+</option>
+			                				<option value="其他">其他</option>
+										</select>
+									</div>
+									<div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+
+										<div class="input-group-prepend">
+			                				<span class="input-group-text">数据生产方式</span>
+			                			</div>
+										<select name="data_production_type" id="data_production_type" class="form-control">
+			                				<!-- <option value="">-- 请选择数据类型 --</option> -->
+			                				<option value="">-- 请选择 --</option>
+			                				<option value="观测数据">观测数据</option>
+			                				<option value="观测处理数据">观测处理数据</option>
+			                				<option value="数值模拟数据">数值模拟数据</option>
+											<option value="时频数据">时频数据</option>
+										</select>
+									</div>
+									<div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+
+										<div class="input-group-prepend">
+			                				<span class="input-group-text">数据类型</span>
+			                			</div>
+										<select name="data_type" id="data_type" class="form-control">
+			                				<!-- <option value="">-- 请选择数据类型 --</option> -->
+			                				<option value="">-- 请选择 --</option>
+			                				<option value="时频数据">时频数据</option>
+			                				<option value="光谱数据">光谱数据</option>
+			                				<option value="星表数据">星表数据</option>
+			                				<option value="图像数据">图像数据</option>
+			                				<option value="多维数据">多维数据</option>
+			                				<option value="时序数据">时序数据</option>
+			                				<option value="能谱数据">能谱数据</option>
+			                				<option value="事件数据">事件数据</option>
+			                				<option value="可见性数据">可见性数据</option>
+			                				<option value="日志数据">日志数据</option>
+			                				<option value="环境数据">环境数据</option>
+			                				<option value="数字化数据">数字化数据</option>
+			                				<option value="其他附属数据">其他附属数据</option>
+										</select>
+									</div>
+									<div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+										<div class="input-group-prepend">
+			                				<span class="input-group-text" id="inputGroup-sizing-sm">数据级别</span>
+			                			</div>
+										<select name="data_level" id="data_level" class="form-control">
+			                				<!-- <option value="">-- 请选择数据级别 --</option> -->
+			                				<option value="">-- 请选择 --</option>
+			                				<option value="原始">原始</option>
+			                				<option value="一级">一级</option>
+			                				<option value="二级">二级</option>
+			                				<option value="三级">三级</option>
+										</select>
+									</div>
+									<div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+										<div class="input-group-prepend">
+			                				<span class="input-group-text">生产年代</span>
+			                			</div>
+										<select name="production_age" id="production_age" class="form-control">
+			                				<!-- <option value="">-- 请选择生产年代 --</option> -->
+			                				<option value="">-- 请选择 --</option>
+			                				<option value="古代">古代</option>
+			                				<option value="近代">近代</option>
+			                				<option value="现代">现代</option>
+			                				<option value="当代">当代</option>
+										</select>
+									</div>
+									<div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+										<div class="input-group-prepend">
+			                				<span class="input-group-text">用户对象</span>
+			                			</div>
+										<select name="content_level" id="content_level" class="form-control">
+			                				<!-- <option value="">-- 请选择用户对象 --</option> -->
+			                				<option value="">-- 请选择 --</option>
+			                				<option value="科研">科研</option>
+			                				<option value="科普教育">科普教育</option>
+			                				<option value="公众/爱好者">公众/爱好者</option>
+										</select>
+			                		</div>
+			                		<div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+										<div class="input-group-prepend">
+			                				<span class="input-group-text">数据分类</span>
+			                			</div>
+										<select name="data_class" id="data_class" class="form-control">
+			                				<!-- <option value="">-- 请选择用户对象 --</option> -->
+			                				<option value="">-- 请选择 --</option>
+			                				<option value="发布数据">发布数据
+</option>
+			                				<option value="论文数据">论文数据
+</option>
+			                				<option value="内部数据">内部数据
+</option>
+										</select>
+			                		</div>
+			            	</div>
+	            		</div>
+	            	</div>
+	            </div>
+	            <div class="card mb-1">
+  					<h5 class="card-header">版权和使用</h5>
+  					<div class="card-body">   				
+		        		<div class="container">    
+			            	<div class="row form-group">
+			                	<label class="control-label col-lg-2" for="datasource">数据源</label>
+			                		<div class="input-group col-lg-10 col-md-10">
+									  <div class="input-group-prepend">
+
+									    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" >Bibcode</button>
+									    <div class="dropdown-menu">
+									    0 <a class="dropdown-item" data-target="">Bibcode</a>
+								        </div>
+									  </div>
+									  <input type="text" class="form-control" aria-label="Text input with dropdown button">
+									</div>
+<!-- 			                	<div class="col-lg-10 col-md-10">
+
+			                    		<input class="form-control" name="datasource" id="datasource" type="text" placeholder="论文出处等">
+			                		</div> -->
+			            	</div>
+			            	
+			            	<div class="row form-group">
+			                	<label class="control-label col-lg-2" for="rights">版权声明</label>
+			                		<div class="col-lg-10 col-md-10">
+			                    		<textarea class="form-control" name="rights" id="rights"></textarea>
+			                		</div>
+			            	</div>
+			            	<div class="row form-group">
+			                	<label class="control-label col-lg-2">资源应用说明</label>
+			                		<div class="input-group col-lg-10 col-md-10 mb-1">
+			                			<div class="input-group-prepend">
+			                				<span class="input-group-text">访问链接</span>
+			                			</div>
+			                    		<input class="form-control" name="accessURL" id="accessURL" type="text">
+			                    	</div>
+									<div class="input-group col-lg-10 col-md-10 mb-1 offset-lg-2">
+			                			<div class="input-group-prepend">
+			                				<span class="input-group-text">镜像链接</span>
+			                			</div>
+			                			<input class="form-control" name="imageURL" id="imageURL" type="text">
+			                		</div>
+	            			</div>
+        				</div>	
+        			
+        			</div>
+        		</div>
+
+	            <div class="form-group">
+	            		<button type="submit" class="btn btn-lg btn-block btn-outline-primary align-center">提交</button>
+	            </div>
+
+    		</form>
+		</div>
+
+	</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Mandatory when setting up Aladin Lite v3 for a smartphones/tablet usage -->
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no" />
+  </head>
+  <body>
+    <div id="aladin-lite-div" style="width: 1000px; height: 800px"></div>
+    <script type="text/javascript" src="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.js" charset="utf-8"></script>
+
+    <script type="text/javascript">
+      let aladin;
+      A.init.then(() => {
+        aladin = A.aladin("#aladin-lite-div", {
+          fov: 360,
+          projection: "AIT",
+          cooFrame: "equatorial",
+          showCooGridControl: true,
+          showSimbadPointerControl: true,
+          showCooGrid: true,
+        });
+        var leia_skymap = aladin.createImageSurvey(
+          "LEIA Flux",
+          "LEIA flux image 0.5-1keV ",
+          "https://ep.bao.ac.cn/leia/static/hips/flux-hips-av-5/",
+          "equatorial",
+          3,
+          { imgFormat: "png", colormap: "rainbow" }
+        );
+        leia_skymap.setColormap("rainbow", { stretch: "Log", reversed: false });
+        aladin.setOverlayImageLayer(leia_skymap, "LEIA");
+      });
+    </script>
+  </body>
+</html>

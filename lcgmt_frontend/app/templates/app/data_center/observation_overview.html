@@ -1,0 +1,87 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/nav.html' import render_breadcrumb_item %}
+
+
+{% block title %}{{ _('Einstein Probe Time Domain Astronomical Information Center') }}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          {{ render_breadcrumb_item('main.index', _('Home')) }}
+          {{ render_breadcrumb_item('data_center.observation_overview', _('Observation Overview')) }}
+        </ol>
+      </nav>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col">
+      <div class="card w-100">
+        <div class="card-header bg-light">
+          <h5>{{_('Observation Overview')}}</h5>
+        </div>
+        <div class="card-body">
+
+     
+  <div class="row">
+    <div class="col-2">
+      <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link active" id="v-pills-today-tab" data-toggle="pill" href="#v-pills-today" role="tab" aria-controls="v-pills-today" aria-selected="true">  
+           Today</a>
+        <a class="nav-link" id="v-pills-yesterday-tab" data-toggle="pill" href="#v-pills-yesterday" role="tab" aria-controls="v-pills-yesterday" aria-selected="false">Yesterday</a>
+        <a class="nav-link" id="v-pills-week-tab" data-toggle="pill" href="#v-pills-week" role="tab" aria-controls="v-pills-week" aria-selected="false">This Week</a>
+        <a class="nav-link" id="v-pills-month-tab" data-toggle="pill" href="#v-pills-month" role="tab" aria-controls="v-pills-month" aria-selected="false">This Month</a>
+      </div>
+    </div>
+
+    <div class="col-10">
+      <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-today" role="tabpanel" aria-labelledby="v-pills-today-tab">
+          {% include 'app/data_center/components/obs_overview_today.html' %}
+        </div>
+        <div class="tab-pane fade" id="v-pills-yesterday" role="tabpanel" aria-labelledby="v-pills-yesterday-tab"> 
+          {% include 'app/data_center/components/obs_overview_today.html' %}
+        </div>
+        <div class="tab-pane fade" id="v-pills-week" role="tabpanel" aria-labelledby="v-pills-week-tab"> 
+          {% include 'app/data_center/components/obs_overview_today.html' %}
+        </div>
+        <div class="tab-pane fade" id="v-pills-month" role="tabpanel" aria-labelledby="v-pills-month-tab"> 
+          {% include 'app/data_center/components/obs_overview_today.html' %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  </div>
+  </div>
+  </div>
+  <script>
+    $(document).ready(function () {
+      $('#obs_table').DataTable({
+                //跟数组下标一样，第一列从0开始，这里表格初始化时，第四列默认降序
+                  "order": [[ 5, "desc" ]]
+                });
+      $('.dataTables_length').addClass('bs-select');
+    });
+  
+    $(".thumb").click(function () {
+  
+      var caption = $(this).find('figcaption')
+      var imagesrc = $(this).attr('imgsrc');
+  
+      $("#imageModalTitle").text(caption.text());
+       // set wcs display to degrees
+      // JS9.imageOpts.wcsunits = "degrees";
+      //     // one call to load files into display 0:
+      // JS9.Preload(imagesrc);
+  
+      $("#image-model").attr("src", imagesrc);
+  
+      $("#image-modal-div").modal('show');
+    });
+  
+  </script>
+{% endblock %}

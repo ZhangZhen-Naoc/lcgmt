@@ -1,0 +1,496 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% block title %}Proposal Submit{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+$(document).ready(function(){
+
+
+
+    //初始化
+   
+
+     // 更新其他数据
+$('#save_changes').on('click',function(e){
+      var data = {'Life-cycle of Stars and Interstellar Medium':0,
+      'Isolated and Binary Compact Objects':0,
+      'Galaxies, Groups of Galaxies, Clusters of Galaxies and Superclusters':0,
+      'Active Galactic Nuclei and Tidal Disruption Events':0,
+      'Solar System Objects, Stars and Exoplanets':0,
+      'Cosmology, Extragalactic Deep Fields and Large Extragalactic Areas':0,
+      'Gravitational Wave Electromagnetic Counterpart':0, 
+      'Other':0,'Category_content':'','Title':'','Abstract':'','urgency': '','obs_type':'','stp':'','anticipated_too_no:':'','other_remarks':''};
+      //
+      data['Title'] =  $("#proposal_title").val();
+      data['Abstract'] =  $("#proposal_abstract").val();
+      
+      //选项 
+      if ($('#lifeCycleStars').is(":checked"))            { data['Life-cycle of Stars and Interstellar Medium']=1;}
+      if ($('#binaryCompactObject').is(":checked"))            { data['Isolated and Binary Compact Objects']=1;}
+      if ($('#galaxies_groupGalaxies_clusterGalaxies').is(":checked"))             { data['Galaxies, Groups of Galaxies, Clusters of Galaxies and Superclusters']=1;}
+    
+      if ($('#agn_quasars_blLacObjects_tde').is(":checked"))                   { data['Active Galactic Nuclei and Tidal Disruption Events']=1;}
+        if ($('#sso_se').is(":checked"))                      { data['Solar System Objects, Stars and Exoplanets']=1;}
+      if ($('#cosmology_egDeepFileds_largeEgAreas').is(":checked"))                      { data['Cosmology, Extragalactic Deep Fields and Large Extragalactic Areas']=1;}
+     
+      if ($('#gwec').is(":checked"))                { data['Gravitational Wave Electromagnetic Counterpart']=1;}
+      if ($('#other').is(":checked"))                    { data['Other']=1; data['Category_content']=$('#other_research').val();}
+      //
+      
+      data['urgency'] = $("input[name='urgency']:checked").val();
+      data['obs_type'] = $("input[name='obs_type']:checked").val();
+      data['stp'] = $("input[name='stp']:checked").val();
+
+      data['anticipated_too_no'] = $("#anticipated_too_no").val();
+     
+      data['other_remarks'] = $("#other_remarks").val();
+      //
+        //   data['Hour'] = $("#hours_requested").val();
+      //
+      $.ajax({
+              type: 'POST',
+              url: "{{ url_for('proposal_submit.too_save_science_overview',proposal_id=proposal_id) }}",
+              data: JSON.stringify(data),
+              dataType: "json",
+              contentType: "application/json",
+              success:function(res){
+               if(res.success == 'ok') 
+               {   
+                   alert("Save Proposal Overview Successfully.");
+                   window.location.reload();
+               }
+               if(res.Title == 'not_ok') alert('Please input proposal title.');
+               if(res.Title == 'not_ok_length') alert('Proposal title is too long. No more than 50 words.');
+               if(res.Abstract == 'not_ok') alert('Please input proposal abstract.');
+               if(res.Abstract == 'not_ok_number') alert('Too many words in your abstract.');
+   
+               if(res.obs_type == 'not_ok') alert('Please select observation type.');
+               //if(res.stp == 'not_ok') alert('Please select stp.');
+
+
+               if(res.Select == 'not_ok') alert('Please select one or more scientific category.');
+               if(res.Category_content == 'not_ok') alert('Please input scientific category if you select Other.');
+               if(res.Category_content == 'not_ok_length') alert('Please check scientific category in Other. No more than 100 characters.');
+                if(res.urgency == 'not_ok') alert('Please select urgency.');
+                if(res.anticipated_too_no== 'not_ok') alert('Please check the anticipated ToO NO.');
+               if(res.success == '1') window.location.reload();
+              },
+              error:function(){
+                  alert(error);
+              }
+          });
+      return false;
+     });
+
+
+
+   $('.submit_button').on("click",function(){
+   var proposal_id =  $(this).attr("proposal_id");
+   $('#confirm').attr("proposal_id",proposal_id);
+   $("#submit-proposal").modal('show');
+});
+
+
+$('#confirm').on("click",function(){
+ var proposal_id =  $(this).attr("proposal_id");
+      $.ajax({
+               type: 'GET',
+               url:"{{ url_for('proposal_submit.user_proposal_submit_confirm') }}",
+               dataType: "json",
+               data: {'proposal_id':proposal_id},
+               success:function(res){
+                   if(res.content_status == 'not_ok')
+                   {
+                     alert("Failed to submit. Please fill in proposal overview.");
+                   }
+                   
+                   if(res.science_case_upload_status == 'not_ok')
+                   {
+                     alert("Failed to submit. Please upload your science justification.");
+                   }
+                    if(res.source_list == 'not_ok')
+                   {
+                     alert("Failed to submit. Please add at least one observation.");
+                   }
+                   if(res.success == 'ok')
+                   {
+                     window.location.reload();
+                     alert("Submit successfully.");
+                   }
+                   if(res.success == 'not_ok')
+                   {
+                     window.location.reload();
+                   }
+
+               },
+                error:function(){
+               }
+      });
+});
+});
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<br>
+ 
+<div class="ep_index_title" style="margin: 20px; ">  
+    {% if proposal.get_proposal_status() == 'Draft' %}
+    Draft {{proposal.get_proposal_type1()}} Proposal
+    {% else %}
+    Proposal NO: {{proposal.proposal_number}}
+    {% endif %}
+      <a  style="float:right; text-decoration: underline;font-size: large;" href="{{ url_for('proposal_submit.download_file',path='proposal_template',filename='Proposal_system_guidance_v1.6.pdf') }}">Proposal System Guidance</a>
+    </div>
+    <div class="container-fluid"> 
+
+    <div class="row justify-content-end">
+        <div class="col-md-8 " align="right">
+            <a href="{{ url_for('proposal_submit.user_proposal_list') }}" role="button" class="btn btn-md ep-normalButton align-self-end">Proposal List</a>
+            <button type="button" class="btn btn-md ep-dangerButton active align-self-end"><strong><a style="color:#CC9999;">Status:</a> </strong>&nbsp;{{proposal.get_proposal_status()}}</button>
+            <a role="button" class="btn btn-md  ep-optimisticButton align-self-end" href="{{ url_for('proposal_submit.detail',proposal_id=proposal.id) }}" target="_blank">View Proposal</a>
+            {% if proposal.get_proposal_status() == 'Draft' %}
+            <a role="button" class="btn btn-md  ep-normalButton submit_button" proposal_id="{{proposal_id}}">Submit Proposal</a>
+            {% else %}
+            <a role="button" class="btn btn-md  ep-normalButton align-self-end">Proposal Submitted</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<br>
+
+<ul class="nav nav-tabs ep-sourcelist-nav">
+    <li class="nav nav-tabs">
+        <a class="nav-link active" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='overview') }}"> Proposal Overview</a>
+    </li>
+
+    <li class="nav nav-tabs">
+        <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='sources')}}"> Observation List</a>
+    </li>
+    <li class="nav nav-tabs">
+        <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='investigators') }}"> Investigators</a>
+    </li>
+
+
+    {% if proposal.scientific_review_finished and proposal.submit_status %}
+    <li class="nav nav-tabs">
+        <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='review')}}"> Peer Review</a>
+    </li>
+    {% endif %} 
+</ul>
+
+<div class="card ep-proposalForm" style="background-color: #eee; margin: 0px 25px 20px 25px; padding-top: 10px; border-radius: 0px; border:0px;">
+    <div class="container-fluid" style="padding:20px 10px 30px 10px; line-height: 30px;">
+        <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-2">
+                <strong>Proposal Title<a style="color:red">*</a>:</strong>
+            </div>
+            <div class="col-md-6">
+                {{ form.proposal_title(class="form-control") }}
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div>
+        <br>
+        <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-11">
+                <strong>Scientific Justification<a style="color:red">*</a>:</strong> <i>(No more than 250 Words)</i>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-10">
+                {{ form.proposal_abstract(class="form-control",rows="15") }}
+            </div>
+        </div>
+        <br>
+
+
+        <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-10">
+                <strong>Scientific Category<a style="color:red">*</a>:</strong> <i>(tick all that apply)</i>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-10">
+                <div class="form-inline">
+                    <div class="col-md-10">
+                        {{ form.lifeCycleStars(class="form-control") }} Life-cycle of Stars and Interstellar Medium
+                        <span
+                class="fa fa-question-circle label-help"
+                data-toggle="tooltip"
+                ,
+                data-placement="top"
+                title="including Gamma-Ray Burst, Supernovae, Supernova Remnant, Pulsar Wind Nebular, Diffuse Emission from Interstellar Medium, etc."
+              ></span>
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <div class="col-md-10">
+                        {{ form.binaryCompactObject(class="form-control") }} Isolated and Binary Compact Objects
+                        <span
+                        class="fa fa-question-circle label-help"
+                        data-toggle="tooltip"
+                        ,
+                        data-placement="top"
+                        title="including Magnetars, Isolated Neutron Stars, Neutron Star X-ray binaries, Black Hole X-ray Binaries, Cataclysmic Variables, Ultra-Luminous X-ray Sources, Binary Mergers, etc."
+                      ></span>
+                        
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <div class="col-md-10">
+                        {{ form.galaxies_groupGalaxies_clusterGalaxies(class="form-control") }} Galaxies, Groups of Galaxies, Clusters of Galaxies and Superclusters
+                        <span
+                        class="fa fa-question-circle label-help"
+                        data-toggle="tooltip"
+                        ,
+                        data-placement="top"
+                        title="including Nearby Galaxies (e.g. LMC, SMC), Galaxy Groups, Galaxy Clusters and Superclusters, Intergalactic Medium, etc."
+                      ></span>
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <div class="col-md-10">
+                        {{ form.agn_quasars_blLacObjects_tde(class="form-control") }} Active Galactic Nuclei and Tidal Disruption Events
+                        <span
+                        class="fa fa-question-circle label-help"
+                        data-toggle="tooltip"
+                        ,
+                        data-placement="top"
+                        title="including Seyferts, QSOs, Quasars, BL Lac, Blazars, Tidal Disruption Events, etc."
+                      ></span>
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <div class="col-md-10">
+                        {{ form.sso_se(class="form-control") }} Solar System Objects, Stars and Exoplanets
+                        <span
+                        class="fa fa-question-circle label-help"
+                        data-toggle="tooltip"
+                        ,
+                        data-placement="top"
+                        title="including Sun, Planets, Comets, Stellar Fares, Exoplanets, etc."
+                      ></span>
+                    </div>
+                </div>
+               {# <div class="form-inline">
+                    <div class="col-md-10">
+                        {{ form.cosmology_egDeepFileds_largeEgAreas(class="form-control") }} Cosmology, Extragalactic Deep Fields and Large Extragalactic Areas
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <div class="col-md-10">
+                        {{ form.gwec(class="form-control") }} Gravitational Wave Electromagnetic Counterpart
+                    </div>
+                </div>
+                #}
+               
+                <div class="form-inline">
+                    <div class="col-md-9">
+                        {{ form.other(class="form-control") }} Other (please specify)&nbsp;&nbsp;
+                        <span
+                        class="fa fa-question-circle label-help"
+                        data-toggle="tooltip"
+                        ,
+                        data-placement="top"
+                        title="any other targets not belong to the categories above."
+                      ></span>
+                        {{ form.other_research(class="form-control",size='35') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+      {# <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-8">
+                <strong>Submit this proposal to Science Topical Panel: <a style="color:red;"> *</a>  </i>  {{ form.stp(class="form-check form-check-inline",name="stp") }} 
+            </div>
+            <div class="col-md-2">
+              
+            </div>
+        </div> #} 
+        <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-6">
+                <strong>Anticipated ToO NO:   </i>    <span
+                    class="fa fa-question-circle label-help"
+                    data-toggle="tooltip"
+                    ,
+                    data-placement="top"
+                    title="Only if your have submitted an anticipated ToO."
+                  ></span>
+                    {{ form.anticipated_too_no(class="form-control form-inline",size='25') }}
+            </div>
+            <div class="col-md-4">
+              
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-8">
+                <strong>Urgency: <a style="color:red;"> *</a>  </i>   {{ form.urgency(class="form-check form-check-inline",name="urgency") }}  
+            </div>
+            <div class="col-md-2">
+              
+            </div>
+        </div>
+ 
+      
+       
+    
+        <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-8">
+                <strong>Observation Type: <a style="color:red;"> *</a>  </i>
+            </div>
+            <div class="col-md-2">
+              
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-8">
+              {{ form.obs_type(class="form-check",name="obs_type") }} 
+            </div>
+            <div class="col-md-2">
+              
+            </div>
+        </div>
+       
+    
+        <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-11">
+                Other remarks (Joint observations with other facilities, etc. < 200 words) 
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-10">
+                {{ form.other_remarks(class="form-control",rows="5") }}
+            </div>
+        </div>
+        {#
+        <div class="ep_index_title" style="margin: 20px; ">Upload Science Justification        </div>
+        <div class="alert alert-success" style="margin: 0px 20px;">
+            <div class="form-row justify-content-center">
+                <div class="col-md-10">
+                    <strong>Please prepare your science justification with the following template, and then convert it to <a style="color:red;">PDF</a> and upload it.</strong>
+                </div>
+                <div class="col-md-5"> <a href="{{ url_for('proposal_submit.download_file',path='proposal_template',filename='ep_scijust_template.tex') }}"><button class="btn ep-normalButton"> Click here to download LaTex template </button> </a> 
+                </div>
+                <div class="col-md-5"><a href="{{ url_for('proposal_submit.download_file',path='proposal_template',filename='ep_scijust_template_MS.docx') }}"><button class="btn ep-normalButton"> Click here to download MS Word template </button></a> 
+                </div>
+        <div id="upload_div" style="width: 100%;">
+            <form id="file_submit" enctype="multipart/form-data">
+                {{ file_form.csrf_token() }}
+                <div class="form-row">
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-8">
+                        {{ file_form.choose_button(class= "col-sm-9", style="border-radius:10px; display:none;", title='Click here to select your Science-Case file',onChange="file_submit.path.value=this.files[0].name") }}
+                        <input type="button" class="col-sm-3" value="Select file" onclick="file_submit.choose_button.click()">
+                        <input name="path" id='file_path_value' readonly='readonly' size="35" autocomplete="off">
+                    </div>
+                    <div class="col-md-3" align="left">
+                        {{ file_form.submit_button(class= "btn ep-optimisticButton", style="margin:0px; padding: 8px 30px;", value='Upload') }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+        <br>
+        <div id="delete_div">
+            <div class="form-inline">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-11">
+                    <strong> <a style=" text-align: center; font-size:17px;"> science justification File: </a> &nbsp;&nbsp;<u> <a style="text-align: center; font-size:20px; color:blue;" id="display_name">{{ proposal.science_case_display_name }} </a></u> </strong>
+                    &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<a class="btn btn-sm  btn-warning" role="button" style="text-align: center; font-size:17px;" id="delete_case"> Delete</a>
+                </div>
+            </div>
+        </div>
+        #}
+        <div class="container-fluid row justify-content-center">
+            <button type="button" class="btn btn-lg ep-optimisticButton" id="save_changes">Save Proposal Overview</button>
+            
+            {% if proposal.get_proposal_status() == 'Draft' %}
+            <a role="button" class="btn btn-md  ep-normalButton submit_button" proposal_id="{{proposal_id}}">Submit Proposal</a>
+            {% else %}
+            <button class="btn btn-md  ep-normalButton" disabled>Proposal Submitted</button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<!-- CONFIRM to submit -->
+<div class="modal fade bd-example-modal-lg" id="submit-proposal" tabindex="-1" role="dialog" aria-labelledby="pro" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pro">Confirm to submit this proposal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="form-row">
+                        <strong>I have finished my proposal, and confirm to submit it.</strong>
+                        <br>
+                        <i style="color:red">(After submission, you can not modify your proposal again.)</i>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal" id="confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+<script>
+     {% include "app/proposal_submit/components/countdown.js" %}
+     $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
+
+<style>
+    .form-check-inline>li{ 
+        display: inline-block;
+        margin-left: 20px;
+    }
+
+
+    </style>
+{% endblock %}

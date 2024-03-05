@@ -1,0 +1,232 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}{{_('Proposal Guide')}}{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+$(document).ready(function(){
+});
+</script>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="ep_index_title" style="margin-top: 30px;">EP Observing Proposal System (EOPS)</div>
+  <!--一个proposal Box，注意countDown ID-->
+  <div class="proposalBox text-left">
+      <div style="font-size: 20px; font-weight: bolder;">EP Observing Proposal Cycle-1: STP Observer Program      <a  style="float:right; text-decoration: underline;font-size: large;" href="{{url_for("cms.view_article",id=125)}}">Proposer's Guidance</a></div>
+       <div class="row proposalStatusLine">
+          <div  class="countdownContainer col-md-4">
+            <!-- Deadline in:  <div id="counterDownFSTO" class="countdown"></div> -->
+             
+          </div>
+          <div class="col-md-5">
+            <!-- <div class="proposalStatus" id="stp_status">Call for science proposals is open</div>-->
+          </div>
+      </div> 
+      <div class="proposalInfo">STP Observer Program, including non-ToO observations and anticipated-ToO for known sources, opens to STP Member and Associate Member only. Please read the proposer's guidance carefully before submitting a proposal. </div>
+     {% if current_user.is_authenticated %}
+      {% if current_user.can('STP_PROPOSAL')%}
+      <div class="proposalLinkLine text-right">
+          {% if current_user.can('TEMP_PROPOSAL_SUBMIT')%}
+          <a href='{{url_for("proposal_submit.user_proposal_create",proposal_type="stp_proposal",season_id=season.id,)}}'>
+          <div class="btn ep-normalButton submitBtn">Create a new proposal</div></a>
+          {% endif %}
+          <a href="{{url_for('proposal_submit.user_proposal_list')}}" target="_blank">
+            <div class="btn ep-normalButton">My proposal list</div>
+        </a>
+      </div>
+      {% endif %}
+      {% else %} 
+      <div class="proposalLinkLine text-right"><div class="btn disabled">Please login the system first</div></div> 
+      {% endif %}
+  </div>
+ 
+  <!--一个proposal Box，注意countDown ID-->
+  <div class="proposalBox text-left">
+      <div style="font-size: 20px; font-weight: bolder;"> EP Observing Proposal Cycle-1: Guest Observer (GO) Program      <a  style="float:right; text-decoration: underline;font-size: large;" href="{{url_for("cms.view_article",id=125)}}">Proposer's Guidance</a></div>
+       <div class="row proposalStatusLine">
+          <div  class="countdownContainer col-md-4">
+            <!-- Deadline in: <div id="countDownGO" class="countdown"></div> -->
+          </div>
+          <div class="col-md-5">
+              <!-- <div class="proposalStaqus" id="go_status">Call for science proposals is open</div> -->
+          </div>
+      </div> 
+      <div class="proposalInfo">Guest Observer (GO) Program, including non-ToO observations and anticipated-ToO for known sources, opens to non-STP proposers whose primary affiliations are in China. Please read the proposer's guidance carefully before submitting a proposal. </div>
+      {% if current_user.is_authenticated %}
+      {% if not current_user.can('STP_PROPOSAL')%}
+      <div class="proposalLinkLine text-right">
+        {% if current_user.can('TEMP_PROPOSAL_SUBMIT')%}
+         <a href='{{url_for("proposal_submit.user_proposal_create",proposal_type="guest_proposal",season_id=season.id,)}}'>
+              <div class="btn ep-normalButton submitBtn">Create a new proposal</div>
+          </a>
+        {% endif %}
+          <a href="{{url_for('proposal_submit.user_proposal_list')}}" target="_blank">
+            <div class="btn ep-normalButton">My proposal list</div>
+          </a>
+      </div>
+      {% endif %}
+      {% else %}
+      <div class="proposalLinkLine text-right"><div class="btn disabled">Please login the system first</div></div> 
+     {# <div class="proposalLinkLine text-right"><div class="proposalLinkLine text-right"><div class="btn disabled">For Chinese Non-STP members only</div></div></div>#}
+      {% endif %}
+  </div>
+  <div class="proposalBox text-left">
+    {% if current_user.can('TOO_PROPOSAL_SUBMIT')%}
+    <div style="font-size: 20px; font-weight: bolder;"><a href='{{url_for("proposal_submit.user_proposal_create",proposal_type="ep_too")}}'>ToO and DDT observations</a></div>
+    {% else %}
+    <div style="font-size: 20px; font-weight: bolder;">ToO and DDT observations (to be open later)</div>
+    {% endif %}
+
+</div>
+{% if current_user.can('TOOMM_PROPOSAL_SUBMIT')%}
+<div class="proposalBox text-left">
+    <div style="font-size: 20px; font-weight: bolder;"><a href='{{url_for("proposal_submit.user_proposal_create",proposal_type="toomm")}}'>ToO-MM observations</a></div>
+
+</div>
+{%endif%}
+
+<div class="proposalSubTitle" style="margin-top: 30px;">Proposal Documents</div>
+<div class="row proposalToolLine">
+   
+
+
+    <div class="col-mt-6">
+        <a href="{{ url_for('proposal_submit.download_file',path='proposal_template',filename='EP_Technical_Handbook.pdf') }}" target="_blank">
+            <div class="card proposalToolBox">
+                <div class="card-body">
+                    <div class="card-title">EP Technical Handbook (PDF)</div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-6">
+    
+        <a href="https://ep.bao.ac.cn/leia/cms/files/Cycle1/EP%20Letter_of_Invitation_EP_Cycle1.pdf" target="_blank">
+            <div class="card proposalToolBox">
+                <div class="card-body">
+                    <div class="card-title">Cycle-1 Invitation Letter (PDF)</div>
+                </div>
+            </div>
+        </a>
+    </div>
+{#<div class="col-md-6">
+        <a href="{{ url_for('proposal_submit.download_file',path='proposal_template',filename='ep_scijust_template_MS.docx') }}" target="_blank">
+            <div class="card proposalToolBox">
+                <div class="card-body">
+                    <div class="card-title">Cycle-1 proposal scientific justification templates (MS Word)</div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6">
+        <a href="{{ url_for('proposal_submit.download_file',path='proposal_template',filename='ep_scijust_template.tex') }}" target="_blank">
+            <div class="card proposalToolBox">
+                <div class="card-body">
+                    <div class="card-title">Cycle-1 proposal scientific justification templates (LaTex)</div>
+                </div>
+            </div>
+        </a>
+    </div>#}
+</div>
+
+  <div class="proposalSubTitle" style="margin-top: 30px;">Proposal Tools</div>
+  <div class="row proposalToolLine">
+      <div class="col-md-6">
+          <a href="https://ep.bao.ac.cn/leia/proposal_submit/target_visibility_tool" target="_blank">
+              <div class="card proposalToolBox">
+                  <div class="card-body">
+                      <div class="card-title">EP Long-term Visibility Check Tool</div>
+                      <div class="card-text">Check EP long-term visibility for specific source coordinates in the sky.</div>
+                  </div>
+              </div>
+          </a>
+      </div>
+      <div class="col-md-6">
+          <a href="https://ep.bao.ac.cn/leia/simulator/" target="_blank">
+              <div class="card proposalToolBox">
+                  <div class="card-body">
+                      <div class="card-title">WXT Online Simulator</div>
+                      <div class="card-text">Simulate point-like X-ray sources to be observed by WXT.</div>
+                  </div>
+              </div>
+          </a>
+      </div>
+      <div class="col-md-6"><a href="http://epfxt.ihep.ac.cn/simulation/obs_sim" target="_blank">
+              <div class="card proposalToolBox">
+                  <div class="card-body">
+                      <div class="card-title">FXT Online Simulator</div>
+                      <div class="card-text">Simulate point-like X-ray sources to be observed by FXT.</div>
+                  </div>
+              </div>
+          </a>
+      </div>
+      <div class="col-md-6">
+          <a href="http://epfxt.ihep.ac.cn/simulation/filter_mode_eval" target="_blank">
+              <div class="card proposalToolBox">
+                  <div class="card-body">
+                      <div class="card-title">FXT Technical Evaluation Tool </div>
+                      <div class="card-text">Perform technical evaluation (photon pile-up and optical loading)
+                          for the input source parameters and FXT configuration.</div>
+                  </div>
+              </div>
+          </a>
+      </div>
+      <div class="col-md-6">
+          <a href="http://epfxt.ihep.ac.cn/simulation/expo_time_est" target="_blank">
+              <div class="card proposalToolBox">
+                  <div class="card-body">
+                      <div class="card-title">FXT Exposure Time Calculator</div>
+                      <div class="card-text">For the input source parameters, calculate the exposure time
+                          required to achieve a certain signal-to-noise ratio, or the signal-to-noise ratio
+                          that can be achieved with a certain exposure time.</div>
+                  </div>
+              </div>
+          </a>
+      </div>
+  </div>
+  
+  <div class="proposalSubTitle" style="margin-top: 30px;">User support at EP Science Center</div>
+  <div class="row proposalToolLine">
+      <div class="col-md-6">
+          <a href="https://ep.bao.ac.cn/leia/cms/helpdesk" target="_blank">
+              <div class="card proposalToolBox">
+                  <div class="card-body">
+                      <div class="card-title">Helpdesk</div>
+                      <div class="card-text">If you have any questions or difficulties submitting your proposal, or technical questions related to EP instruments, data and software, please submit them via EP helpdesk under appropriate categories.</div>
+                  </div>
+              </div>
+          </a>
+      </div>
+      <div class="col-md-6">
+        <a href="mailto:ep@bao.ac.cn" target="_blank">
+            <div class="card proposalToolBox">
+                <div class="card-body">
+                    <div class="card-title">Email Us</div>
+                    <div class="card-text"> If you have more general questions, comments and suggestions related to EP's scientific operation and performance, you may send emails directly to EPSC via: <span style="color:#007bff">ep@bao.ac.cn</span></div>
+                </div>
+            </div>
+        </a>
+    </div>
+  </div>
+</div>
+<script>
+ {# {% include "app/proposal_submit/components/countdown.js" %} #}
+</script>
+<style>
+  #counterDownContainer {
+    /* font-size: large; */
+  }
+
+
+</style>
+
+{% endblock %}
+

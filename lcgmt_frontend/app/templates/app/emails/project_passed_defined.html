@@ -1,0 +1,13 @@
+<p>Dear Project {{project.pid}} Users:</p>
+
+{% if project.finished == False %}
+Your Observation Project {{ project.pid }} has been updated!!  Please login EP Web Site to get more information.
+{% endif %}
+
+{% if project.finished == True %}
+    Your Observation Project {{ project.pid }} has been closed!! Please contact us if there is any questions.
+{% endif %}
+
+<p>
+    {{ content }}
+</p>

@@ -1,0 +1,278 @@
+{% extends 'app/base.html' %} {% from 'bootstrap/form.html' import render_form %} {% from 'bootstrap/nav.html' import render_nav_item %} {% from
+'bootstrap/form.html' import render_form_row %} {% block title %}Proposal Submit{% endblock %} {% block content %} {% if current_user.is_authenticated
+%}
+
+<br />
+
+<div class="ep_index_title" style="margin: 20px">SY01 ToO Proposal Submit</div>
+<div class="container-fluid">
+  <div class="row justify-content-end">
+    <div class="col-md-7" align="right">
+      <a href="{{ url_for('proposal_submit.user_proposal_list') }}" role="button" class="btn btn-md ep-normalButton align-self-end"
+        >Proposal List</a
+      >
+      {#
+      <button type="button" class="btn btn-md ep-dangerButton active align-self-end">
+        <strong><a style="color: #cc9999">Status:</a> </strong>&nbsp;{{proposal.get_proposal_status()}}
+      </button>
+      <a role="button" class="btn btn-md ep-optimisticButton align-self-end" href="{{ url_for('proposal_submit.detail',proposal_id=proposal.id) }}"
+        >View Proposal</a
+      >
+      {% if proposal.get_proposal_status() == 'Draft' %}
+      <a role="button" class="btn btn-md ep-normalButton submit_button" proposal_id="{{proposal_id}}">Submit Proposal</a>
+      {% else %}
+      <a role="button" class="btn btn-md ep-normalButton align-self-end">Proposal Submitted</a> {% endif %}#}
+    </div>
+  </div>
+</div>
+<br />
+<div class="card" style="margin-top: 15px">
+  <div class="card-header bg-light ep-cardheader">
+    <div class="card-header-title">Upload Source File</div>
+  </div>
+
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-5" style="margin-top: 15px">
+        <div class="lc-file-inputer ep-checkbox-line" style="padding: 2px 20px">
+          <label for="source_file" class="btn btn-secondary">Select Source File</label>
+          <input type="file" id="source_file" hidden name="source_file" accept="text/csv" />
+          <a target _blank href="{{ url_for('static',filename='resources/SY01ToO_Template.csv')}}"
+            ><span class="badge badge-info">Download Template</span></a
+          >
+        </div>
+        <div id="src_table"></div>
+      </div>
+
+      <!-- <div class="col-md-4" style="margin-top: 21px"><button type="button" class="btn ep_openBtn" id="source_upload">Upload</button></div> -->
+    </div>
+    <form method="post" target="_blank">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <div class="row" id="source_list_div" style="margin-top: 20px; display: none">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">Source List</div>
+
+            <div class="card-body">
+              <div id="result_tab" style="z-index: 50; width: 100%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 20px; display: none" id="submit_button">
+        <input type="submit" class="btn ep_openBtn" value="Submit Proposal" style="width: 130px; height: 38px" />
+      </div>
+    </form>
+
+    <div id="spinner-div">
+      Loading...
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM to submit -->
+
+<script>
+  var source_data;
+  var that = this;
+  //选择文件后更新Button和table内容
+  $("input[type='file']").change(function (event) {
+    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+    if (regex.test($("#source_file").val().toLowerCase())) {
+      if (typeof FileReader != "undefined") {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $("#source_list_div").css("display", "block");
+          var res = csvJSON(e.target.result);
+          that.source_data = res;
+
+          // console.log(that.source_data);
+          var table = new Tabulator("#result_tab", {
+            data: res,
+            selectable: 1,
+            pagination: "local",
+            paginationSize: 15,
+            paginationSizeSelector: [3, 6, 8, 10],
+            movableColumns: true,
+            paginationCounter: "rows",
+            layout: "fitDataFill",
+
+            columns: [
+              { title: "OBS Type", field: "OBS Type" },
+              // {
+              //   title: "Delete",
+              //   formatter: deleteIcon,
+              //   width: 100,
+              //   hozAlign: "center",
+              //   cellClick: function (e, cell) {
+              //     if (confirm("Are you sure you want to delete the source?")) {
+              //       // Save it!
+              //       cell.getRow().delete();
+              //     }
+              //   },
+              // },
+              { title: "PI Name", field: "PI Name" },
+              { title: "Source Type", field: "Source Type", editor: "input" },
+              {
+                title: "Source Name",
+                field: "Source Name",
+                editor: "input",
+                editorParams: {
+                  selectContents: true,
+                },
+              },
+              {
+                title: "RA",
+                field: "RA",
+                editor: "number",
+                editorParams: {
+                  min: 0,
+                  max: 360,
+                  step: 0.0000001,
+                  selectContents: true,
+                },
+              },
+              {
+                title: "Dec",
+                field: "Dec",
+                editor: "number",
+                editorParams: {
+                  min: -90,
+                  max: 90,
+                  step: 0.0000001,
+                  selectContents: true,
+                },
+              },
+              {
+                title: "Priority",
+                field: "Priority",
+                editor: "list",
+                editorParams: {
+                  values: ["A", "B", "C", "D"],
+                },
+              },
+              {
+                title: "Duration",
+                field: "Duration",
+                editor: "number",
+                editorParams: {
+                  min: 0,
+                  max: 10000,
+                  step: 0.000000001,
+                  selectContents: true,
+                },
+              },
+              {
+                title: "Time Constraints",
+                field: "time_constraints",
+                editor: "input",
+              },
+              {
+                title: "CMOS",
+                field: "CMOS",
+                editor: "number",
+                editorParams: {
+                  min: 0,
+                  max: 48,
+                  step: 1,
+                  selectContents: true,
+                },
+              },
+              {
+                title: "Pixel_X",
+                field: "Pixel_X",
+                editor: "number",
+                editorParams: {
+                  min: 0,
+                  max: 3000,
+                  step: 1,
+                  selectContents: true,
+                },
+              },
+              {
+                title: "Pixel_Y",
+                field: "Pixel_Y",
+                editor: "number",
+                editorParams: {
+                  min: 0,
+                  max: 3000,
+                  step: 1,
+                  selectContents: true,
+                },
+              },
+            ],
+          });
+          $("#submit_button").css("display", "block");
+        };
+        reader.readAsText($("#source_file").prop("files")[0]);
+      } else {
+        alert("This browser does not support HTML5.");
+      }
+    } else {
+      alert("Please upload a valid CSV file.");
+    }
+  });
+
+  var deleteIcon = function (cell, formatterParams, onRendered) {
+    //plain text value
+    return '<i class="fas fa-trash-alt"></i>';
+  };
+
+  function csvJSON(csv) {
+    const lines = csv.split("\r\n");
+    const result = [];
+    const headers = lines[0].split(",");
+
+    for (let i = 1; i < lines.length; i++) {
+      if (!lines[i]) continue;
+      const obj = {};
+      const currentline = lines[i].split(",");
+
+      for (let j = 0; j < headers.length; j++) {
+        obj[headers[j]] = currentline[j];
+      }
+      result.push(obj);
+    }
+    return result;
+  }
+
+  $("form").submit(function () {
+    $("#spinner-div").show();
+
+    // var data = that.source_data;
+    var data = JSON.stringify(that.source_data);
+    console.log(data);
+    var url_path = "{{ url_for('proposal_submit.sy01_too_proposal_submit',id=proposal.id) }}";
+
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      dataType: "json",
+      url: url_path,
+      data: data,
+      success: function (result) {
+        console.log(result);
+        if (result.success == "ok") {
+          alert("SY01 ToO Proposal Submit Success.");
+          window.location.href = "{{ url_for('proposal_submit.user_proposal_list') }}";
+          console.log("SUCCESS");
+        } else {
+          alert("Proposal submit failed, Please try again later.\n" + result.error);
+        }
+      },
+      error: function (e) {
+        console.log(e);
+        // alert("Proposal submit failed, Please try again later.\n" + result.error);
+      },
+      complete: function () {
+        $("#spinner-div").hide(); //Request is complete so hide spinner
+      },
+    });
+    return false;
+  });
+</script>
+
+{% endif %} {% endblock %}

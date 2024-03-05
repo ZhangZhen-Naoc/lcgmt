@@ -1,0 +1,5 @@
+<p>Hello {{ user.name }},</p>
+<p>Please visit the link to Login:<br>
+    <a href="{{ url_for('user.login_byemail_check', email=user.email, token=token, _external=True) }}">{{ url_for('user.login_byemail_check', email=user.email, token=token, _external=True) }}</a>
+</p>
+<small>(Please do not reply to this notification, this inbox is not monitored.)</small>

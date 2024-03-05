@@ -1,0 +1,20 @@
+{% extends 'app/base.html' %}
+
+{% block title %}{{_('Redirecting ...')}}{% endblock %}
+{% block head %}
+{{ super() }}
+{% if redirect_url %}
+    <META HTTP-EQUIV="refresh" CONTENT="0;URL={{redirect_url}}">
+    <script>
+        window.location.replace('{{redirect_url}}');
+    </script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div style="text-align:center;">
+    <p>&nbsp;</p>
+    <h3>{{_('Redirecting ...')}}</h3>
+    <p>&nbsp;</p>
+</div>
+{% endblock %}

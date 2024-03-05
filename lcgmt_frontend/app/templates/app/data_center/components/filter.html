@@ -1,0 +1,101 @@
+
+<div class="row">
+    <div class="col-3"><label>
+        Filter by time
+    </label></div>
+    <div class="col-2">
+        <button class="filter-btn time-filter" days=36500>All</button>
+    </div>
+    <div class="col-2">
+        <button class="filter-btn time-filter" days=1>24 hours</button>
+    </div>
+    <div class="col-2">
+        <button class="filter-btn time-filter" days=2>48 hours</button>
+    </div>
+    <div class="col-2">
+        <button class="filter-btn time-filter" days=7>1 week</button>
+    </div>
+    <div class="col-2">
+        <button class="filter-btn time-filter" days=30>1 month</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-3"><label>
+        Filter by type
+    </label></div>
+    <div class="col-2">
+        <button class="filter-btn type-filter" type="">All</button>
+    </div>
+    {%for type in types%}
+        <div class="col-2">
+            <button class="filter-btn type-filter" type={{type}}>{{type}}</button>
+        </div>
+    {%endfor%}
+</div>
+
+<style>
+
+</style>
+
+<script>
+/**
+ * 拼接对象为请求字符串
+ * @param {Object} obj - 待拼接的对象
+ * @returns {string} - 拼接成的请求字符串
+ */
+function encodeSearchParams(obj) {
+  const params = []
+
+  Object.keys(obj).forEach((key) => {
+    let value = obj[key]
+    // 如果值为undefined我们将其置空
+    if (typeof value === 'undefined' || value==null || value=="") {
+      value = ''
+    }
+    // 对于需要编码的文本（比如说中文）我们要进行编码
+    else {
+        params.push([key, encodeURIComponent(value)].join('='))
+    }
+  })
+
+  return params.join('&')
+}
+
+// 添加跳转事件
+let days = null
+let type = null
+function redirect(){
+    base_url = "{{url_for('data_center.transient_list')}}"
+    concated_url = base_url+"?"
+    window.location.href = base_url + "?" + encodeSearchParams({days,type})
+}
+
+
+function addFilterEvt(){
+    // 按键点击事件
+    $(".time-filter").click(function(){
+        days = $(this).attr('days')
+        redirect()
+    })
+    $(".type-filter").click(function(){
+        type = $(this).attr('type')
+        redirect()
+    })
+}
+
+function resetFilterStyle(){
+    //重置filter的class，高亮显示
+    var url_string = window.location.href
+    var url = new URL(url_string);
+    days = url.searchParams.get("days");
+    type = url.searchParams.get("type");
+
+    $(`[days=${days}]`).addClass('btn-primary')
+    $(`[type=${type}]`).addClass('btn-primary')
+}
+$(document).ready(function () {
+    resetFilterStyle() //根据输入参数高亮相应标签
+    addFilterEvt() //添加事件
+})
+</script>

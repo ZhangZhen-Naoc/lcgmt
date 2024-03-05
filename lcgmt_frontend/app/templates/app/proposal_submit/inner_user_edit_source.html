@@ -1,0 +1,565 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Add Source to Proposal{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="margin: 0px; padding: 0px;">
+
+
+
+    <form id="form" method="POST"
+        action="{{ url_for('proposal_submit.user_edit_tiling_target',proposal_id=proposal_id,source_id=ps_id)}}">
+        {{ form.csrf_token() }}
+        <div class="modal-body">
+            <div class="container-fluid" style="margin: 0px; padding: 0px;">
+
+                <div class="card w-100" style="border: 0px;">
+                    <div class="card-body ep-newsView">
+
+                        <div id='article_body' style="margin: 0px 20px; background-color:#fff; padding:20px;">
+                            <a type="button" class="btn btn-secondary" data-dismiss="modal"
+                                href="{{url_for('proposal_submit.user_proposal_submit', proposal_id=proposal_id, card='sources')}}">Back
+                                to Target List</a>
+                            <h3 class="ep_article_title">Add Source (For EPSC Members)</h3>
+
+                            <div class="articleContent">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Basic source info
+                                    </div>
+                                    <div class="card-body">
+
+                                        <div class="row mb-3">
+                                            <label class="col-sm-2 col-form-label" for="">Source Name</label>
+                                            <div class="col-sm-10"> {{ form.source_name(class="form-control
+                                                source_name_input",id="source_name") }}</div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">RA</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.ra(class="form-control ra_input",id="ra") }}
+                                                    <span class="input-group-text">degree</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-grovp">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">Dec</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.dec(class="form-control dec_input",id="dec") }}
+                                                    <span class="input-group-text">degree</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label">Counts Rate</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.count_rate(class="form-control
+                                                    count_rate_input",id="count_rate") }}
+                                                    <span class="input-group-text">flux E-11 erg/cm^2/s</span>
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Range:
+                                                    >0</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">Energy Lower</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.energy_lower(class="form-control
+                                                    energy_lower_input",id="energy_lower") }}
+                                                    <span class="input-group-text">KeV</span>
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Range:
+                                                    0.3~10keV</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">Energy Upper</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.energy_upper(class="form-control
+                                                    energy_upper_input",id="energy_upper") }}
+                                                    <span class="input-group-text">KeV</span>
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Range:
+                                                    0.3~10keV</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">nH</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.nh(class="form-control nh_input",id="nh") }}
+                                                    <span class="input-group-text">10^22 cm^-2</span>
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Range:
+                                                    >0</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">Exposure Time</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.exposure_time(class="form-control
+                                                    exposure_time_input",id="exposure_time") }}
+                                                    <span class="input-group-text">s</span>
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Range:
+                                                    >300</small>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">Completeness</label>
+                                                <div class="input-group col-sm-10">
+
+                                                    {{ form.completeness(class="form-control
+                                                    completeness_input",id="completeness") }}
+
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Range:
+                                                    0.2~1</small>
+                                            </div>
+                                        </div>
+                                        <!--for Time Multiple Observations-->
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-form-label col-sm-2 pt-0" for="">Multiple
+                                                    Observations</label>
+                                                <div class="col-sm-10">
+                                                    <div class="form-check">{{
+                                                        form.multiple_observation(class="form-check-input
+                                                        multiple_observations_input
+                                                        collapsed",id="multiple_observations") }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-12 collapse" id="collapse_multiple"
+                                            style="margin-bottom: 20px;">
+                                            <div class="card-header">
+                                                Multiple Observation Parameters
+                                            </div>
+                                            <div class="card card-body">
+                                                <div class="fzrm-group">
+                                                    <label for="">Number of visits</label>
+                                                    <div class="input-group mb-3">
+                                                        {{ form.visit_number(class="form-control
+                                                        visit_number_input",id="visit_number") }}
+
+                                                    </div>
+                                                    <small class="form-text text-muted">Range: 0~1000</small>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Exposure time per visit min</label>
+                                                    <div class="input-group mb-3">
+                                                        {{ form.exposure_per_vist_min(class="form-control
+                                                        exposure_per_vist_min_input",id="exposure_per_vist_min") }}
+                                                        <span class="input-group-text">s</span>
+                                                    </div>
+                                                    <small class="form-text text-muted">Range: 300~3600</small>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Exposure time per visit max</label>
+                                                    <div class="input-group mb-3">
+                                                        {{ form.exposure_per_vist_max(class="form-control
+                                                        exposure_per_vist_max_input",id="exposure_per_vist_max") }}
+                                                        <span class="input-group-text">s</span>
+                                                    </div>
+                                                    <small class="form-text text-muted">Range: 300~3600</small>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Monitoring cadence </label>
+                                                    <div class="input-group mb-3">
+                                                        {{ forc.monitoring_cadence(class="form-control
+                                                        monitoring_cadence_input",id="monitoring_cadence") }}
+                                                        <span class="input-group-text"><select class="form-select"
+                                                                id="monitoring_cadence_unit">
+                                                                <option value="orbits">Orbits</option>
+                                                                <option value="days">Days</option>
+                                                            </select></span>
+                                                    </div>
+                                                    <small class="form-text text-muted">Range: 1~16 in Orbits or 1~180
+                                                        in days</small>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Precision</label>
+                                                    <div class="input-group mb-3">
+                                                        {{ form.precision(class="form-control
+                                                        precision_input",id="precision") }}
+                                                        <span class="input-group-text">Orbits</span>
+                                                    </div>
+                                                    <small class="form-text text-muted">Default: 1</small>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <!--for Time Critical-->
+
+                                        <div class="row mb-3">
+                                            <label class="col-sm-2 form-check-label" for="">Time Critical?</label>
+                                            <div class="col-sm-10">
+                                                <div class="form-check"> {{ form.time_critical(class="form-check-input
+                                                    time_critical_input",id="time_critical") }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-12 collapse" id="collapse_time_critical"
+                                            style="margin-bottom: 20px;">
+                                            <div class="card-header">
+                                                Time Critical Parameters
+                                            </div>
+                                            <div class="card card-body">
+                                                <div class="form-group">
+                                                    <label for="">Start Time</label>
+                                                    <div class="input-group mb-3">
+                                                        {{ form.start_time(class="form-control
+                                                        start_time_input",id="start_time") }}
+
+                                                    </div>
+                                                    <small class="form-text text-muted">Format: YYYY-MM-DD
+                                                        hh:mm:ss</small>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">End Time</label>
+                                                    <div class="input-group mb-3">
+                                                        {{ form.end_time(class="form-control
+                                                        end_time_input",id="end_time") }}
+
+                                                    </div>
+                                                    <small class="form-text text-muted">Format: YYYY-MM-DD
+                                                        hh:mm:ss</small>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Time Critical Remark</label>
+                                                    <div class="input-group mb-3">
+                                                        {{ form.time_critical_remark(class="form-control
+                                                        time_critical_remark_input",id="time_critical_remark") }}
+
+                                                    </div>
+                                                    <small class="form-text text-muted">Max Length: 20
+                                                        Characters</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--for Source Priority-->
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">Source Priority</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.source_priority(class="form-control
+                                                    source_priority_input",id="source_priority") }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="card">
+                                    <div class="card-header">
+                                        FXT Obervation Settings
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">FXT-1 Observation
+                                                    Mode</label>
+                                                <div class="input-group col-sm-10">
+
+                                                    {{ form.fxt1_obs_mode(class="form-control
+                                                    fxt1_obs_mode_input",id="fxt1_obs_mode") }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">FXT-1 Window Mode</label>
+                                                <div class="input-group col-sm-10">
+
+                                                    {{ form.fxt1_window_mode(class="form-control
+                                                    fxt1_window_mode_input",id="fxt1_window_mode") }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--for FXT  Config-->
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">FXT-1 Filter</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.fxt1_filter(class="form-control
+                                                    fxt1_filter_input",id="fxt1_filter") }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if inner_user == True%}
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">FXT-1 X</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.fxt1_x(class="form-control fxt1_x_input",id="fxt1_x") }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">FXT-1 Y</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.fxt1_y(class="form-control fxt1_y_input",id="fxt1_y") }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %} 
+
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">FXT-2 Observation
+                                                    Mode</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.fxt2_obs_mode(class="form-control
+                                                    fxt2_obs_mode_input",id="fxt2_obs_mode") }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">FXT-2 Window Mode</label>
+                                                <div class="input-group col-sm-10">
+
+                                                    {{ form.fxt2_window_mode(class="form-control
+                                                    fxt2_window_mode_input",id="fxt2_window_mode") }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">FXT-2 Filter</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.fxt2_filter(class="form-control
+                                                    fxt1_filter_input",id="fxt2_filter") }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% if inner_user == True%}
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">FXT-2 X</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.fxt2_x(class="form-control fxt2_x_input",id="fxt2_x") }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">FXT-2 Y</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.fxt2_y(class="form-control fxt2_y_input",id="fxt2_y") }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if too_proposal == True %}
+
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-form-label col-sm-2 pt-0" for="">Whether real-time
+                                                    transmission of FXT data is required?</label>
+                                                <div class="col-sm-10">
+                                                    <div class="form-check">{{
+                                                        form.fxt_data_realtime_trans(class="form-check-input
+                                                        real-time-trans_input",id="real-time-trans") }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if too_proposal == True and inner_user == True%}
+                                <div class="card">
+                                    <div class="card-header">
+                                        ToOMM Settings
+                                    </div>
+                                    <div class="card-body">
+                                        <!--for ToMM-->
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">ToMM ID</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.tomm_id(class="form-control tomm_id_input",id="tomm_id") }}
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Only for ToMM
+                                                    Observation</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">ToMM Tile ID</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.tomm_tile_id(class="form-control
+                                                    tomm_tile_id_input",id="tomm_tile_id") }}
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-texs text-muted">Only for ToMM
+                                                    Observation, Seperated by commas</small>
+                                            </div>
+                                        </div>
+                                        <!--for ToMM-->
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if inner_user == True%}
+                                <div class="card">
+                                    <div class="card-header">
+                                        WXT Configuration Settings
+                                    </div>
+                                    <div class="card-body">
+                                        <!--for WXT Config-->
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">WXT Config Parameter
+                                                    Switch</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.wxt_config_param_switch(class="form-control
+                                                    wxt_config_param_switch_input",id="wxt_config_param_switch") }}
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Only for WXT
+                                                    Config</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">WXT Config Force
+                                                    Switch</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.wxt_config_force_switch(class="form-control
+                                                    wxt_config_force_switch_input",id="wxt_config_force_switch") }}
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Only for WXT
+                                                    Config</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">WXT Operation Code
+                                                    3</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.wxt_operation_code_3(class="form-control
+                                                    wxt_operation_code_3_input",id="wxt_operation_code_3") }}
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Only for WXT
+                                                    Config</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">WXT Minnsigma Dim</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.wxt_minnsigma_dim(class="form-control
+                                                    wxt_minnsigma_dim_input",id="wxt_minnsigma_dim") }}
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Only for WXT
+                                                    Config</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">WXT SN Dim</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.wxt_sn_dim(class="form-control
+                                                    wxt_sn_dim_input",id="wxt_sn_dim") }}
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Only for WXT
+                                                    Config</small>
+        5                                   </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">WXT CMOS</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.wxt_cmos(class="form-control wxt_cmos_input",id="wxt_cmos")
+                                                    }}
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Only for WXT
+                                                    Config, 1~48</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">WXT X</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.wxt_x(class="form-control wxt_x_input",id="wxt_x") }}
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Only for WXT
+                                                    Config</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label" for="">WXT Y</label>
+                                                <div class="input-group col-sm-10">
+                                                    {{ form.wxt_y(class="form-control wxt_y_input",id="wxt_y") }}
+                                                </div>
+                                                <small class="col-sm-10 offset-sm-2 form-text text-muted">Only for WXT
+                                                    Config</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                {% endif %}
+
+
+                                <!-- <button type="submit" class="btn btn-primary">Add Source</button> -->
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a type="button" class="btn btn-secondary" data-dismiss="modal"
+                href=3{{url_for('proposal_submit.user_proposal_submit', proposal_id=proposal_id, card='sources')}}">Back
+                to Target List</a>
+            {{ form.add_source(class="btn btn-primary", value='Save' ) }}
+        </div>
+    </form>
+
+
+
+
+</div>
+
+<script>
+    if ($('#multiple_observations').is(':checked') == true) {
+        $('#collapse_multiple').collapse('show');
+    }
+    else {
+        $('#collapse_multiple').collapse('hide');
+    }
+
+
+    if ($('#time_critical').is(':checked') == true) {
+        $('#collapse_time_critical').collapse('show');
+    }
+    else {
+        $('#collapse_time_critical').collapse('hide');
+    }
+
+</script>
+{% endblock %}

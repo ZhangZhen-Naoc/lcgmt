@@ -1,0 +1,295 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% block title %}{{_('Proposal Submit')}}{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+$(document).ready(function(){
+$('#add-co-i').on("click",function(){
+   $("#add-investigator").modal('show');
+});
+
+$('#update').on("click",function(){
+   var title = $('#pi_title').val()
+   var first_name = $('#pi_first_name').val()
+   var last_name=  $('#pi_last_name').val();
+   var institution = $('#pi_institution').val();
+   var country = $('#pi_country').val();
+   var phone = $('#pi_phone').val();
+   var pi_id = $('#update').attr('pi_id');
+   var proposal_id = "{{proposal_id}}";
+//    var user_group = $('#pi_user_group').val();
+
+   var data = {'title':title,'first_name':first_name,'last_name':last_name,'institution':institution,'phone':phone,'country':country,'proposal_id':proposal_id,'investigator_id':pi_id};
+   $.ajax({
+          type: 'GET',
+          url:"{{ url_for('proposal_submit.user_proposal_edit_pi') }}",
+          dataType: "json",
+          data: data,
+          success:function(re){
+                alert("Update investigator information successfully.");
+                   window.location.reload();
+               },
+          error:function(){
+                  window.location.reload();
+           }
+    });
+});
+
+
+$('.submit_button').on("click",function(){
+   var proposal_id =  $(this).attr("proposal_id");
+   $('#confirm').attr("proposal_id",proposal_id);
+   $("#submit-proposal").modal('show');
+});
+
+
+$('#confirm').on("click",function(){
+ var proposal_id =  $(this).attr("proposal_id");
+      $.ajax({
+               type: 'GET',
+               url:"{{ url_for('proposal_submit.user_proposal_submit_confirm') }}",
+               dataType: "json",
+               data: {'proposal_id':proposal_id},
+               success:function(res){
+                   if(res.content_status == 'not_ok')
+                   {
+                     alert("Failed to submit. Please fill in proposal overview.");
+                   }
+                   
+                   if(res.science_case_upload_status == 'not_ok')
+                   {
+                     alert("Failed to submit. Please upload your science justification.");
+                   }
+                    if(res.source_list == 'not_ok')
+                   {
+                     alert("Failed to submit. Please upload your source list.");
+                   }
+                   if(res.success == 'ok')
+                   {
+                     window.location.reload();
+                     alert("Submit successfully.");
+                   }
+                   if(res.success == 'not_ok')
+                   {
+                     window.location.reload();
+                   }
+
+               },
+                error:function(){
+               }
+      });
+});
+
+
+
+
+
+
+
+
+});
+
+
+
+
+
+
+
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+<br>
+<div class="ep_index_title" style="margin: 20px; ">
+    {% if proposal.get_proposal_status() == 'Draft' %}
+    Draft Proposal
+    {% else %}
+    Proposal NO: {{proposal.proposal_number}}
+    {% endif %}
+    {% if not proposal.is_too_proposal() and proposal.get_proposal_status() == 'Draft' %}
+    <span it="counterDownContainer">
+    <!-- Deadline in: <b id="counterDown"></b></span> -->
+    {% endif %}
+    <a style="float:right;text-decoration: underline;font-size: large;" href="{{ url_for('proposal_submit.download_file',path='proposal_template',filename='Proposal_system_guidance_v1.6.pdf') }}">Proposal System Guidance</a>
+  </div>
+
+<div class="container-fluid">
+    <div class="row justify-conteft-end">
+        <div class="col-md-8 " align="right">
+            <a href="{{ url_for('proposal_submit.user_proposal_list') }}" role="button" class="btn btn-md ep-normalButton align-self-end">Proposal List</a>
+            <button type="button" class="btn btn-md ep-dangerButton active align-self-end"><strong><a style="color:#CC9999;">Status:</a> </strong>&nbsp;{{proposal.get_proposal_status()}}</button>
+            <a role="button" class="btn btn-md  ep-optimisticButton align-self-end" href="{{ url_for('proposal_submit.detail',proposal_id=proposal.id) }}" target="_blank">View Proposal</a>
+            {% if proposal.get_proposal_status() == 'Draft' %}
+            <a role="button" class="btn btn-md  ep-normalButton submit_button" proposal_id="{{proposal_id}}">Submit Proposal</a>
+            {% else %}
+            <a role="button" class="btn btn-md  ep-normalButton align-self-end">Proposal Submitted</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<br>
+
+<ul class="nav nav-tabs ep-sourcelist-nav">
+    <li class="nav nav-tabs">
+        {% if proposal.is_too_proposal() %}
+        <a class="nav-link" href="{{ url_for('proposal_submit.ep_too_proposal_submit',proposal_id=proposal_id,card='overview') }}">Proposal Overview</a>
+      {% else %}
+      <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='overview') }}">Proposal Overview</a>
+      {% endif %}
+    </li>
+   
+    <li class="nav nav-tabs">
+        <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='sources')}}">Observation List</a>
+    </li>
+    <li class="nav nav-tabs">
+        <a class="nav-link active" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='investigators') }}">Investigators</a>
+    </li>
+<!--    <li class="nav-item">-->
+<!--        <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='experts')}}">Non-preferred Reviewers</a>-->
+<!--    </li>-->
+    {% if proposal.scientific_review_finished and proposal.submit_status %}
+    <li class="nav nav-tabs">
+        <a class="nav-link" href="{{ url_for('proposal_submit.user_proposal_submit',proposal_id=proposal_id,card='review')}}">Peer Review</a>
+    </li>
+    {% endif %}
+</ul>
+
+    <div class="card ep-proposalForm" style="background-color: #eee; margin: 0px 25px 20px 25px; padding-top: 10px; border-radius: 0px; border:0px;">
+        <div class="container-fluid" style="padding:20px 10px 30px 10px; line-height: 30px;">
+
+
+            <div class="row">
+                <div class="col-md-2">
+                    <a type="button" class="btn btn-md ep-optimisticButton" id="add-co-i">Add Co-Investigator</a>
+                </div>
+            </div>
+        </div>
+            <div class="container-fluid">
+                <table class="table table-hover table-bordered table-striped"  style="background-color: #fff;">
+                    <thead class="table-secondary">
+                    <tr align="center">
+                        <th scope="col">Title</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Institute</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Country</th>
+                        <th scope="col">User Group</th>
+                        <th scope="col">Operation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr align="center">
+                        <td><input class="date-set form-control-sm mr-sm-0" value="{{pi.title}}" name="pi_title" id="pi_title"  size="10"></td>
+                        <td>{{pi.first_name}}</td>
+                        <td>{{pi.last_name}}</td>
+                        <td>PI</td>
+                        <td>{{pi.email}}</td>
+                        <td><input class="date-set form-control-sm mr-sm-0" value="{{pi.institution}}" name="pi_institution" id="pi_institution"  size="10"></td>
+                        <td><input class="date-set form-control-sm mr-sm-0" value="{{pi.phone}}" name="pi_phone" id="pi_phone"  size="10"></td>
+                        <td><input class="date-set form-control-sm mr-sm-0" value="{{pi.country}}" name="pi_country" id="pi_country"  size="10"></td>
+
+                        <td>{{pi.user_group}}</td>
+                
+                        <td>
+                            <button type="button" class="btn btn btn-info" id="update" pi_id="{{pi.id}}">Update</button>
+                        </td>
+                    </tr>
+                    {% for coi in cois %}
+                    <tr>
+                        
+                     
+                        <td style="word-wrap:break-word; word-break:break-all;">{{coi.title}}</td>
+                        <td style="word-wrap:break-word; word-break:break-all;">{{coi.first_name}}</td>
+                        <td style="word-wrap:break-word; word-break:break-all;">{{coi.last_name}}</td>
+
+                        <td>{{_('Co-I')}}</td>
+                        <td style="word-wrap:break-word; word-break:break-all;">{{coi.email}}</td>
+                        <td style="word-wrap:break-word; word-break:break-all;">{{coi.institution}}</td>
+                        <td style="word-wrap:break-word; word-break:break-all;">{{coi.phone}}</td>
+                        <td style="word-wrap:break-word; word-break:break-all;">{{coi.country}}</td>
+                        <td style="word-wrap:break-word; word-break:break-all;">{{coi.user_group}}</td>
+
+                        <td>
+                            <a class="btn btn-danger" role="button" href="{{ url_for('proposal_submit.user_proposal_delete_investigator',proposal_id=proposal_id,investigator_id=coi.id)}}">{{_('Delete ')}}</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+        
+                    </tbody>
+                </table>
+            </div>
+        
+        
+    </div>
+
+
+
+
+<!-- Modal  for  add user -->
+<div class="modal fade bd-example-modal-lg" id="add-investigator" tabindex="-1" role="dialog" aria-labelledby="investigator-info" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="investigator-info">Add Co-investigator</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form id="form" method="POST" action="{{ url_for('proposal_submit.user_proposal_add_investigator',proposal_id=proposal_id)}}">
+                {{ form.csrf_token() }}
+                <div class="modal-body">
+                    <div class="container">
+                        {{render_form(form)}}
+                    </div>
+                </div>
+                <script>
+                    //邮箱验证
+                    document.getElementById("email").setAttribute("type","email")
+                </script>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- CONFIRM to submit -->
+<div class="modal fade bd-example-modal-lg" id="submit-proposal" tabindex="-1" role="dialog" aria-labelledby="pro" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pro">Confirm to submit this proposal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="form-row">
+                        <strong>I have finished my proposal, and confirm to submit it.</strong>
+                        <br>
+                        <i style="color:red">(After submission, you can not modify your proposal again.)</i>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal" id="confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endif %}
+<script>
+    {% include "app/proposal_submit/components/countdown.js" %}
+</script>
+{% endblock %}
+

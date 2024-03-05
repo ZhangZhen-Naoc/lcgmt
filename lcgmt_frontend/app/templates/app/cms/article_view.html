@@ -1,0 +1,48 @@
+{% extends 'app/base.html' %}
+
+{% block title %}{{ article.title if article else _('Article not found!') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="margin: 0px; padding: 0px;">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li>
+            <li class="breadcrumb-item active">{{root_menu_name}}</li>
+            {% if article.category.name != root_menu_name %}
+            <li class="breadcrumb-item"><a
+                    href="{{ url_for('cms.view_category', id=article.category_id) }}">{{article.category.name}}</a>
+            </li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page"> {{ article.title }}</li>
+        </ol>
+    </nav>
+    <div class="card w-100" style="border: 0px;">
+        <div class="card-body ep-newsView">
+            {% if article %}
+            <div id='article_body' style="margin: 0px 20px; background-color:#fff; padding:20px;">
+                <h3 class="ep_article_title">{{ article.title }}</h3>
+               {# <p class="articleTime">{{ article.created|date('%Y-%m-%d') }}</p>#}
+                <div class="articleContent">
+                    {{ article.content | safe }}</div>
+            </div>
+            <div class="card-footer bg-transparent" style="text-align: right; line-height: 48px; border: 0px; margin-right: 50px;">
+                {% if (article.editor.id==current_user.id and current_user.can('CMS_EDIT')) or
+                current_user.can('CMS_ADMIN') %}
+                <a href="{{url_for('cms.edit_article', id=article.id)}}"><span class="oi oi-document"></span>
+                    {{_('Edit')}}</a>
+                {% endif %}
+                <span class="oi oi-person"></span> {{ _('Editor')}}：{{ article.editor.name }}
+            </div>
+            {% else %}
+            <div class="card">
+                <div class="card-body" style="padding: 10px 50px;">
+                    <h3 class="card-title">{{ _('Article not found!') }}</h3>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}

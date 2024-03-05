@@ -1,0 +1,44 @@
+{% extends 'app/base.html' %}
+
+
+{% block title %}{{ _('Cross-Matching Result List') }}{% endblock %}
+{% block content %}
+<div class="table-responsive" >
+    <table class="table   table-striped table-hover">
+        <thead class="table-light">
+            <tr >
+                <th>Submit Time</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for task in tasks%}
+            <tr>
+                <td>{{task.submit_time.strftime("%Y-%m-%d %H:%M:%S")}}</td>
+
+                <td>{{task.description}}</td>
+                <td>{{task.status}}</td>
+                <td><a href="{{url_for('mwr.get_task_result',taskid=task.id)}}">
+                    {% if task.status=="SUCCESS"%}
+                        Download
+                    {% elif task.status=="FAILURE"%}
+                        Reasons for Failure
+                    {%else%}
+                        Task Running, Please Wait
+                    {%endif%}
+                </a></td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+<script language="JavaScript">
+function myrefresh()
+{undefined
+   window.location.reload();
+}
+setTimeout('myrefresh()',5000);
+</script>
+{%endblock%}

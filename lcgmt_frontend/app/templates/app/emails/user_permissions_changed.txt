@@ -1,0 +1,6 @@
+{{_('Hello')}} {{ user.name }},
+
+
+{{_('Your permissions have been changed. Now you have following roles:')}} {{roles}}
+
+{{_('(Please do not reply to this notification, this inbox is not monitored.)')}}

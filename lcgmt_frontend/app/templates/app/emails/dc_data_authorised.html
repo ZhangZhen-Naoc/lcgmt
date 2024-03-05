@@ -1,0 +1,6 @@
+<p>Hello {{ user.name }},</p>
+<p>You have been authorised to access data of project {{application.pid}}.<br>
+    For more information, please <a href="{{url_for('datd_center.view_applications',type='data_authorisation', id = application.id,_external=True) }}">see your application</a><br>
+
+</p>
+<small>(Please do not reply to this notification, this inbox is not monitored.)</small>

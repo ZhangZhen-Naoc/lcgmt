@@ -1,0 +1,76 @@
+{% extends 'app/simulator/base.html' %} {% block bread %} {% from
+'bootstrap/nav.html' import render_breadcrumb_item %}
+<nav aria-label="breadcrumb" style="margin-bottom: 10px">
+  <ol class="breadcrumb">
+    {{ render_breadcrumb_item('main.index', _('Home')) }} {{
+    render_breadcrumb_item('simulator.index', _('Simulator')) }}
+  </ol>
+</nav>
+{% endblock %}
+
+<!--顶部选择标签-->
+{% block simu_content %}
+<a href="{{ url_for('simulator.simulate_tasks')}}">
+  <div class="btn ep-manage-btn" style="float: right">
+    My Simulation Tasks List
+  </div>
+</a>
+
+<ul class="nav nav-tabs ep-sourcelist-nav" id="simu_type" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a
+      class="nav-link table-title-sm"
+      id="single_obs_tab"
+      href="{{url_for('.index')}}"
+      aria-selected="true"
+    >
+      <div class="ep-tabButton" aria-pressed="true">
+        WXT Single Observation
+      </div></a
+    >
+  </li>
+  <li class="nav-item" role="presentation">
+    <a
+      class="nav-link table-title-sm"
+      id="monitor_tab"
+      href="{{url_for('.monitoring_form')}}"
+      aria-selected="false"
+      ><div class="ep-tabButton" aria-pressed="true">
+        WXT Long-term Monitoring
+      </div></a
+    >
+  </li>
+</ul>
+{% block form_content%} {% endblock%}
+<script>
+  // 两个Change函数，第一个添加回调，第二个调用（页面初始化把其他选项隐藏）
+  $("select[name='spec_model']")
+    .change(function () {
+      var selected = $(this).val();
+      $(".spec-inputer").hide();
+      $(`.spec-inputer-${selected}`).show();
+    })
+    .change();
+  $("input[name='lc']")
+    .change(function () {
+      if (this.checked) {
+        $(".lc-file-inputer").show();
+      } else {
+        $(".lc-file-inputer").hide();
+      }
+    })
+    .change();
+
+
+
+  // 初始化tooltip
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
+<style>
+  .fa-question-circle {
+    cursor: pointer;
+  }
+</style>
+{% endblock %}

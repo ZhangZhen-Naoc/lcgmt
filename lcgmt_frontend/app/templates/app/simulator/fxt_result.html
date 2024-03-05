@@ -1,0 +1,40 @@
+{% extends 'app/simulator/result_base.html' %} {% block output %} {% if
+result.has_src %} {% if result.snr < 5 %}
+<p class="alert alert-dark">
+  WARNING: Please increase the exposure to achieve a higher significance
+</p>
+{%endif%}
+<!-- <div class="row "> -->
+<dl class="row">
+  <dt class="col-sm-3">SNR</dt>
+  <dd class="col-sm-3">{{"%.2f"%result.snr}}</dd>
+
+  <dt class="col-sm-3">Source Rate</dt>
+  <dd class="col-sm-3">
+    {{"%.4f"%result.src_rate}} ({{"%.2f"%result.src_rate_err}})
+  </dd>
+  <dt class="col-sm-3">Background Rate</dt>
+  <dd class="col-sm-3">
+    {{"%.4f"%result.bkg_rate}} ({{"%.2f"%result.bkg_rate_err}})
+  </dd>
+
+  <dt class="col-sm-3">Pileup Fraction</dt>
+  <dd class="col-sm-3">{{"%.4f"%result.pileup_frac}}</dd>
+</dl>
+
+<!-- <div  class="col-3 border border-right-0 mb-2">SNR</div>
+        <div class="col-3 border border-left-0  mb-2">{{"%.2f"%result.snr}}</div>
+        <div  class="col-3 border border-right-0 mb-2">Source Rate</div>
+        <div class="col-3 border border-left-0  mb-2">{{"%.4f"%result.src_rate}}</div>
+        <div  class="col-3 border border-right-0 mb-2">Background Rate</div>
+        <div class="col-3 border border-left-0  mb-2">{{"%.4f"%result.bkg_rate}}</div> -->
+
+<!-- </div> -->
+{%else %}
+<p class="alert alert-dark">
+  WARNING: The number of source photons is less than 20. Please increase the
+  exposure time
+</p>
+{%endif%} {% endblock output %} {% block quicklook %} {% if result.has_src %} {%
+include "app/simulator/components/fxt_quicklook.html" %} {%endif%} {% endblock
+quicklook %}

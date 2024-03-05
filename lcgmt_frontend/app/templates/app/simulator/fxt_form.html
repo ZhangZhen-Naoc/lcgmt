@@ -1,0 +1,284 @@
+{% extends 'app/simulator/form-framework.html' %} {% block form_content %}
+<!--标签-->
+<script>
+  document.getElementById("fxt_single_obs_tab").classList.add("active");
+</script>
+<div class="tab-content" id="myTabContent">
+  <div
+    class="tab-pane fade show active"
+    id="fxt_single_obs"
+    role="tabpanel"
+    aria-labelledby="fxt_single_obs_tab"
+  >
+    {% from 'input.html' import ValueInputerUP, ValueInputer, TextInputer %}
+    <form
+      method="POST"
+      enctype="multipart/form-data"
+      action="{{ url_for('simulator.simulate',mode='fxt')}}"
+      style="clear: both; padding-top: 20px"
+      class="ep-simulator-form"
+    >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      {%include "app/simulator/components/form_user.html"%}
+      <div class="card">
+        <div class="card-header">Input Basic Info</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              {{
+              ValueInputerUP('exposure','s',1200,label_class="ep_objsearch_label",tooltip="Exposure
+              time for the simulated observation.",max=5000)}}
+            </div>
+            <div class="col-md-3">
+              {{
+              ValueInputerUP('offset','degree',0,label_class="ep_objsearch_label",tooltip="Offset
+              angle of the target source relative to FXT pointing direction.")}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="card">
+        <div class="card-header">Input Source Spectrum</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label
+                  for="spec_model"
+                  class="ep_objsearch_label"
+                  data-toggle="tooltip"
+                  title="The input spectral model for the simulated source. An arbitrary user-defined model can be uploaded by choosing the “File” option, in which case a textfile which contains two columns should be uploaded. The first column should be the “photon energy” in units of keV. The second column should be the “photon flux” in units of counts s-1 cm-2 keV-1."
+                >
+                  Spectral Model <span class="fa fa-question-circle"></span>:
+                </label>
+                <div class="input-group mb-3">
+                  <select class="form-control" name="spec_model">
+                    <option value="PL">Power Law</option>
+                    <option value="BB">Black Body</option>
+                    <option value="File">File</option>
+                    <!-- <option value="file">File</option> -->
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="spec-inputer spec-inputer-PL col-md-3">
+              {{
+              ValueInputerUP('index',"",2,label_class="ep_objsearch_label",hint="Photon
+              Index", tooltip="If the Power Law model is selected then value is
+              the photon index, i.e [E^-(index)].")}}
+            </div>
+            <div class="spec-inputer spec-inputer-BB col-md-3">
+              {{
+              ValueInputerUP('temp','eV',100,label_class="ep_objsearch_label",hint="Temperature(kT)",
+              tooltip="The temperature of the input blackbody model.")}}
+            </div>
+
+            <div
+              class="spec-inputer spec-inputer-File col-md-5"
+              style="margin-top: 32px"
+            >
+              <label for="spec_file" class="btn ep-manage-btn"
+                >Select Spectrum File</label
+              >
+              <input type="file" hidden name="spec_file" id="spec_file" />
+
+              <a
+                target
+                _blank
+                href="{{ url_for('static',filename='resources/example_spc.txt')}}"
+                ><span class="badge badge-info">txt example</span></a
+              >
+              <a
+                target
+                _blank
+                href="{{ url_for('static',filename='resources/example.xcm')}}"
+                ><span class="badge badge-info">xcm example</span></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="card">
+        <div class="card-header">Input Source Flux</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              {{
+              ValueInputerUP('flux','erg/s/cm²',1e-13,label_class="ep_objsearch_label",
+              tooltip="The flux of the celestial source, in units of erg/s/cm2.
+              When absorded is not chosen (absorded=0) and the model spctrum is
+              PL/BB, this value indicates the intrinsic flux. Otherwise, the
+              flux defined by user is always after absorption.",max=1e-8)}}
+            </div>
+            <div class="col-md-2 mr-0">
+              {{
+              ValueInputerUP('emin','keV',0.5,label_class="ep_objsearch_label",hint="Energy
+              Range Low",tooltip="")}}
+            </div>
+            <div class="col-md-2 ml-0">
+              {{
+              ValueInputerUP('emax','keV',10,label_class="ep_objsearch_label",hint="Energy
+              Range High",tooltip="")}}
+            </div>
+
+            <div class="col-md-2">
+              {{
+              ValueInputerUP('nh','1e+22cm⁻²',1,label_class="ep_objsearch_label",tooltip="The
+              X-ray absorption column density for the simulated source.")}}
+              <script>
+                //这里特殊格式nH用Js处理下。
+                $('label[for="nh"]>span.label-title').text("nH");
+              </script>
+            </div>
+
+            <div
+              class="col-md-3 spec-inputer-PL spec-inputer-BB"
+              style="padding-top: 32px"
+            >
+              <div
+                class="ep_objsearch_label form-group ep-checkbox-line"
+                style="padding: 2px 10px"
+              >
+                <label
+                  for="absp"
+                  data-toggle="tooltip"
+                  title="It is used to define whether user defined flux is intrinsic or not.It works only when the spectral model is set to PL/BB. The flux is intrinsic if the absorded flag is 0 (i.e. run with '-absorbed 0') only when the PL or BB spectral model is chosen. Otherwise, the flux defined by user is always after absorption."
+                  >Absorbed</label
+                >
+                <input
+                  type="checkbox"
+                  name="absp"
+                  value="True"
+                  id="absp"
+                  checked
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br />
+
+      <div class="card">
+        <div class="card-header">Input Light Curve</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3" style="margin-top: 15px">
+              <div
+                class="form-group ep-checkbox-line"
+                style="padding: 2px 20px"
+              >
+                <label
+                  for="lc"
+                  data-toggle="tooltip"
+                  title="The file used to define the input light curve of celestial source. Optional parameter. It could be used as '-lc example_lc.txt'. The light curve file should contain two columns, the first one is time in unit of second, the second one is flux, which is given as the fracton relative to the flux value. Please note that the second column is fraction!."
+                >
+                  Input light curve:
+                </label>
+                <input type="checkbox" name="lc" value="True" id="lc" />
+              </div>
+            </div>
+            <div class="col-md-4" style="margin-top: 15px">
+              <div
+                class="lc-file-inputer ep-checkbox-line"
+                style="padding: 2px 20px"
+              >
+                <label for="lc_file" class="btn btn-secondary"
+                  >Select Light Curve File</label
+                >
+                <input type="file" id="lc_file" hidden name="lc_file" />
+                <a
+                  target
+                  _blank
+                  href="{{ url_for('static',filename='resources/example_lc.txt')}}"
+                  ><span class="badge badge-info">example</span></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 20px">
+        <input
+          type="submit"
+          class="btn ep_openBtn"
+          value="simulate"
+          style="width: 130px; height: 38px"
+        />
+      </div>
+
+      <div class="alert alert-dark" style="margin-top: 20px">
+        <h3>Notes:</h3>
+        <ol>
+          <li>
+            This simulator gives the observational results for one of the two
+            FXT modules.
+          </li>
+          <li>
+            The simulation of FXT is based on the open source package
+            <a href="https://www.sternwarte.uni-erlangen.de/sixte/">SIXTE</a> (
+            Dauser, T. et al. A&A, 630, A66(2019)).
+          </li>
+          <li>
+            The particle background, which is ~3.6e-2 counts/s/keV in the whole
+            image area of pnCCD, is derived from a previous Geant4 simulation
+            (the latest value is 3.1e-2 counts/s/keV, J. Zhang, et al.
+            Astroparticle Physics, 137 (2022) 102668).
+          </li>
+          <li>
+            The diffuse X-ray background model is adopted from D. McCammon, et
+            al. (ApJ, 576, 188(2002)). <br />For more details, please refer to
+            J. Zhang, et al. (Astroparticle Physics, 137 (2022) 102668).
+          </li>
+          <li>
+            The ancillary file (arf) comes from our simulation. Other
+            calibration files such as the response (rmf), point-spread-function
+            (psf) and vignetting files come from the publicly released CALDB of
+            <a
+              href="https://erosita.mpe.mpg.de/edr/DataAnalysis/esasscaldb.html"
+              >eRosita</a
+            >
+            , considering that the on-ground calibration of FXT has not finished
+            at the moment, and that the design of FXT is nearly identical to a
+            single telescope module of eRosita.
+          </li>
+          <li>
+            The output files include the image of the entire filed of view, the
+            intrinsic source (background-subtracted) and background spectra and
+            light curves, as well as the response and ancillary files which are
+            required by the spectral analysis.
+          </li>
+          <li>
+            The significance is calculated based on the source and background
+            rates at 0.5-10 keV within a circle with a radius of 1.5 arcmin
+            centered at the foci.
+          </li>
+          <li>
+            If too few source photons (<20) are generated, a warning message
+            will be displayed, and The following analysis will not be performed.
+          </li>
+        </ol>
+      </div>
+
+      <script>
+        $("select[name='spec_model']")
+          .change(function () {
+            var selected = $(this).val();
+            if (selected == "File") {
+              //absorbed必需为True
+              $("#absp").prop("checked", true).attr("disabled", "disabled");
+            } else {
+              $("#absp").removeAttr("disabled");
+            }
+          })
+          .change();
+      </script>
+    </form>
+  </div>
+</div>
+{%endblock%}

@@ -1,0 +1,42 @@
+{% extends 'app/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}{{_('Search')}}: {{ q }}{% endblock %}
+
+{% block content %}
+{% if not warning %}
+    <div class="page-header">
+        <h1>{{_('Search')}}: {{ q }}</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% if results %}
+                <h5>{{ results|length }} {{_('results')}}</h5>
+                <ul>
+                {% for item in results %}
+                    {% set article=item %}
+                    <li class="media imgnews-list">
+                        {% if article.thumbnail %}
+                        <a href="{{ article.link }}" class="mt-0 mb-1"><img class="col-lg-4 col-sm-12 imgnews-list-img" border="0" src="{{article.thumbnail}}" alt="article.title"></a>
+                        <div class="col-lg-8">
+                        {% else %}
+                        <div class="col-lg-12">
+                        {% endif %}
+                            <h5 class="imgnews-list-title"><a href="{{ url_for('cms.view_article', id=article.id) }}" class="mt-0 mb-1">{{ article.title }}</a></h5>
+                            <div class="imgnews-list-info">{{ article.summary }}</div>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <h5 class="tip">{{_('No results.')}}</h5>
+            {% endif %}
+        </div>
+    </div>
+    {% if results %}
+        <div class="page-footer">
+            {{ render_pagination(pagination, align='right') }}
+        </div>
+    {% endif %}
+{% endif %}
+{% endblock %}
