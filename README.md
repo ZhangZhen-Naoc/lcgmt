@@ -9,4 +9,9 @@
 - config.py : the configuration file for the database and the engine, specify the database connection and the engine parameters
 
 ## Run 
-- api.py : a flask application for the api
+- backend: api.py : a flask application for the api
+- frontend: lcgmt_frontend/wsgi.py
+- Nginx: as the gateway. proxy /lcgmt to frontend and /lcgmt/api to backend
+
+## Quick look
+![lcgmt.png]
