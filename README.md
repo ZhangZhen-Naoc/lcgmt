@@ -14,4 +14,4 @@
 - Nginx: as the gateway. proxy /lcgmt to frontend and /lcgmt/api to backend
 
 ## Quick look
-![lcgmt.png]
+![Screenshot_20240305_152709](https://github.com/ZhangZhen-Naoc/lcgmt/assets/156745898/2f128541-369a-40fc-b956-07d87b00c871)
