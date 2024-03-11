@@ -1,5 +1,9 @@
 # LCGMT : Light Curve Generator in Multi-Time-bin based on time-series database
 
+## Enviroment requirements
+- Postgresql >=12.0
+- TDEngine >=3.0
+- Python >=3.8
 ## Components
 - SourceTable : a postgresql table based database for storing the sources
 - InstruTable : a postgresql table based database for storing the instruments or dataset metadata
